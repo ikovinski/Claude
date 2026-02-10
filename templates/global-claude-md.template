@@ -1,0 +1,70 @@
+# Global Claude Instructions
+
+## AI Agents System
+
+I have access to a comprehensive AI agents system.
+
+**IMPORTANT**: For ANY task, first check if there's a relevant agent, command, or skill.
+
+### Quick Reference
+
+| Task | What to Read |
+|------|--------------|
+| Code review | `~/.claude/agents/technical/code-reviewer.md` |
+| Security review | `~/.claude/agents/technical/security-reviewer.md` |
+| Architecture | `~/.claude/agents/technical/staff-engineer.md` |
+| Task breakdown | `~/.claude/agents/technical/decomposer.md` |
+| Implementation plan | `~/.claude/agents/technical/planner.md` |
+| TDD workflow | `~/.claude/agents/technical/tdd-guide.md` |
+| Dead code cleanup | `~/.claude/agents/technical/refactor-cleaner.md` |
+| Challenge decision | `~/.claude/agents/facilitation/devils-advocate.md` |
+
+### Commands (Slash Commands)
+
+Available commands (type `/command` to use):
+- `/plan` — Create implementation plan
+- `/code-review` — Code review (uses Code Reviewer agent)
+- `/tdd` — TDD workflow
+- `/security-check` — Security review
+- `/skill-create` — Generate skill from git history
+- `/ai-debug` — Show AI agents system status
+
+### Rules (Always Apply for PHP/Symfony)
+
+These rules should be applied automatically:
+- Security: `~/.claude/rules/security.md`
+- Testing: `~/.claude/rules/testing.md`
+- Coding Style: `~/.claude/rules/coding-style.md`
+- Messaging: `~/.claude/rules/messaging.md`
+- Database: `~/.claude/rules/database.md`
+
+### Project-Specific Skills
+
+**On FIRST message in any session**, check for project skill:
+1. Get current directory name (last part of path)
+2. Look for: `~/.claude/skills/{directory-name}-patterns/SKILL.md`
+3. **ALWAYS announce result:**
+   - If found: "📚 Loaded project skill: {skill-name}"
+   - If not found: "📚 No project skill found for: {directory-name}"
+
+Example:
+```
+Working in: /Users/ivan/repo/wellness-backend
+Looking for: ~/.claude/skills/wellness-backend-patterns/SKILL.md
+→ Found → "📚 Loaded project skill: wellness-backend-patterns"
+```
+
+### Scenarios (Multi-Step Workflows)
+
+| Scenario | File |
+|----------|------|
+| Feature decomposition | `~/.claude/scenarios/delivery/feature-decomposition.md` |
+| Rewrite decision | `~/.claude/scenarios/technical-decisions/rewrite-decision.md` |
+
+### How to Use Agents
+
+1. **Read the agent file** — load persona, biases, output format
+2. **Check for project skill** — load if exists
+3. **Apply rules** — relevant rules from `rules/`
+4. **Announce agent** — "Applying [Agent Name] with bias: [main bias]"
+5. **Follow output structure** — from the agent file

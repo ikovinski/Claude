@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Claude Code hooks for PHP/Symfony wellness tech project",
+  "hooks": [
+    {
+      "event": "PreToolUse",
+      "matcher": "tool == 'Edit' && path matches '\\.php$'",
+      "action": {
+        "type": "message",
+        "content": "Remember: Check for PII/PHI in logs, ensure idempotency for message handlers."
+      },
+      "description": "Remind about PHP security rules before editing"
+    },
+    {
+      "event": "PreToolUse",
+      "matcher": "tool == 'Bash' && command matches 'git push'",
+      "action": {
+        "type": "confirm",
+        "message": "Are you sure you want to push? Have you run tests?"
+      },
+      "description": "Confirm before git push"
+    },
+    {
+      "event": "PostToolUse",
+      "matcher": "tool == 'Edit' && path matches '\\.php$'",
+      "action": {
+        "type": "command",
+        "command": "php-cs-fixer fix --dry-run --diff {{path}} 2>/dev/null || true"
+      },
+      "description": "Run PHP CS Fixer after PHP edits"
+    },
+    {
+      "event": "PreToolUse",
+      "matcher": "tool == 'Bash' && command matches '(composer require|composer update)'",
+      "action": {
+        "type": "confirm",
+        "message": "Adding/updating dependencies affects composer.lock. Proceed?"
+      },
+      "description": "Confirm before changing dependencies"
+    },
+    {
+      "event": "Stop",
+      "matcher": "response matches '(?i)(var_dump|dump\\(|dd\\(|console\\.log)'",
+      "action": {
+        "type": "warning",
+        "message": "Debug code detected in response. Remove before committing."
+      },
+      "description": "Warn about debug code in response"
+    },
+    {
+      "event": "PreToolUse",
+      "matcher": "tool == 'Write' && path matches 'Migration.*\\.php$'",
+      "action": {
+        "type": "message",
+        "content": "Migration file! Ensure: 1) Backward compatible, 2) Safe for large tables, 3) Has down() method."
+      },
+      "description": "Migration safety reminder"
+    }
+  ]
+}
