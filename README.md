@@ -61,35 +61,42 @@ ai-agents-system/
 ├── agents/                    # AI персонажі з унікальними biases
 │   ├── technical/
 │   │   ├── code-reviewer.md   # Code quality, production-readiness
+│   │   ├── security-reviewer.md # Security audit, OWASP
 │   │   ├── staff-engineer.md  # Architecture, tech strategy
-│   │   └── decomposer.md      # Task breakdown, delivery
-│   ├── facilitation/
-│   │   └── devils-advocate.md # Challenge assumptions, find risks
-│   └── management/            # [Wave 2]
+│   │   ├── decomposer.md      # Task breakdown, delivery
+│   │   ├── planner.md         # Implementation planning
+│   │   ├── tdd-guide.md       # Test-Driven Development
+│   │   └── refactor-cleaner.md # Dead code cleanup
+│   └── facilitation/
+│       └── devils-advocate.md # Challenge assumptions, find risks
 │
-├── skills/                    # Reusable prompts для конкретних tasks
-│   ├── engineering/
-│   │   ├── code-review.md     # PR review process
-│   │   └── task-decomposition.md
-│   ├── core/                  # [Wave 2]
-│   ├── management/            # [Wave 2]
-│   └── product/               # [Wave 2]
+├── skills/                    # Reusable workflows & patterns
+│   ├── architecture/          # ADR templates, decision matrices
+│   ├── planning/              # Epic breakdown, vertical slicing
+│   ├── code-quality/          # Refactoring, test patterns
+│   ├── security/              # Security checklists, OWASP
+│   ├── tdd/                   # TDD workflow
+│   ├── risk-management/       # Risk assessment
+│   └── {project}-patterns/    # Auto-generated from git history
 │
 ├── scenarios/                 # Multi-agent workflows
 │   ├── technical-decisions/
 │   │   └── rewrite-decision.md
-│   ├── delivery/
-│   │   └── feature-decomposition.md
-│   ├── quality/               # [Wave 2]
-│   └── people/                # [Wave 2]
+│   └── delivery/
+│       └── feature-decomposition.md
 │
-├── templates/                 # Шаблони для створення нових items
-│   ├── agent-template.md
-│   ├── skill-template.md
-│   └── scenario-template.md
+├── rules/                     # Always-follow guidelines
+│   ├── security.md            # PII/PHI protection
+│   ├── testing.md             # Coverage requirements
+│   ├── coding-style.md        # PHP 8.3, Symfony 6.4
+│   ├── messaging.md           # RabbitMQ/Kafka patterns
+│   └── database.md            # Doctrine, migrations
 │
-├── docs/                      # [Wave 2] Confluence documentation
-└── examples/                  # [Wave 2] Real-world examples
+├── commands/                  # Slash commands (/plan, /review, etc)
+├── contexts/                  # Mode-specific focus (dev, review, etc)
+├── templates/                 # Templates for creating new items
+├── docs/                      # Documentation & how-to guides
+└── examples/                  # Real-world usage examples
 ```
 
 ## Core Concepts
@@ -101,10 +108,10 @@ AI персонажі з **унікальними biases**. Biases — це те
 - Devil's Advocate bias: "Assume nothing works"
 
 ### Skills
-Reusable prompts для конкретних tasks з **Quality Bar**:
-- Must Have — без цього результат невалідний
-- Should Have — значно покращує якість
-- Nice to Have — бонус
+Reusable workflows та patterns, організовані по категоріям:
+- **Universal Skills** — для всіх проєктів (architecture, security, planning, etc.)
+- **Project Skills** — автогенеровані з git history конкретного проєкту
+- **Auto-loading** — агенти та scenarios автоматично завантажують потрібні skills
 
 ### Scenarios
 Multi-agent workflows для складних ситуацій:
@@ -136,66 +143,232 @@ After installation, these commands work in any project:
 
 ---
 
-## Available Agents
+## How Skills Work
 
-| Type | Item | Use Case |
-|------|------|----------|
-| Agent | [code-reviewer.md](agents/technical/code-reviewer.md) | PR review, code quality |
-| Agent | [staff-engineer.md](agents/technical/staff-engineer.md) | Architecture decisions |
-| Agent | [decomposer.md](agents/technical/decomposer.md) | Task breakdown |
-| Agent | [security-reviewer.md](agents/technical/security-reviewer.md) | Security audit |
-| Agent | [tdd-guide.md](agents/technical/tdd-guide.md) | TDD workflow |
-| Agent | [planner.md](agents/technical/planner.md) | Implementation planning |
-| Agent | [devils-advocate.md](agents/facilitation/devils-advocate.md) | Challenge decisions |
-| Skill | [code-review.md](skills/engineering/code-review.md) | Structured PR review |
-| Skill | [task-decomposition.md](skills/engineering/task-decomposition.md) | Feature breakdown |
-| Scenario | [rewrite-decision.md](scenarios/technical-decisions/rewrite-decision.md) | "Should we rewrite?" |
-| Scenario | [feature-decomposition.md](scenarios/delivery/feature-decomposition.md) | Epic → sprints |
+### Автоматичне Завантаження
 
-## Usage Example
+Skills автоматично завантажуються агентами та scenarios:
 
-### Quick Code Review
+```yaml
+# Example: scenarios/delivery/feature-decomposition.md
+skills:
+  - auto:{project}-patterns        # ← Project-specific conventions
+  - planning/epic-breakdown         # ← Universal skill
+  - planning/vertical-slicing       # ← Universal skill
+  - planning/planning-template      # ← Universal skill
+```
 
-1. Open [code-review.md](skills/engineering/code-review.md)
-2. Copy the prompt template
-3. Replace:
-   - `{{paste_code_or_diff}}` — your code
-   - `{{what_this_code_does}}` — context
-   - `{{full | security | performance | quick}}` — scope
-4. Paste to Claude.ai
+Коли scenario запускається:
+1. **Перевіряє поточну директорію** → знаходить project skill
+2. **Завантажує universal skills** зі списку
+3. **Застосовує всі patterns** до процесу
 
-### Architecture Decision
+### Приклади Використання
 
-1. Open [staff-engineer.md](agents/technical/staff-engineer.md)
-2. Copy the prompt template
-3. Fill in your context
-4. Get structured analysis with trade-offs
+#### Приклад 1: Feature Decomposition з Project Skills
 
-### Challenge a Decision
+```
+You: "Decompose feature: Add Apple Health integration"
 
-1. Got a decision everyone agrees on too quickly?
-2. Open [devils-advocate.md](agents/facilitation/devils-advocate.md)
-3. Feed the decision to the Devil's Advocate
-4. Get back assumptions to validate, risks to mitigate
+System:
+├─ Loads: agents/technical/decomposer.md
+├─ Checks: ~/.claude/skills/wellness-backend-patterns/SKILL.md ✓ Found
+├─ Loads: skills/planning/epic-breakdown.md
+├─ Loads: skills/planning/vertical-slicing.md
+└─ Applies: Project patterns + Planning skills
 
-## Project-Specific Skills
+Output:
+✓ Slices follow project naming conventions
+✓ Estimates based on historical velocity
+✓ Tests follow project test patterns
+✓ Vertical slices per project architecture
+```
 
-Generate a skill from your project's git history:
+#### Приклад 2: Security Review з Universal Skills
+
+```
+You: "/security-check src/Controller/Api/PaymentController.php"
+
+System:
+├─ Loads: agents/technical/security-reviewer.md
+├─ Loads: skills/security/owasp-top-10.md
+├─ Loads: skills/security/security-audit-checklist.md
+└─ Applies: OWASP checks + Security audit
+
+Output:
+✓ Checks OWASP Top 10 vulnerabilities
+✓ Validates input sanitization
+✓ Reviews authentication/authorization
+✓ Checks for PII/PHI leaks
+```
+
+#### Приклад 3: Rewrite Decision з Risk Management
+
+```
+You: "Should we rewrite the sync engine?"
+
+System:
+├─ Loads: agents/technical/staff-engineer.md
+├─ Loads: agents/facilitation/devils-advocate.md
+├─ Loads: skills/architecture/decision-matrix.md
+├─ Loads: skills/risk-management/risk-assessment.md
+└─ Applies: Decision framework + Risk analysis
+
+Output:
+✓ Structured decision matrix (rewrite vs refactor)
+✓ Risk assessment with probabilities
+✓ Pre-mortem analysis
+✓ ADR (Architecture Decision Record)
+```
+
+### Створення Project Skill
+
+Згенеруйте skill з вашого проєкту:
 
 ```bash
 cd ~/your-project
 # In Claude Code:
-/skill-create
+/skill-create --commits 100
 ```
 
-This creates `skills/{project-name}-patterns/SKILL.md` with:
-- Commit conventions
-- Code architecture patterns
-- Naming conventions
-- Common workflows
-- Testing patterns
+**Що аналізується:**
+- Commit messages → конвенції
+- Code structure → архітектурні патерни
+- File naming → стандарти найменування
+- Common imports → dependencies patterns
+- Test files → testing patterns
 
-Agents automatically load matching project skills.
+**Результат:** `skills/{project-name}-patterns/SKILL.md`
+
+**Автоматичне використання:**
+- При запуску агента в цьому проєкті → skill завантажується автоматично
+- При запуску scenario → skill застосовується до всіх фаз
+- При code review → паттерни проєкту враховуються
+
+### Skills Categories
+
+| Category | Purpose | Used By |
+|----------|---------|---------|
+| **architecture/** | ADR templates, decision matrices | Staff Engineer, Rewrite Decision |
+| **planning/** | Epic breakdown, vertical slicing | Decomposer, Planner, Feature Decomposition |
+| **code-quality/** | Refactoring patterns, test patterns | Code Reviewer, Refactor Cleaner |
+| **security/** | OWASP checks, audit checklists | Security Reviewer |
+| **tdd/** | Red-Green-Refactor workflow | TDD Guide |
+| **risk-management/** | Risk assessment frameworks | Devil's Advocate, Rewrite Decision |
+
+Детальніше: [skills/README.md](skills/README.md) та [skills/skills-index.md](skills/skills-index.md)
+
+---
+
+## Available Agents
+
+### Technical Agents
+
+| Agent | Main Bias | Use Case | Skills Used |
+|-------|-----------|----------|-------------|
+| [code-reviewer](agents/technical/code-reviewer.md) | Maintainability > cleverness | PR review, code quality | code-quality/* |
+| [security-reviewer](agents/technical/security-reviewer.md) | Paranoid by default | Security audit, OWASP | security/* |
+| [staff-engineer](agents/technical/staff-engineer.md) | Boring technology wins | Architecture decisions | architecture/* |
+| [decomposer](agents/technical/decomposer.md) | Vertical slices > horizontal | Task breakdown | planning/* |
+| [planner](agents/technical/planner.md) | Clarity over speed | Implementation planning | planning/* |
+| [tdd-guide](agents/technical/tdd-guide.md) | Test first, always | TDD workflow | tdd/* |
+| [refactor-cleaner](agents/technical/refactor-cleaner.md) | Less code = less bugs | Dead code cleanup | code-quality/* |
+
+### Facilitation Agents
+
+| Agent | Main Bias | Use Case | Skills Used |
+|-------|-----------|----------|-------------|
+| [devils-advocate](agents/facilitation/devils-advocate.md) | Assume nothing works | Challenge decisions | risk-management/* |
+
+### Scenarios
+
+| Scenario | Agents Used | Duration | Output |
+|----------|-------------|----------|--------|
+| [feature-decomposition](scenarios/delivery/feature-decomposition.md) | Decomposer → Staff Engineer | 30-90 min | Slices, estimates, dependencies |
+| [rewrite-decision](scenarios/technical-decisions/rewrite-decision.md) | Staff Engineer → Devil's Advocate | 1-2 hours | ADR, risk assessment |
+
+## Usage Examples
+
+### 1. Quick Security Review
+
+```bash
+# In Claude Code CLI
+/security-check src/Controller/Api/PaymentController.php
+```
+
+**What happens:**
+- Loads: Security Reviewer agent
+- Applies: security/owasp-top-10.md + security/security-audit-checklist.md
+- Checks: Input validation, auth, PII leaks, SQL injection, XSS
+
+**Output:** Structured security report with findings + recommendations
+
+---
+
+### 2. Feature Decomposition with Project Context
+
+```bash
+# In your project directory
+cd ~/wellness-backend
+
+# Then in Claude Code:
+"Decompose feature: Add Apple Health integration"
+```
+
+**What happens:**
+- Loads: Decomposer agent
+- Finds: skills/wellness-backend-patterns/SKILL.md (auto)
+- Applies: planning/epic-breakdown.md + planning/vertical-slicing.md
+- Uses: Your project's naming conventions, test patterns, architecture
+
+**Output:**
+- Vertical slices (1-3 days each)
+- Following YOUR project patterns
+- With realistic estimates based on YOUR history
+
+---
+
+### 3. Architecture Decision (Rewrite vs Refactor)
+
+```bash
+"Should we rewrite the sync engine? It's slow and hard to maintain"
+```
+
+**What happens:**
+- Phase 1: Staff Engineer analyzes problem
+  - Uses: architecture/decision-matrix.md
+- Phase 2: Devil's Advocate challenges
+  - Uses: risk-management/risk-assessment.md
+- Phase 3: Staff Engineer synthesizes
+  - Creates: ADR (Architecture Decision Record)
+
+**Output:** Structured decision with risks, alternatives, recommendation
+
+---
+
+### 4. TDD Workflow
+
+```bash
+/tdd "CalorieCalculator service"
+```
+
+**What happens:**
+- Loads: TDD Guide agent
+- Applies: tdd/tdd-workflow.md
+- Enforces: Red → Green → Refactor cycle
+
+**Output:**
+1. Test cases first (failing tests)
+2. Minimal implementation (make tests pass)
+3. Refactor (improve code)
+4. Coverage report
+
+## Documentation
+
+- **[How Scenarios Work](docs/how-it-works/how-scenarios-work.md)** — детальний гайд по multi-agent workflows
+- **[Skills Index](skills/skills-index.md)** — повний каталог skills
+- **[Skills Integration](docs/skills-integration-summary.md)** — як skills інтегруються з agents
+- **[Agent Biases](agents/README.md)** — розуміння agent perspectives
 
 ---
 
@@ -219,31 +392,42 @@ Use templates:
 2. Every skill MUST have Quality Bar (must/should/nice)
 3. Format for Claude.ai (copy-paste prompts)
 
-## Wave 2 Roadmap
+## Roadmap
 
-### Additional Agents
-- [ ] tech-lead.md — team coordination, delivery
-- [ ] mentor.md — 1:1, growth plans
-- [ ] incident-commander.md — crisis management
-- [ ] interviewer.md — technical interviews
+### ✅ Completed (Wave 1)
+- [x] Core agents (8 agents: technical + facilitation)
+- [x] Skills system with categories (architecture, planning, security, etc.)
+- [x] Auto-loading skills in agents/scenarios
+- [x] Scenarios (feature-decomposition, rewrite-decision)
+- [x] Slash commands (/plan, /review, /tdd, /security-check)
+- [x] Rules system (security, testing, coding-style, messaging, database)
+- [x] Project skills auto-generation (/skill-create)
+- [x] Documentation (how scenarios work, skills integration)
 
-### Additional Skills
-- [ ] estimation.md — task estimation
-- [ ] 1-on-1.md — 1:1 meeting prep
-- [ ] feedback.md — giving feedback
-- [ ] adr-writing.md — architecture decision records
+### 🎯 Wave 2: Expansion
 
-### Additional Scenarios
-- [ ] incident-response.md
-- [ ] tech-debt-prioritization.md
-- [ ] hiring-decision.md
-- [ ] performance-review.md
+**Additional Agents:**
+- [ ] tech-lead.md — team coordination, delivery tracking
+- [ ] mentor.md — 1:1, growth plans, career development
+- [ ] incident-commander.md — crisis management, post-mortems
+- [ ] interviewer.md — technical interviews, candidate evaluation
 
-### Documentation
-- [ ] docs/quick-start.md
-- [ ] docs/agents-overview.md
-- [ ] docs/skills-catalog.md
-- [ ] docs/scenarios-playbook.md
+**Additional Skills:**
+- [ ] estimation/ — task estimation, velocity tracking
+- [ ] people/ — 1:1 meeting prep, feedback frameworks
+- [ ] incident/ — incident response playbooks
+- [ ] hiring/ — interview questions, rubrics
+
+**Additional Scenarios:**
+- [ ] incident-response.md — detection → mitigation → post-mortem
+- [ ] tech-debt-prioritization.md — assess → prioritize → roadmap
+- [ ] hiring-decision.md — interview → evaluation → offer
+- [ ] sprint-planning.md — backlog → decomposition → commitment
+
+**Documentation:**
+- [x] docs/how-it-works/how-scenarios-work.md
+- [ ] docs/how-it-works/how-agents-work.md
+- [ ] docs/how-it-works/how-skills-work.md
 - [ ] docs/customization-guide.md
 - [ ] docs/best-practices.md
 

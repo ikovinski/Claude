@@ -21,11 +21,54 @@ Slash-команди для Claude Code CLI. Швидкий виклик workflo
 
 ## Available commands
 
-| Command | Description | Agent used |
-|---------|-------------|------------|
-| `/plan` | Створення плану імплементації | Planner |
-| `/code-review` | Code review | Code Reviewer |
-| `/tdd` | Запуск TDD workflow | TDD Guide |
-| `/security-check` | Security аудит | Security Reviewer |
-| `/skill-create` | Генерація skill з git history | — |
-| `/ai-debug` | Показати статус системи | — |
+| Command | Description | Agent used | Skills applied |
+|---------|-------------|------------|----------------|
+| `/plan` | Створення плану імплементації | Planner | planning/* |
+| `/code-review` | Code review | Code Reviewer | code-quality/* |
+| `/tdd` | Запуск TDD workflow | TDD Guide | tdd/* |
+| `/security-check` | Security аудит | Security Reviewer | security/* |
+| `/skill-create` | Генерація skill з git history | — | — |
+| `/ai-debug` | Показати статус системи | — | — |
+
+## Examples з Skills
+
+### `/plan` з Project Context
+
+```bash
+cd ~/wellness-backend
+/plan "Add Apple Health integration"
+```
+
+**Loads:**
+- Agent: Planner
+- Skills: planning/planning-template.md, wellness-backend-patterns/SKILL.md
+
+**Output:** Plan що слідує project conventions
+
+---
+
+### `/security-check` з OWASP
+
+```bash
+/security-check src/Controller/Api/PaymentController.php
+```
+
+**Loads:**
+- Agent: Security Reviewer
+- Skills: security/owasp-top-10.md, security/security-audit-checklist.md
+
+**Output:** OWASP Top 10 check + PII/PHI scan
+
+---
+
+### `/tdd` з Test Patterns
+
+```bash
+/tdd "CalorieCalculator service"
+```
+
+**Loads:**
+- Agent: TDD Guide
+- Skills: tdd/tdd-workflow.md, {project}-patterns/SKILL.md
+
+**Output:** Red → Green → Refactor cycle з project test patterns
