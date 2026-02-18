@@ -85,6 +85,102 @@ Reusable для всіх PHP/Symfony проєктів. Розподілені п
 ### Project Skills
 Генеруються через `/skill-create` з git history конкретного проєкту. Містять project-specific conventions.
 
+## Як Skills Інтегруються
+
+### З Agents
+
+Агенти автоматично завантажують релевантні skills:
+
+```yaml
+# agents/technical/decomposer.md
+skills:
+  - auto:{project}-patterns      # Автоматично шукає у поточному проєкті
+  - planning/epic-breakdown       # Завантажує universal skill
+  - planning/vertical-slicing
+```
+
+**Коли агент запускається:**
+1. Перевіряє поточну директорію
+2. Шукає `~/.claude/skills/{directory-name}-patterns/SKILL.md`
+3. Завантажує universal skills зі списку
+4. Застосовує всі patterns до роботи
+
+### З Scenarios
+
+Scenarios декларують skills у metadata:
+
+```yaml
+# scenarios/delivery/feature-decomposition.md
+skills:
+  - auto:{project}-patterns
+  - planning/epic-breakdown
+  - planning/vertical-slicing
+  - planning/planning-template
+```
+
+**Під час виконання scenario:**
+- **Phase 1 (Decomposer)** → завантажує planning skills
+- **Phase 2 (Staff Engineer)** → завантажує architecture skills
+- **Project skill** → доступний для всіх фаз
+
+### Приклад Real-World Usage
+
+```
+Directory: ~/wellness-backend
+Task: "Decompose feature: Add Apple Health integration"
+
+System loads:
+├─ agents/technical/decomposer.md
+├─ skills/wellness-backend-patterns/SKILL.md  ← Project-specific
+├─ skills/planning/epic-breakdown.md          ← Universal
+├─ skills/planning/vertical-slicing.md        ← Universal
+└─ skills/planning/planning-template.md       ← Universal
+
+Result:
+✓ Slices follow wellness-backend naming conventions
+✓ Tests match project test patterns
+✓ Estimates based on historical velocity from git
+✓ Architecture patterns from existing codebase
+```
+
+## Universal Skills vs Project Skills
+
+| Aspect | Universal Skills | Project Skills |
+|--------|------------------|----------------|
+| **Location** | `skills/{category}/` | `skills/{project}-patterns/` |
+| **Source** | Manually created | Auto-generated from git |
+| **Scope** | All projects | Specific project |
+| **Updates** | Manual | Re-run `/skill-create` |
+| **Examples** | OWASP, ADR templates | Commit conventions, naming |
+
+## Створення Project Skill
+
+```bash
+cd ~/your-project
+# In Claude Code:
+/skill-create --commits 100
+```
+
+**Аналізується:**
+- Commit messages → patterns, prefixes, structure
+- File structure → architecture, organization
+- Code patterns → naming, common imports
+- Test files → testing conventions
+- Dependencies → frequently used packages
+
+**Генерується:** `~/.claude/skills/{project-name}-patterns/SKILL.md`
+
+**Результат:**
+- Агенти в цьому проєкті автоматично використовують ці patterns
+- Код proposals слідують вашим конвенціям
+- Estimates базуються на вашій історії
+
 ## Quick Reference
 
 See [skills-index.md](skills-index.md) для повного списку skills та їх використання в agents/scenarios.
+
+## Related Documentation
+
+- [How Scenarios Work](../docs/how-it-works/how-scenarios-work.md) — Як scenarios використовують skills
+- [Skills Integration Summary](../docs/skills-integration-summary.md) — Огляд інтеграції
+- [Skills Mapping](../docs/skills-mapping.md) — Маппінг agents → skills
