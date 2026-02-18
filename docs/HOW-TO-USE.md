@@ -14,25 +14,31 @@
 
 ## Швидкий старт
 
-### Крок 1: Переконайся що CLAUDE.md підключений
+### Крок 1: Переконайся що система встановлена
 
-У твоєму `~/.claude/CLAUDE.md` має бути посилання на систему:
+Виконай setup script:
 
-```markdown
-# Global Claude Instructions
+```bash
+# Перейди в директорію куди ти склонував систему
+cd <path-to-cloned-repo>/ai-agents-system
+chmod +x setup.sh
+./setup.sh
+```
 
-## AI Agents System
+Це створить:
+- Symlink `~/.claude/ai-agents/` → твоя директорія з системою
+- Оновить `~/.claude/CLAUDE.md` з інструкціями для Claude
 
-I have access to a library of specialized agents at `~/repo/ai-agents-system/`.
+### Крок 1.5: Або використовуй Slash Commands
 
-When appropriate, I should read and apply agents from this library:
+Після встановлення доступні команди:
 
-- **Code reviews** → read `~/repo/ai-agents-system/skills/engineering/code-review.md`
-- **Architecture decisions** → read `~/repo/ai-agents-system/agents/technical/staff-engineer.md`
-- **Task breakdown** → read `~/repo/ai-agents-system/agents/technical/decomposer.md`
-- **Challenging decisions** → read `~/repo/ai-agents-system/agents/facilitation/devils-advocate.md`
-
-When using an agent, announce: "Applying [Agent Name] perspective with bias: [main bias]"
+```bash
+/plan "Add feature X"        # Planner agent + planning skills
+/review src/file.php         # Code Reviewer + code-quality skills
+/tdd "Service name"          # TDD Guide + tdd skills
+/security-check src/Api/     # Security Reviewer + security skills
+/skill-create                # Generate project skill
 ```
 
 ### Крок 2: Просто пиши запити
@@ -70,16 +76,43 @@ Claude: "Applying Decomposer perspective with bias: Vertical slices > horizontal
 
 ### Скіли (Skills)
 
-**Що це**: Переиспользовувані workflow для конкретних задач.
+**Що це**: Переиспользовувані workflows та patterns, організовані по категоріях.
 
-**Відмінність від агентів**: Скіл — це "як робити", агент — це "з якої perspective дивитись".
+**Два типи:**
+1. **Universal Skills** — для всіх проєктів (architecture, planning, security, etc.)
+2. **Project Skills** — автогенеровані з git history конкретного проєкту
 
-| Скіл | Що робить |
-|------|-----------|
-| code-review | Структура review, checklist, output format |
-| task-decomposition | Процес розбивки, критерії slice, DoD |
+**Відмінність від агентів**: Skill — це "як робити", агент — це "з якої perspective дивитись".
 
-**Файли**: `skills/engineering/`
+**Структура:**
+
+```
+skills/
+├── architecture/        # ADR templates, decision matrices
+├── planning/            # Epic breakdown, vertical slicing
+├── code-quality/        # Refactoring, test patterns
+├── security/            # OWASP checks, security audit
+├── tdd/                 # TDD workflow
+├── risk-management/     # Risk assessment
+└── {project}-patterns/  # Auto-generated (via /skill-create)
+```
+
+**Автоматичне завантаження:**
+- Агент завантажує skills зі свого списку
+- Система автоматично шукає project skill у поточній директорії
+- Skills застосовуються до всіх операцій
+
+**Приклад:**
+```
+Directory: ~/wellness-backend
+Command: /plan "Add feature"
+
+Loads:
+→ planning/planning-template.md (universal)
+→ wellness-backend-patterns/SKILL.md (project-specific)
+```
+
+**Файли**: `skills/*/`
 
 ### Сценарії (Scenarios)
 
@@ -135,6 +168,69 @@ Claude: "Applying Decomposer perspective with bias: Vertical slices > horizontal
 - При створенні migration — нагадування про безпеку
 
 **Файли**: `hooks/hooks.json`
+
+---
+
+## Як Працює Автоматичне Завантаження
+
+### Loading Sequence
+
+Коли ти викликаєш агента або команду:
+
+```
+1. Визначення агента
+   ↓
+   "Review this code" → Code Reviewer agent
+
+2. Завантаження universal skills
+   ↓
+   Agent metadata: skills: [code-quality/*]
+   Loads: refactoring-patterns.md, test-patterns.md
+
+3. Пошук project skill
+   ↓
+   Current dir: ~/wellness-backend
+   Looks for: ~/.claude/skills/wellness-backend-patterns/SKILL.md
+   Status: ✓ Found → loads conventions
+
+4. Застосування rules
+   ↓
+   Always applied: security, testing, coding-style, messaging, database
+
+5. Виконання
+   ↓
+   Agent + Universal Skills + Project Skills + Rules
+```
+
+### Приклад: Feature Decomposition
+
+```bash
+cd ~/wellness-backend
+"Decompose feature: Add workout sharing"
+```
+
+**Що завантажується:**
+
+| Type | File | Why |
+|------|------|-----|
+| Agent | decomposer.md | Main persona |
+| Universal Skill | planning/epic-breakdown.md | Decomposition methodology |
+| Universal Skill | planning/vertical-slicing.md | Slicing technique |
+| Project Skill | wellness-backend-patterns/SKILL.md | Project conventions |
+| Rule | security.md | Health data rules |
+| Rule | testing.md | Coverage requirements |
+
+**Результат:**
+- Slices слідують wellness-backend naming (з project skill)
+- Vertical по архітектурі (з universal skill)
+- З урахуванням health data security (з rules)
+
+### Переваги Auto-Loading
+
+✅ **Consistency** — завжди використовуються правильні patterns
+✅ **Zero config** — працює одразу, без налаштувань
+✅ **Project-aware** — адаптується до кожного проєкту
+✅ **Extensible** — додав skill → він автоматично використовується
 
 ---
 
@@ -251,7 +347,44 @@ Benefit: Faster response to issues, better user experience
 2. Застосовує biases (boring technology wins, reversibility over perfection)
 3. Видає аналіз з options і recommendation
 
-### Сценарій 4: Challenge рішення
+### Сценарій 4: Skills Auto-Loading
+
+**Запит**:
+```bash
+cd ~/wellness-backend
+/security-check src/Controller/Api/PaymentController.php
+```
+
+**Що відбувається**:
+1. Claude завантажує Security Reviewer agent
+2. Автоматично завантажує universal skills:
+   - `skills/security/owasp-top-10.md`
+   - `skills/security/security-audit-checklist.md`
+3. Перевіряє чи є project skill:
+   - Шукає `skills/wellness-backend-patterns/SKILL.md` ✓
+   - Завантажує project conventions
+4. Застосовує rules:
+   - `rules/security.md` (PII/PHI protection)
+
+**Очікуваний output**:
+```
+Security Review с використанням:
+→ OWASP Top 10 checks
+→ Project-specific patterns (wellness-backend)
+→ Health data PII/PHI rules
+
+## Findings
+
+🔴 CRITICAL: SQL Injection risk [line 23]
+Code: `$query = "SELECT * FROM payments WHERE id = " . $id;`
+Project pattern: У wellness-backend завжди використовуйте prepared statements
+Fix: Use $em->find() or parameterized query
+
+🟡 WARNING: No input validation [line 15]
+...
+```
+
+### Сценарій 5: Challenge рішення
 
 **Запит**:
 ```
@@ -355,19 +488,60 @@ rules:
 
 3. Додати до routing table в `CLAUDE.md`
 
-### Створення нового скілу
+### Створення нового universal skill
 
-1. Скопіювати template: `templates/skill-template.md`
+1. Вибрати категорію або створити нову:
+   ```bash
+   skills/
+   ├── architecture/   # For ADR, design decisions
+   ├── planning/       # For decomposition, estimates
+   ├── security/       # For security checks
+   └── your-category/  # New category
+   ```
 
-2. Заповнити:
-   - **Metadata**: complexity, time_estimate, requires_context
-   - **Purpose**: What it does
-   - **When to Use / NOT to Use**
-   - **Prompt**: Ready-to-use prompt with placeholders
-   - **Quality Bar**: Must Have, Should Have, Nice to Have
-   - **Examples**: Input/Output pairs
+2. Створити skill file: `skills/{category}/{skill-name}.md`
 
-3. Додати до routing table в `CLAUDE.md`
+3. Структура файлу:
+   ```markdown
+   # Skill Name
+
+   ## Purpose
+   What this skill does
+
+   ## When to Use
+   Specific scenarios
+
+   ## Process
+   Step-by-step workflow
+
+   ## Output Format
+   Expected deliverables
+
+   ## Examples
+   Real-world usage
+   ```
+
+4. Додати до агента який буде використовувати:
+   ```yaml
+   # agents/technical/your-agent.md
+   skills:
+     - your-category/your-skill
+   ```
+
+### Створення project skill (автоматично)
+
+```bash
+cd ~/your-project
+/skill-create --commits 100
+```
+
+Аналізує:
+- Commit messages → patterns
+- Code structure → architecture
+- File naming → conventions
+- Tests → testing patterns
+
+Генерує: `~/.claude/skills/{project}-patterns/SKILL.md`
 
 ---
 
@@ -440,6 +614,18 @@ Stakes: [що втратимо якщо помилимось]
 
 ## Корисні команди
 
+### Slash Commands (Швидкі)
+
+| Command | Що робить | Skills |
+|---------|-----------|--------|
+| `/plan "feature"` | Implementation plan | planning/* |
+| `/review file.php` | Code review | code-quality/* |
+| `/tdd "ServiceName"` | TDD workflow | tdd/* |
+| `/security-check src/` | Security audit | security/* |
+| `/skill-create` | Generate project skill | — |
+
+### Природна мова (Гнучкі)
+
 | Що хочу | Як сказати |
 |---------|------------|
 | Quick code check | "Швидко глянь на цей код" |
@@ -448,6 +634,8 @@ Stakes: [що втратимо якщо помилимось]
 | Validate architecture | "Перевір чи це правильний підхід" |
 | Find risks | "Що може піти не так?" |
 | Compare options | "Порівняй варіанти A і B" |
+| Decompose epic | "Decompose feature: [опис]" |
+| Rewrite decision | "Should we rewrite [component]?" |
 
 ---
 
@@ -456,4 +644,18 @@ Stakes: [що втратимо якщо помилимось]
 Якщо щось не працює або потрібна допомога:
 1. Перевір цей документ
 2. Подивись приклади в агентах і скілах
-3. Запитай Claude про конкретну проблему
+3. Читай документацію:
+   - [How Scenarios Work](docs/how-it-works/how-scenarios-work.md)
+   - [Skills Integration](docs/skills-integration-summary.md)
+   - [README.md](README.md) — загальний огляд
+4. Запитай Claude про конкретну проблему
+
+## Додаткова Документація
+
+- **[README.md](README.md)** — System overview, installation, examples
+- **[CLAUDE.md](CLAUDE.md)** — Quick reference, routing, biases
+- **[docs/how-it-works/how-scenarios-work.md](docs/how-it-works/how-scenarios-work.md)** — Multi-agent workflows
+- **[skills/README.md](skills/README.md)** — Skills system explained
+- **[skills/skills-index.md](skills/skills-index.md)** — Complete skills catalog
+- **[agents/README.md](agents/README.md)** — Agent biases overview
+- **[commands/README.md](commands/README.md)** — Slash commands reference

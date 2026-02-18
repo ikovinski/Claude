@@ -117,7 +117,7 @@ skills:
 
 ### For Project Skills
 ```bash
-cd ~/repo/your-project
+cd ~/your-project
 /skill-create --commits 100
 # Creates ~/.claude/skills/your-project-patterns/SKILL.md
 ```

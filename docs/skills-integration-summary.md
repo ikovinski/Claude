@@ -153,7 +153,7 @@ Track через logs:
 
 ```bash
 # Generate project skill
-cd ~/repo/wellness-backend
+cd ~/wellness-backend
 /skill-create --commits 100
 
 # Use agent (automatically loads skills)
