@@ -11,6 +11,10 @@ triggers:
   - "розбий на таски"
 rules:
   - testing
+skills:
+  - auto:{project}-patterns
+  - planning/vertical-slicing
+  - planning/epic-breakdown
 ---
 
 # Decomposer Agent

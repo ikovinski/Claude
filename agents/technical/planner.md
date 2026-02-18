@@ -10,9 +10,19 @@ triggers:
   - "сплануй"
   - "як реалізувати"
 rules: []
+skills:
+  - auto:{project}-patterns
+  - planning/planning-template
+  - risk-management/risk-assessment
 ---
 
 # Planner Agent
+
+## Before Starting Planning
+
+1. **Check for project skill**: Look for `~/.claude/skills/{project-name}-patterns/SKILL.md`
+2. **Load planning skills**: Read `planning-template.md` and `risk-assessment.md`
+3. **Then proceed**: Use planning template + assess risks
 
 ## Identity
 

@@ -25,16 +25,66 @@ Looks for: ~/.claude/skills/wellness-backend-patterns/SKILL.md
 
 ```
 skills/
-├── {project-name}-patterns/    # Auto-generated з git history
-│   └── SKILL.md
-└── engineering/                # Manual reusable skills
-    ├── code-review.md
-    └── task-decomposition.md
+├── architecture/              # Architecture decisions & ADR
+│   ├── architecture-decision-template.md
+│   └── decision-matrix.md
+├── code-quality/              # Refactoring, testing, dead code
+│   ├── refactoring-patterns.md
+│   ├── test-patterns.md
+│   └── dead-code-detection.md
+├── planning/                  # Implementation planning & decomposition
+│   ├── planning-template.md
+│   ├── vertical-slicing.md
+│   └── epic-breakdown.md
+├── risk-management/           # Risk assessment & mitigation
+│   └── risk-assessment.md
+├── security/                  # Security audits & OWASP
+│   ├── security-audit-checklist.md
+│   └── owasp-top-10.md
+├── tdd/                       # Test-Driven Development
+│   └── tdd-workflow.md
+├── engineering/               # Legacy general skills
+│   ├── code-review.md
+│   └── task-decomposition.md
+└── {project}-patterns/        # Auto-generated з git history
+    └── SKILL.md
 ```
 
-## Skill contents
-- Конвенції commit messages
-- Патерни архітектури коду
-- Стандарти найменування
-- Типові imports та dependencies
-- Командно-специфічні практики
+## Categories
+
+### [architecture/](architecture/)
+ADR templates, decision matrices для архітектурних рішень.
+
+### [code-quality/](code-quality/)
+Refactoring patterns, test patterns, dead code detection.
+
+### [planning/](planning/)
+Implementation plans, vertical slicing, epic breakdown.
+
+### [risk-management/](risk-management/)
+Risk assessment, mitigation strategies.
+
+### [security/](security/)
+Security checklists, OWASP Top 10.
+
+### [tdd/](tdd/)
+TDD workflow, Red-Green-Refactor cycle.
+
+### {project}-patterns/
+Auto-generated project-specific patterns:
+- Commit conventions
+- Architecture patterns
+- Naming standards
+- Common imports/dependencies
+
+## Skill Types
+
+### Universal Skills
+Reusable для всіх PHP/Symfony проєктів. Розподілені по категоріях (architecture, security, etc.).
+
+### Project Skills
+Генеруються через `/skill-create` з git history конкретного проєкту. Містять project-specific conventions.
+
+## Quick Reference
+
+See [skills-index.md](skills-index.md) для повного списку skills та їх використання в agents/scenarios.

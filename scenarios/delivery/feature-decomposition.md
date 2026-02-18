@@ -10,7 +10,19 @@ participants:
   - Staff Engineer (validation)
   - Devil's Advocate (optional - for complex features)
 duration: 30-90 minutes
+skills:
+  - auto:{project}-patterns
+  - planning/epic-breakdown
+  - planning/vertical-slicing
+  - planning/planning-template
 ```
+
+## Skills Usage in This Scenario
+
+1. **epic-breakdown**: Decomposer використовує для розбиття epic на features/stories
+2. **vertical-slicing**: Decomposer застосовує для створення deliverable increments
+3. **planning-template**: Planner використовує для detailed breakdown
+4. **{project}-patterns**: Всі агенти застосовують project conventions
 
 ## Situation
 
