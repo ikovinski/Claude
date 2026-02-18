@@ -7,7 +7,7 @@
 Skills завантажуються автоматично на основі поточної директорії:
 
 ```
-Working in: ~/repo/wellness-backend
+Working in: ~/wellness-backend
 Looks for: ~/.claude/skills/wellness-backend-patterns/SKILL.md
 ```
 

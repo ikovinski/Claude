@@ -22,21 +22,21 @@ allowed_tools: ["Bash", "Read", "Write", "Grep", "Glob"]
 
 | Режим | Шлях | Коли використовувати |
 |-------|------|---------------------|
-| **Default (global)** | `~/repo/ai-agents-system/skills/{project-name}-patterns/SKILL.md` | Для переиспользування в всіх проектах |
+| **Default (global)** | `~/.claude/skills/skills/{project-name}-patterns/SKILL.md` | Для переиспользування в всіх проектах |
 | `--local` | `./.claude/skills/{project-name}-patterns/SKILL.md` | Тільки для цього проекту |
 | `--output <path>` | `<path>/SKILL.md` | Custom location |
 
 ### Приклад
 
 ```bash
-# Ти в ~/repo/my-fitness-app
-cd ~/repo/my-fitness-app
+# Ти в ~/my-fitness-app
+cd ~/my-fitness-app
 
 # Запускаєш команду
 /skill-create
 
 # Результат зберігається в:
-# ~/repo/ai-agents-system/skills/my-fitness-app-patterns/SKILL.md
+# ~/.claude/skills/skills/my-fitness-app-patterns/SKILL.md
 #
 # Тепер цей skill доступний для всіх проектів через ai-agents-system
 ```

@@ -36,13 +36,13 @@ ai-agents-system/
 
 Quick-invoke workflows via `/command`:
 
-| Command | What It Does | Agent |
-|---------|--------------|-------|
-| `/plan` | Create implementation plan | Planner |
-| `/review` | Code review | Code Reviewer |
-| `/tdd` | Start TDD workflow | TDD Guide |
-| `/security-check` | Security review | Security Reviewer |
-| `/skill-create` | Generate skill from git history | — |
+| Command | What It Does | Agent | Skills Applied |
+|---------|--------------|-------|----------------|
+| `/plan` | Create implementation plan | Planner | planning/* |
+| `/review` | Code review | Code Reviewer | code-quality/* |
+| `/tdd` | Start TDD workflow | TDD Guide | tdd/* |
+| `/security-check` | Security review | Security Reviewer | security/* |
+| `/skill-create` | Generate skill from git history | — | — |
 
 ### Usage Examples
 
@@ -149,38 +149,85 @@ Architecture Decision:
 Staff Engineer → Devil's Advocate → Decomposer (if approved)
 ```
 
-## Project Skills (Auto-generated)
+## Skills System
 
-Skills generated via `/skill-create` contain project-specific patterns:
+Skills поділяються на **Universal** (для всіх проєктів) та **Project-specific** (автогенеровані).
+
+### Universal Skills (Categories)
+
+```
+skills/
+├── architecture/        # ADR templates, decision matrices
+├── planning/            # Epic breakdown, vertical slicing
+├── code-quality/        # Refactoring patterns, test patterns
+├── security/            # OWASP checks, security audit
+├── tdd/                 # TDD workflow
+└── risk-management/     # Risk assessment
+```
+
+**Used by agents:**
+- Decomposer → planning/*
+- Staff Engineer → architecture/*
+- Security Reviewer → security/*
+- TDD Guide → tdd/*
+- Code Reviewer → code-quality/*
+- Devil's Advocate → risk-management/*
+
+### Project Skills (Auto-generated)
 
 ```
 skills/
 ├── wellness-backend-patterns/    # Generated from wellness-backend repo
 │   └── SKILL.md
-├── billing-service-patterns/     # Generated from billing-service repo
-│   └── SKILL.md
-└── engineering/                  # Manual skills
-    ├── code-review.md
-    └── task-decomposition.md
+└── billing-service-patterns/     # Generated from billing-service repo
+    └── SKILL.md
 ```
 
-### How Skills Are Used
+Generated via `/skill-create --commits 100`
 
-When agent is activated:
-1. **Check for project skill** — look for `skills/{project-name}-patterns/SKILL.md`
-2. **If exists, load it** — apply project conventions
-3. **Merge with agent rules** — project patterns + general rules
+### How Skills Are Loaded
 
-### Example
+**Automatic loading sequence:**
+
+1. **Universal skills** — based on agent type (planning/, security/, etc.)
+2. **Project skill** — based on current directory (auto-detected)
+3. **Rules** — always applied (security, testing, coding-style, etc.)
+
+### Example: Feature Decomposition
 
 ```
-User is in: ~/repo/wellness-backend
-Calls: /review src/Service/WorkoutService.php
+User is in: ~/wellness-backend
+Says: "Decompose feature: Add Apple Health integration"
 
-Agent loads:
-1. agents/technical/code-reviewer.md (persona + biases)
-2. rules/security.md, rules/testing.md (general rules)
-3. skills/wellness-backend-patterns/SKILL.md (project conventions) ← 🆕
+System loads:
+1. agents/technical/decomposer.md (persona + biases)
+2. skills/planning/epic-breakdown.md (universal skill)
+3. skills/planning/vertical-slicing.md (universal skill)
+4. skills/wellness-backend-patterns/SKILL.md (project conventions) ✓
+5. rules/security.md, rules/testing.md (always applied)
+
+Output:
+→ Slices follow wellness-backend naming conventions
+→ Tests match project patterns
+→ Estimates based on historical velocity
+```
+
+### Example: Security Review
+
+```
+User: "/security-check src/Controller/Api/PaymentController.php"
+
+System loads:
+1. agents/technical/security-reviewer.md (persona + biases)
+2. skills/security/owasp-top-10.md (universal skill)
+3. skills/security/security-audit-checklist.md (universal skill)
+4. rules/security.md (PII/PHI protection rules)
+
+Output:
+→ OWASP Top 10 checks
+→ PII/PHI leak detection
+→ Input validation review
+→ Auth/authorization checks
 ```
 
 ## How Agents Work
@@ -200,6 +247,25 @@ Multi-step scenarios:
 3. Show output of each phase
 4. Ask for input at decision points
 5. Wait for approval before proceeding
+
+---
+
+## Documentation
+
+### Core Guides
+
+- **[README.md](README.md)** — System overview, installation, quick start
+- **[How Scenarios Work](docs/how-it-works/how-scenarios-work.md)** — Multi-agent workflows explained
+- **[Skills Index](skills/skills-index.md)** — Complete skills catalog
+- **[Skills Integration](docs/skills-integration-summary.md)** — How skills connect to agents
+
+### By Component
+
+- **[agents/README.md](agents/README.md)** — Agent biases and use cases
+- **[skills/README.md](skills/README.md)** — Skills system overview
+- **[scenarios/README.md](scenarios/README.md)** — Multi-step workflows
+- **[commands/README.md](commands/README.md)** — Slash commands reference
+- **[rules/README.md](rules/README.md)** — Always-apply guidelines
 
 ---
 
