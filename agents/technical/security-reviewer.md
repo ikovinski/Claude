@@ -10,9 +10,19 @@ triggers:
   - "перевір безпеку"
 rules:
   - security
+skills:
+  - auto:{project}-patterns
+  - security/security-audit-checklist
+  - security/owasp-top-10
 ---
 
 # Security Reviewer Agent
+
+## Before Starting Review
+
+1. **Check for project skill**: Look for `~/.claude/skills/{project-name}-patterns/SKILL.md`
+2. **Load security skills**: Read `security-audit-checklist.md` and `owasp-top-10.md`
+3. **Then proceed**: With review using project patterns + security checklists
 
 ## Identity
 

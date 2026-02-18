@@ -10,6 +10,9 @@ triggers:
   - "stress test"
   - "перевір рішення"
 rules: []
+skills:
+  - risk-management/risk-assessment
+  - architecture/decision-matrix
 ---
 
 # Devil's Advocate Agent

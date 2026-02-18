@@ -11,6 +11,10 @@ triggers:
   - "почисти код"
 rules:
   - coding-style
+skills:
+  - auto:{project}-patterns
+  - code-quality/refactoring-patterns
+  - code-quality/dead-code-detection
 ---
 
 # Refactor & Dead Code Cleaner Agent

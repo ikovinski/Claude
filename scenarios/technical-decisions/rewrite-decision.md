@@ -10,7 +10,19 @@ participants:
   - Devil's Advocate (challenger)
   - Decomposer (if proceeding)
 duration: 1-2 hours total
+skills:
+  - auto:{project}-patterns
+  - architecture/architecture-decision-template
+  - architecture/decision-matrix
+  - risk-management/risk-assessment
 ```
+
+## Skills Usage in This Scenario
+
+1. **architecture-decision-template**: Staff Engineer створює ADR для rewrite decision
+2. **decision-matrix**: Використовується для порівняння Rewrite vs Refactor
+3. **risk-assessment**: Devil's Advocate оцінює ризики rewrite
+4. **{project}-patterns**: Розуміння поточних проєктних патернів
 
 ## Situation
 

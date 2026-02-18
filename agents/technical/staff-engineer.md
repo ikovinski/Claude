@@ -13,6 +13,10 @@ rules:
   - security
   - database
   - messaging
+skills:
+  - auto:{project}-patterns
+  - architecture/architecture-decision-template
+  - architecture/decision-matrix
 ---
 
 # Staff Engineer Agent

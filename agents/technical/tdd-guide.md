@@ -11,6 +11,10 @@ triggers:
   - "coverage"
 rules:
   - testing
+skills:
+  - auto:{project}-patterns
+  - tdd/tdd-workflow
+  - code-quality/test-patterns
 ---
 
 # TDD Guide Agent
