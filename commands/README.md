@@ -28,6 +28,7 @@ Slash-команди для Claude Code CLI. Швидкий виклик workflo
 | `/tdd` | Запуск TDD workflow | TDD Guide | tdd/* |
 | `/security-check` | Security аудит | Security Reviewer | security/* |
 | `/docs` | Документація (Stoplight-compatible) | Technical Writer | documentation/* |
+| `/architecture-docs` | System profiles, integration catalogs | Architecture Documenter | documentation/* |
 | `/skill-create` | Генерація skill з git history | — | — |
 | `/ai-debug` | Показати статус системи | — | — |
 
@@ -88,3 +89,19 @@ cd ~/wellness-backend
 - Skills: documentation/api-docs-template.md, documentation/feature-spec-template.md
 
 **Output:** Stoplight-compatible OpenAPI або Feature Spec для stakeholders
+
+---
+
+### `/architecture-docs` для System Overview
+
+```bash
+/architecture-docs
+/architecture-docs --integration "Apple App Store"
+/architecture-docs --scan
+```
+
+**Loads:**
+- Agent: Architecture Documenter
+- Skills: documentation/system-profile-template.md, documentation/integration-template.md
+
+**Output:** System Profile з C4 diagrams, Integration Catalog, Open Questions

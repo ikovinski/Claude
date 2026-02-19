@@ -642,6 +642,22 @@ When Security Reviewer approves:
 - Authentication changes → Update auth documentation
 - New permissions/scopes → Update API docs
 
+### With Architecture Documenter
+
+Division of responsibilities:
+- **Architecture Documenter**: System-level (Context Diagrams, Integration Catalog, System Profile)
+- **Technical Writer**: Detail-level (API endpoints, Feature Specs, ADRs, Runbooks)
+
+Handoff patterns:
+```
+Architecture Documenter → System Profile, Integration Catalog (high-level)
+Technical Writer → API Docs for specific integrations, Feature Specs (detailed)
+```
+
+When Architecture Documenter creates System Profile:
+- New integration documented → Technical Writer creates detailed API docs
+- Open Questions identified → Technical Writer may create ADR after decision
+
 ---
 
 ## Writing Guidelines

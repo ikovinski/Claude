@@ -17,6 +17,7 @@ Just describe what you need. The system routes automatically:
 | "Plan implementation" | Planner agent |
 | "Cleanup dead code" | Refactor Cleaner agent |
 | "Document this" / "API docs" / "Write docs" | Technical Writer agent |
+| "Architecture docs" / "System profile" / "Integration catalog" | Architecture Documenter agent |
 
 ## Structure
 
@@ -44,6 +45,7 @@ Quick-invoke workflows via `/command`:
 | `/tdd` | Start TDD workflow | TDD Guide | tdd/* |
 | `/security-check` | Security review | Security Reviewer | security/* |
 | `/docs` | Generate documentation (Stoplight-compatible) | Technical Writer | documentation/* |
+| `/architecture-docs` | System profiles, integration catalogs | Architecture Documenter | documentation/* |
 | `/skill-create` | Generate skill from git history | — | — |
 
 ### Usage Examples
@@ -55,6 +57,8 @@ Quick-invoke workflows via `/command`:
 /security-check src/Controller/Api/
 /docs --api /api/v1/workouts
 /docs --feature "Workout Sharing"
+/architecture-docs
+/architecture-docs --integration "Apple App Store"
 /skill-create --commits 100
 ```
 
@@ -78,6 +82,7 @@ Quick-invoke workflows via `/command`:
 | Implementation plan, how to build | `planner` | [agents/technical/planner.md](agents/technical/planner.md) |
 | Dead code, cleanup, refactor | `refactor-cleaner` | [agents/technical/refactor-cleaner.md](agents/technical/refactor-cleaner.md) |
 | Document, API docs, feature spec, ADR | `technical-writer` | [agents/technical/technical-writer.md](agents/technical/technical-writer.md) |
+| Architecture docs, system profile, integrations | `architecture-documenter` | [agents/technical/architecture-documenter.md](agents/technical/architecture-documenter.md) |
 
 ## Scenario Routing
 
@@ -127,6 +132,7 @@ Quick-invoke workflows via `/command`:
 | Planner | Clarity over speed |
 | Refactor Cleaner | Less code = less bugs |
 | Technical Writer | Audience first, examples > explanations |
+| Architecture Documenter | Diagram first, tables over prose |
 
 ## Agent Selection Guide
 
@@ -143,6 +149,8 @@ Quick-invoke workflows via `/command`:
 | Codebase захаращений | Refactor Cleaner |
 | Потрібна документація для інших команд | Technical Writer |
 | Feature spec для менеджерів | Technical Writer |
+| System overview для onboarding | Architecture Documenter |
+| Integration catalog | Architecture Documenter |
 
 ### Recommended Sequences
 
@@ -158,6 +166,9 @@ Staff Engineer → Devil's Advocate → Decomposer (if approved) → Technical W
 
 Cross-Team Feature:
 Planner → Technical Writer (feature spec for stakeholders) → Decomposer → Implementation
+
+System Documentation:
+Architecture Documenter (system profile) → Technical Writer (API docs) → Staff Engineer (review)
 ```
 
 ## Skills System
@@ -185,6 +196,7 @@ skills/
 - Code Reviewer → code-quality/*
 - Devil's Advocate → risk-management/*
 - Technical Writer → documentation/*
+- Architecture Documenter → documentation/*
 
 ### Project Skills (Auto-generated)
 

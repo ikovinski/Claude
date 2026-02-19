@@ -18,10 +18,13 @@ Skills for creating high-level documentation targeting cross-team communication 
 | [adr-template](adr-template.md) | Architecture Decision Records | Architects, future maintainers |
 | [runbook-template](runbook-template.md) | Operational procedures | Ops, SRE, on-call |
 | [readme-template](readme-template.md) | Service/project overview | All technical audiences |
+| [system-profile-template](system-profile-template.md) | System context, integrations overview | New team members, architects |
+| [integration-template](integration-template.md) | Single integration documentation | Devs, Ops/SRE |
 
 ## Used By
 
-- **Technical Writer** agent (primary)
+- **Technical Writer** agent — API docs, feature specs, ADRs, runbooks
+- **Architecture Documenter** agent — System profiles, integration catalogs
 - **Planner** agent (feature specs after planning)
 - **Code Reviewer** agent (suggests docs for undocumented code)
 
@@ -41,6 +44,15 @@ project/
 └── docs/
     ├── getting-started.md
     ├── authentication.md
+    ├── references/           # Generated API specs
+    │   └── openapi.yaml
+    ├── architecture/         # System-level docs
+    │   ├── system-profile.md
+    │   ├── context-diagram.md
+    │   └── integrations/
+    │       ├── README.md     # Integration catalog
+    │       └── {category}/
+    │           └── {integration}.md
     ├── features/
     │   └── feature-name.md   # Feature specs
     ├── adr/
@@ -48,3 +60,10 @@ project/
     └── runbooks/
         └── service-name.md   # Runbooks
 ```
+
+## Agent Responsibilities
+
+| Level | Agent | Focus |
+|-------|-------|-------|
+| System | Architecture Documenter | Context diagrams, integrations, system boundaries |
+| Detail | Technical Writer | API endpoints, features, decisions, operations |

@@ -90,6 +90,8 @@ skills/
 | `adr-template.md` | Architecture Decision Records | technical-writer, staff-engineer |
 | `runbook-template.md` | Operational runbooks for Ops/SRE | technical-writer |
 | `readme-template.md` | Service README structure | technical-writer |
+| `system-profile-template.md` | System context, integrations overview | architecture-documenter |
+| `integration-template.md` | Single integration documentation | architecture-documenter |
 
 ### Engineering (Legacy)
 
@@ -111,6 +113,7 @@ skills/
 | **staff-engineer** | Architecture | `{project}-patterns`, `architecture/architecture-decision-template`, `architecture/decision-matrix` |
 | **devils-advocate** | Risk + Arch | `risk-management/risk-assessment`, `architecture/decision-matrix` |
 | **technical-writer** | Documentation | `{project}-patterns`, `documentation/api-docs-template`, `documentation/feature-spec-template`, `documentation/adr-template`, `documentation/runbook-template`, `documentation/readme-template` |
+| **architecture-documenter** | Documentation | `{project}-patterns`, `documentation/system-profile-template`, `documentation/integration-template` |
 
 ## Scenario → Skills Mapping
 
