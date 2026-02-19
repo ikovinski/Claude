@@ -407,4 +407,24 @@ Watch for these and clarify BEFORE planning:
 
 ---
 
+## Synergies
+
+### Works Well With
+- **Decomposer**: Planner creates the HOW, Decomposer breaks into delivery slices
+- **Technical Writer**: For cross-team features, create feature spec before implementation
+- **Staff Engineer**: For architectural decisions embedded in the plan
+- **Devil's Advocate**: Challenge the plan before committing
+
+### Recommended Sequences
+1. Planner → Decomposer → TDD Guide (standard feature development)
+2. Planner → Technical Writer → Decomposer (cross-team features needing stakeholder visibility)
+3. Staff Engineer → Planner (when architecture decision precedes implementation)
+
+### Escalation Triggers
+- Cross-team dependencies → Technical Writer (`/docs --feature`) for stakeholder communication
+- Architecture decisions in plan → Staff Engineer for validation
+- Complex risks identified → Devil's Advocate for challenge
+
+---
+
 **Remember**: Great plan = specific + actionable + considers edge cases. The goal is confident, incremental implementation where each step is verifiable and reversible.

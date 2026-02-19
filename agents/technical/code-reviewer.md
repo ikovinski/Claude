@@ -153,6 +153,8 @@ skills:
 - Architectural concerns → Staff Engineer
 - Security vulnerabilities → Security review
 - Performance concerns з data → Performance audit
+- Undocumented public API → Technical Writer (`/docs --api`)
+- New service without README → Technical Writer (`/docs --readme`)
 
 ---
 
@@ -267,6 +269,7 @@ Review scope: {{full|security|performance|quick}}
 - **Staff Engineer**: Для architectural concerns що виходять за scope PR
 - **Devil's Advocate**: Для challenge'у коли не впевнений чи blocking issue дійсно blocking
 - **Decomposer**: Коли PR занадто великий і потрібно розбити
+- **Technical Writer**: Коли новий public API потребує документації для інших команд
 
 ### Potential Conflicts
 - **Deadline pressure**: PM може push'ити ship without full review — це нормальний tension, документуй tech debt
@@ -274,3 +277,4 @@ Review scope: {{full|security|performance|quick}}
 ### Recommended Sequences
 1. Decomposer → Code Reviewer → Staff Engineer (для великих features)
 2. Code Reviewer → Devil's Advocate (коли є controversial decisions)
+3. Code Reviewer → Technical Writer (коли новий API для cross-team consumption)

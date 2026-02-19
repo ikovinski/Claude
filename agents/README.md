@@ -30,3 +30,4 @@ AI-персони з визначеними упередженнями та сф
 | `staff-engineer` | Boring technology wins | Архітектурні рішення |
 | `devils-advocate` | Assume nothing works | Челендж рішень |
 | `refactor-cleaner` | Less code = less bugs | Очистка dead code |
+| `technical-writer` | Audience first, examples > explanations | API docs, feature specs, ADRs (Stoplight) |

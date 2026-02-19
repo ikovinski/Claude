@@ -27,6 +27,7 @@ Slash-команди для Claude Code CLI. Швидкий виклик workflo
 | `/code-review` | Code review | Code Reviewer | code-quality/* |
 | `/tdd` | Запуск TDD workflow | TDD Guide | tdd/* |
 | `/security-check` | Security аудит | Security Reviewer | security/* |
+| `/docs` | Документація (Stoplight-compatible) | Technical Writer | documentation/* |
 | `/skill-create` | Генерація skill з git history | — | — |
 | `/ai-debug` | Показати статус системи | — | — |
 
@@ -72,3 +73,18 @@ cd ~/wellness-backend
 - Skills: tdd/tdd-workflow.md, {project}-patterns/SKILL.md
 
 **Output:** Red → Green → Refactor cycle з project test patterns
+
+---
+
+### `/docs` для Cross-Team APIs
+
+```bash
+/docs --api /api/v1/workouts
+/docs --feature "Workout Sharing"
+```
+
+**Loads:**
+- Agent: Technical Writer
+- Skills: documentation/api-docs-template.md, documentation/feature-spec-template.md
+
+**Output:** Stoplight-compatible OpenAPI або Feature Spec для stakeholders

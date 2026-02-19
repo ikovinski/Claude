@@ -16,6 +16,7 @@ Just describe what you need. The system routes automatically:
 | "Write tests first" / "TDD" | TDD Guide agent |
 | "Plan implementation" | Planner agent |
 | "Cleanup dead code" | Refactor Cleaner agent |
+| "Document this" / "API docs" / "Write docs" | Technical Writer agent |
 
 ## Structure
 
@@ -42,6 +43,7 @@ Quick-invoke workflows via `/command`:
 | `/review` | Code review | Code Reviewer | code-quality/* |
 | `/tdd` | Start TDD workflow | TDD Guide | tdd/* |
 | `/security-check` | Security review | Security Reviewer | security/* |
+| `/docs` | Generate documentation (Stoplight-compatible) | Technical Writer | documentation/* |
 | `/skill-create` | Generate skill from git history | — | — |
 
 ### Usage Examples
@@ -51,6 +53,8 @@ Quick-invoke workflows via `/command`:
 /review src/MessageHandler/SyncHandler.php
 /tdd "CalorieCalculator service"
 /security-check src/Controller/Api/
+/docs --api /api/v1/workouts
+/docs --feature "Workout Sharing"
 /skill-create --commits 100
 ```
 
@@ -73,6 +77,7 @@ Quick-invoke workflows via `/command`:
 | TDD, write tests, coverage | `tdd-guide` | [agents/technical/tdd-guide.md](agents/technical/tdd-guide.md) |
 | Implementation plan, how to build | `planner` | [agents/technical/planner.md](agents/technical/planner.md) |
 | Dead code, cleanup, refactor | `refactor-cleaner` | [agents/technical/refactor-cleaner.md](agents/technical/refactor-cleaner.md) |
+| Document, API docs, feature spec, ADR | `technical-writer` | [agents/technical/technical-writer.md](agents/technical/technical-writer.md) |
 
 ## Scenario Routing
 
@@ -121,6 +126,7 @@ Quick-invoke workflows via `/command`:
 | TDD Guide | Test first, always |
 | Planner | Clarity over speed |
 | Refactor Cleaner | Less code = less bugs |
+| Technical Writer | Audience first, examples > explanations |
 
 ## Agent Selection Guide
 
@@ -135,18 +141,23 @@ Quick-invoke workflows via `/command`:
 | Architectural decision | Staff Engineer |
 | Сумніваюсь у рішенні | Devil's Advocate |
 | Codebase захаращений | Refactor Cleaner |
+| Потрібна документація для інших команд | Technical Writer |
+| Feature spec для менеджерів | Technical Writer |
 
 ### Recommended Sequences
 
 ```
 Feature Development:
-Planner → Decomposer → TDD Guide → Code Reviewer → Security Reviewer
+Planner → Decomposer → TDD Guide → Code Reviewer → Security Reviewer → Technical Writer (docs)
 
 Refactoring:
 Refactor Cleaner → Code Reviewer → TDD Guide (add missing tests)
 
 Architecture Decision:
-Staff Engineer → Devil's Advocate → Decomposer (if approved)
+Staff Engineer → Devil's Advocate → Decomposer (if approved) → Technical Writer (ADR)
+
+Cross-Team Feature:
+Planner → Technical Writer (feature spec for stakeholders) → Decomposer → Implementation
 ```
 
 ## Skills System
@@ -162,6 +173,7 @@ skills/
 ├── code-quality/        # Refactoring patterns, test patterns
 ├── security/            # OWASP checks, security audit
 ├── tdd/                 # TDD workflow
+├── documentation/       # API docs, feature specs, runbooks (Stoplight-compatible)
 └── risk-management/     # Risk assessment
 ```
 
@@ -172,6 +184,7 @@ skills/
 - TDD Guide → tdd/*
 - Code Reviewer → code-quality/*
 - Devil's Advocate → risk-management/*
+- Technical Writer → documentation/*
 
 ### Project Skills (Auto-generated)
 

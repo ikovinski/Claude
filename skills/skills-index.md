@@ -13,6 +13,12 @@ skills/
 │   ├── refactoring-patterns.md
 │   ├── test-patterns.md
 │   └── dead-code-detection.md
+├── documentation/             # Cross-team docs (Stoplight-compatible)
+│   ├── api-docs-template.md
+│   ├── feature-spec-template.md
+│   ├── adr-template.md
+│   ├── runbook-template.md
+│   └── readme-template.md
 ├── planning/                  # Planning & decomposition
 │   ├── planning-template.md
 │   ├── vertical-slicing.md
@@ -75,6 +81,16 @@ skills/
 |-------|---------|---------|
 | `tdd-workflow.md` | Red-Green-Refactor cycle, TDD rules | tdd-guide |
 
+### Documentation (Stoplight-compatible)
+
+| Skill | Use for | Used by |
+|-------|---------|---------|
+| `api-docs-template.md` | OpenAPI 3.x endpoint documentation | technical-writer |
+| `feature-spec-template.md` | Feature specs for managers/stakeholders | technical-writer |
+| `adr-template.md` | Architecture Decision Records | technical-writer, staff-engineer |
+| `runbook-template.md` | Operational runbooks for Ops/SRE | technical-writer |
+| `readme-template.md` | Service README structure | technical-writer |
+
 ### Engineering (Legacy)
 
 | Skill | Use for | Used by |
@@ -94,6 +110,7 @@ skills/
 | **refactor-cleaner** | Code Quality | `{project}-patterns`, `code-quality/refactoring-patterns`, `code-quality/dead-code-detection` |
 | **staff-engineer** | Architecture | `{project}-patterns`, `architecture/architecture-decision-template`, `architecture/decision-matrix` |
 | **devils-advocate** | Risk + Arch | `risk-management/risk-assessment`, `architecture/decision-matrix` |
+| **technical-writer** | Documentation | `{project}-patterns`, `documentation/api-docs-template`, `documentation/feature-spec-template`, `documentation/adr-template`, `documentation/runbook-template`, `documentation/readme-template` |
 
 ## Scenario → Skills Mapping
 
