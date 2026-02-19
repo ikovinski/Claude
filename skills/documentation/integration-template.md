@@ -2,9 +2,24 @@
 
 Confluence-compatible. Бізнес-орієнтований формат.
 
+## Freshness Metadata
+
+Integration docs need regular validation — external APIs change.
+
+| Staleness | Risk | Action |
+|-----------|------|--------|
+| < 30 days | Low | OK |
+| 30-90 days | Medium | Verify API versions |
+| > 90 days | High | Full review required |
+
 ## Template
 
 ```markdown
+---
+last_updated: YYYY-MM-DD
+api_version_verified: YYYY-MM-DD
+---
+
 ## [Назва Системи]
 
 > Коротко призначення сторонньої системи

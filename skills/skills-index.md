@@ -18,7 +18,10 @@ skills/
 │   ├── feature-spec-template.md
 │   ├── adr-template.md
 │   ├── runbook-template.md
-│   └── readme-template.md
+│   ├── readme-template.md
+│   ├── system-profile-template.md
+│   ├── integration-template.md
+│   └── codemap-template.md
 ├── planning/                  # Planning & decomposition
 │   ├── planning-template.md
 │   ├── vertical-slicing.md
@@ -92,6 +95,7 @@ skills/
 | `readme-template.md` | Service README structure | technical-writer |
 | `system-profile-template.md` | System context, integrations overview | architecture-documenter |
 | `integration-template.md` | Single integration documentation | architecture-documenter |
+| `codemap-template.md` | Auto-generated architectural maps | doc-updater |
 
 ### Engineering (Legacy)
 
@@ -114,6 +118,7 @@ skills/
 | **devils-advocate** | Risk + Arch | `risk-management/risk-assessment`, `architecture/decision-matrix` |
 | **technical-writer** | Documentation | `{project}-patterns`, `documentation/api-docs-template`, `documentation/feature-spec-template`, `documentation/adr-template`, `documentation/runbook-template`, `documentation/readme-template` |
 | **architecture-documenter** | Documentation | `{project}-patterns`, `documentation/system-profile-template`, `documentation/integration-template` |
+| **doc-updater** | Documentation | `{project}-patterns`, `documentation/codemap-template` |
 
 ## Scenario → Skills Mapping
 

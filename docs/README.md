@@ -9,7 +9,8 @@
 docs/
 ├── how-it-works/                    # Пояснення як працює система
 │   ├── how-scenarios-work.md        # Multi-agent workflows
-│   └── plan-vs-ai-debug-prompt.md   # Порівняння команд
+│   ├── plan-vs-ai-debug-prompt.md   # Порівняння команд
+│   └── documentation-agents-comparison.md  # Tech Writer vs Arch Doc vs Doc-Updater
 ├── plans/                           # Згенеровані плани (output від /plan)
 ├── HOW-TO-USE.md                    # Детальний гайд
 ├── skills-integration-summary.md    # Skills + agents інтеграція
@@ -23,6 +24,7 @@ docs/
 |----------|-------------|
 | [how-scenarios-work.md](how-it-works/how-scenarios-work.md) | Multi-agent workflows, phases, decision points |
 | [plan-vs-ai-debug-prompt.md](how-it-works/plan-vs-ai-debug-prompt.md) | Різниця між /plan та /ai-debug --prompt |
+| [documentation-agents-comparison.md](how-it-works/documentation-agents-comparison.md) | Technical Writer vs Architecture Documenter vs Doc-Updater |
 
 ## Generated Plans
 
@@ -51,6 +53,7 @@ docs/plans/
 | Повний гайд | [HOW-TO-USE.md](HOW-TO-USE.md) |
 | Як працюють scenarios | [how-scenarios-work.md](how-it-works/how-scenarios-work.md) |
 | /plan vs /ai-debug | [plan-vs-ai-debug-prompt.md](how-it-works/plan-vs-ai-debug-prompt.md) |
+| Doc agents порівняння | [documentation-agents-comparison.md](how-it-works/documentation-agents-comparison.md) |
 | Skills система | [../skills/README.md](../skills/README.md) |
 
 ## Coming Soon

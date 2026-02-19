@@ -28,6 +28,9 @@ Slash-команди для Claude Code CLI. Швидкий виклик workflo
 | `/tdd` | TDD Guide | Chat + Files | TDD workflow |
 | `/security-check` | Security Reviewer | Chat | Security аудит |
 | `/docs` | Technical Writer | Chat / Files | Документація (Stoplight) |
+| `/docs --validate` | Technical Writer | Chat | Перевірка свіжості документації |
+| `/codemap` | Doc-Updater | `docs/CODEMAPS/*.md` | Генерація codemaps з коду |
+| `/codemap --validate` | Doc-Updater | Chat | Валідація codemaps vs код |
 | `/architecture-docs` | Architecture Documenter | Chat / Files | System profiles (Confluence) |
 | `/skill-create` | — | `skills/*.md` | Генерація skill з git |
 | `/ai-debug` | — | Chat | Статус системи, аналіз |
@@ -96,6 +99,31 @@ docs/plans/
 - Skills: documentation/api-docs-template.md, documentation/feature-spec-template.md
 
 **Output:** Stoplight-compatible OpenAPI або Feature Spec для stakeholders
+
+---
+
+### `/codemap` для Code-Driven Docs
+
+```bash
+/codemap                        # Generate all codemaps
+/codemap --area controllers     # Only controllers
+/codemap --validate             # Check codemaps vs code
+```
+
+**Loads:**
+- Agent: Doc-Updater
+- Skills: documentation/codemap-template.md
+
+**Output:**
+```
+docs/CODEMAPS/
+├── INDEX.md
+├── controllers.md
+├── services.md
+├── entities.md
+├── messages.md
+└── commands.md
+```
 
 ---
 
