@@ -21,16 +21,16 @@ Slash-команди для Claude Code CLI. Швидкий виклик workflo
 
 ## Available commands
 
-| Command | Description | Agent used | Skills applied |
-|---------|-------------|------------|----------------|
-| `/plan` | Створення плану імплементації | Planner | planning/* |
-| `/code-review` | Code review | Code Reviewer | code-quality/* |
-| `/tdd` | Запуск TDD workflow | TDD Guide | tdd/* |
-| `/security-check` | Security аудит | Security Reviewer | security/* |
-| `/docs` | Документація (Stoplight-compatible) | Technical Writer | documentation/* |
-| `/architecture-docs` | System profiles, integration catalogs | Architecture Documenter | documentation/* |
-| `/skill-create` | Генерація skill з git history | — | — |
-| `/ai-debug` | Показати статус системи | — | — |
+| Command | Agent | Output | Description |
+|---------|-------|--------|-------------|
+| `/plan` | Planner | `docs/plans/*.md` | Створення плану імплементації |
+| `/code-review` | Code Reviewer | Chat | Code review |
+| `/tdd` | TDD Guide | Chat + Files | TDD workflow |
+| `/security-check` | Security Reviewer | Chat | Security аудит |
+| `/docs` | Technical Writer | Chat / Files | Документація (Stoplight) |
+| `/architecture-docs` | Architecture Documenter | Chat / Files | System profiles (Confluence) |
+| `/skill-create` | — | `skills/*.md` | Генерація skill з git |
+| `/ai-debug` | — | Chat | Статус системи, аналіз |
 
 ## Examples з Skills
 
@@ -45,7 +45,14 @@ cd ~/wellness-backend
 - Agent: Planner
 - Skills: planning/planning-template.md, wellness-backend-patterns/SKILL.md
 
-**Output:** Plan що слідує project conventions
+**Output:** `docs/plans/001.apple-health-integration.md`
+
+```
+docs/plans/
+├── 001.apple-health-integration.md
+├── 002.next-feature.md
+└── ...
+```
 
 ---
 

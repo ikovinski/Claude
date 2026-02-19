@@ -96,6 +96,8 @@ ai-agents-system/
 ├── contexts/                  # Mode-specific focus (dev, review, etc)
 ├── templates/                 # Templates for creating new items
 ├── docs/                      # Documentation & how-to guides
+│   ├── how-it-works/          # How system components work
+│   └── plans/                 # Generated implementation plans
 └── examples/                  # Real-world usage examples
 ```
 
@@ -123,21 +125,29 @@ Multi-agent workflows для складних ситуацій:
 
 After installation, these commands work in any project:
 
-| Command | Description |
-|---------|-------------|
-| `/plan <task>` | Create implementation plan for a task |
-| `/review` | Code review (staged changes or specific file) |
-| `/tdd <feature>` | Start TDD workflow - tests first |
-| `/security-check` | Security-focused review |
-| `/skill-create` | Generate project skill from git history |
+| Command | Output | Description |
+|---------|--------|-------------|
+| `/plan <task>` | `docs/plans/*.md` | Create implementation plan |
+| `/code-review` | Chat | Code review |
+| `/tdd <feature>` | Chat + Files | TDD workflow - tests first |
+| `/security-check` | Chat | Security-focused review |
+| `/docs` | Chat / Files | Documentation (Stoplight) |
+| `/architecture-docs` | Chat / Files | System profiles (Confluence) |
+| `/skill-create` | `skills/*.md` | Generate project skill from git |
+| `/ai-debug` | Chat | System status and analysis |
 
 ### Example Usage
 
 ```bash
 # In Claude Code CLI
 /plan "Add user authentication with JWT"
-/review src/Service/PaymentService.php
+# → Creates: docs/plans/001.user-authentication-jwt.md
+
+/code-review src/Service/PaymentService.php
 /tdd "CalorieCalculator service"
+/security-check src/Controller/Api/
+/docs --api /api/v1/workouts
+/ai-debug --commands
 /skill-create --commits 100
 ```
 
@@ -365,10 +375,12 @@ cd ~/wellness-backend
 
 ## Documentation
 
-- **[How Scenarios Work](docs/how-it-works/how-scenarios-work.md)** — детальний гайд по multi-agent workflows
+- **[How Scenarios Work](docs/how-it-works/how-scenarios-work.md)** — multi-agent workflows
+- **[/plan vs /ai-debug](docs/how-it-works/plan-vs-ai-debug-prompt.md)** — різниця між командами
 - **[Skills Index](skills/skills-index.md)** — повний каталог skills
 - **[Skills Integration](docs/skills-integration-summary.md)** — як skills інтегруються з agents
 - **[Agent Biases](agents/README.md)** — розуміння agent perspectives
+- **[HOW-TO-USE](docs/HOW-TO-USE.md)** — детальний гайд
 
 ---
 
