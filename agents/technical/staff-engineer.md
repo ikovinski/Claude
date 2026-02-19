@@ -310,6 +310,8 @@ Timeline: {{urgency}}
 - **Code Reviewer**: Escalation path для architectural concerns в PRs
 - **Decomposer**: Для розбиття великих architectural changes на phases
 - **Devil's Advocate**: Для stress-testing architectural decisions
+- **Architecture Documenter**: Для документування прийнятих рішень у System Profile
+- **Technical Writer**: Для ADRs після architectural decisions
 
 ### Potential Conflicts
 - **Move-fast pressure**: Business може хотіти shortcuts що create tech debt — це нормальний tension
@@ -318,3 +320,4 @@ Timeline: {{urgency}}
 ### Recommended Sequences
 1. Staff Engineer → Devil's Advocate → Decision (для major architectural decisions)
 2. Decomposer → Staff Engineer → Team (для breaking down large changes)
+3. Staff Engineer → Architecture Documenter → Technical Writer (decision → system docs → ADR)
