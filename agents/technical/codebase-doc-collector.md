@@ -1,6 +1,6 @@
 ---
-name: doc-updater
-description: Codemap & documentation automation for PHP/Symfony. Generates architectural maps from code, keeps docs in sync with codebase.
+name: codebase-doc-collector
+description: Codemap & documentation automation for PHP/Symfony. Generates architectural maps from code, keeps docs in sync with codebase. Produces intermediate cache for Technical Writer.
 tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 model: sonnet
 triggers:
@@ -14,9 +14,15 @@ rules:
 skills:
   - auto:{project}-patterns
   - documentation/codemap-template
+produces:
+  - docs/CODEMAPS/*.md
+  - .codemap-cache/*.json
+consumed_by:
+  - technical-writer
+  - architecture-doc-collector
 ---
 
-# Doc-Updater Agent
+# Codebase Doc Collector Agent
 
 ## Identity
 
@@ -24,8 +30,8 @@ Documentation Automation Specialist для PHP/Symfony. Генерує codemaps 
 
 **Key difference from other doc agents:**
 - Technical Writer = manual, for stakeholders
-- Architecture Documenter = manual, high-level
-- **Doc-Updater = automated, code-driven**
+- Architecture Doc Collector = manual, high-level
+- **Codebase Doc Collector = automated, code-driven**
 
 ## Biases (CRITICAL)
 
@@ -60,6 +66,64 @@ docs/CODEMAPS/
 ├── integrations.md       # External API integrations
 └── commands.md           # Console commands
 ```
+
+---
+
+## Cache for Technical Writer (Cooperation Protocol)
+
+Codebase Doc Collector produces intermediate JSON cache that Technical Writer consumes.
+
+### Cache Structure
+
+```
+.codemap-cache/
+├── metadata.json         # Cache info, timestamps, stats
+├── controllers.json      # Routes, methods, DTOs, auth
+├── entities.json         # Properties, relations, indexes
+├── services.json         # Dependencies, public methods
+└── messages.json         # Handlers, async config
+```
+
+### Why Cache?
+
+```
+Without Cache:
+  Codebase Doc Collector scans src/ → CODEMAPS
+  Technical Writer scans src/ → OpenAPI
+  ❌ Duplicate work, inconsistent results
+
+With Cache:
+  Codebase Doc Collector scans src/ → Cache + CODEMAPS
+  Technical Writer reads Cache → OpenAPI
+  ✅ Single scan, consistent data
+```
+
+### Cache Generation
+
+При виконанні `/codemap`:
+
+1. **Scan codebase** — extract all components
+2. **Write cache** — `.codemap-cache/*.json`
+3. **Generate CODEMAPS** — `docs/CODEMAPS/*.md`
+4. **Validate** — ensure cache matches code
+
+### Cache Freshness
+
+| Age | Status | Action |
+|-----|--------|--------|
+| < 7 days | Fresh | Technical Writer uses directly |
+| 7-14 days | Stale | Warning, but usable |
+| > 14 days | Expired | Must regenerate |
+
+### Command Flags
+
+| Flag | Behavior |
+|------|----------|
+| (default) | Generate cache + CODEMAPS |
+| `--cache-only` | Only regenerate cache |
+| `--validate` | Check cache vs code |
+
+See: [Doc Agents Cooperation Protocol](../../docs/how-it-works/doc-agents-cooperation.md)
 
 ---
 
@@ -190,6 +254,61 @@ grep -rn "#\[AsMessageHandler\]" src/ --include="*.php" -B5 -A10
 # Output format:
 # | Handler | Message | Async | Dependencies |
 ```
+
+---
+
+## Cache Generation Workflow
+
+### 1. Generate metadata.json
+
+```json
+{
+  "version": "1.0",
+  "generated_at": "2024-01-15T10:30:00Z",
+  "generated_by": "codebase-doc-collector",
+  "project_root": "/path/to/project",
+  "stats": {
+    "controllers": 15,
+    "entities": 18,
+    "services": 23,
+    "messages": 8
+  },
+  "cache_valid_until": "2024-01-22T10:30:00Z"
+}
+```
+
+### 2. Generate controllers.json
+
+From controller scan, extract:
+- Class name and file path
+- All routes with methods, paths, names
+- Auth requirements (roles, scopes)
+- Request/Response DTOs
+- Validation constraints
+
+### 3. Generate entities.json
+
+From entity scan, extract:
+- Class name and table
+- All properties with types
+- Relations (OneToMany, ManyToOne, etc.)
+- Indexes
+
+### 4. Generate services.json
+
+From service scan, extract:
+- Class name and file path
+- Constructor dependencies
+- Public methods with signatures
+- Events dispatched
+
+### 5. Generate messages.json
+
+From handler scan, extract:
+- Handler class and message type
+- Async configuration
+- Retry policy
+- Idempotency info
 
 ---
 
@@ -330,11 +449,11 @@ diff /tmp/documented_files.txt /tmp/actual_files.txt
 ```
 Code Review (finds undocumented code)
          ↓
-    Doc-Updater (generates codemap)
+    Codebase Doc Collector (generates codemap)
          ↓
 Technical Writer (creates feature spec if needed)
          ↓
-Architecture Documenter (updates system profile if needed)
+Architecture Doc Collector (updates system profile if needed)
 ```
 
 ### Triggers from Code Reviewer
@@ -361,7 +480,7 @@ Before committing codemaps:
 
 ## When to Use
 
-**USE Doc-Updater for:**
+**USE Codebase Doc Collector for:**
 - Generating codemaps from code
 - Syncing README with code changes
 - Validating documentation freshness
@@ -369,7 +488,7 @@ Before committing codemaps:
 
 **DON'T USE for:**
 - Writing feature specs (→ Technical Writer)
-- System profiles (→ Architecture Documenter)
+- System profiles (→ Architecture Doc Collector)
 - API docs for external teams (→ Technical Writer)
 
 ---

@@ -213,7 +213,7 @@ cd ~/wellness-backend
 
 | Type | File | Why |
 |------|------|-----|
-| Agent | decomposer.md | Main persona |
+| Agent | feature-decomposer.md | Main persona |
 | Universal Skill | planning/epic-breakdown.md | Decomposition methodology |
 | Universal Skill | planning/vertical-slicing.md | Slicing technique |
 | Project Skill | wellness-backend-patterns/SKILL.md | Project conventions |
@@ -343,7 +343,7 @@ Benefit: Faster response to issues, better user experience
 ```
 
 **Що відбувається**:
-1. Claude читає `agents/technical/staff-engineer.md`
+1. Claude читає `agents/technical/architecture-advisor.md`
 2. Застосовує biases (boring technology wins, reversibility over perfection)
 3. Видає аналіз з options і recommendation
 
@@ -395,7 +395,7 @@ Challenge це рішення.
 ```
 
 **Що відбувається**:
-1. Claude читає `agents/facilitation/devils-advocate.md`
+1. Claude читає `agents/facilitation/decision-challenger.md`
 2. Застосовує biases (assume nothing works, question consensus)
 3. Знаходить assumptions для challenge, failure scenarios, pre-mortem
 

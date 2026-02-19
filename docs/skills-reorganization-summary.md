@@ -60,7 +60,7 @@ skills/
 - `decision-matrix.md` — Weighted decisions
 
 **Використання**:
-- Agents: staff-engineer, devils-advocate
+- Agents: architecture-advisor, decision-challenger
 - Scenarios: rewrite-decision
 
 ---
@@ -87,7 +87,7 @@ skills/
 - `epic-breakdown.md` — Epic → Feature → Story
 
 **Використання**:
-- Agents: planner, decomposer
+- Agents: planner, feature-decomposer
 - Scenarios: feature-decomposition
 
 ---
@@ -99,7 +99,7 @@ skills/
 - `risk-assessment.md` — Risk matrix, strategies
 
 **Використання**:
-- Agents: planner, devils-advocate
+- Agents: planner, decision-challenger
 - Scenarios: rewrite-decision
 
 ---

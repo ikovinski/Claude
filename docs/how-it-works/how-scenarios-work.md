@@ -296,7 +296,7 @@ Phase 2: Staff Engineer active
 
 **Phase 1: Scope Understanding (Decomposer)**
 ```
-Loading: agents/technical/decomposer.md
+Loading: agents/technical/feature-decomposer.md
 Loading: skills/wellness-backend-patterns/SKILL.md
 Applying bias: "Vertical slices > horizontal layers"
 
@@ -325,7 +325,7 @@ Output: decomposition_draft.md
 
 **Phase 3: Technical Validation (Staff Engineer)**
 ```
-Switching to: agents/technical/staff-engineer.md
+Switching to: agents/technical/architecture-advisor.md
 Input: decomposition_draft.md
 Applying bias: "Boring technology wins"
 
@@ -341,7 +341,7 @@ Output: validation_report.md
 
 **Phase 4: Finalization (Decomposer)**
 ```
-Switching back to: agents/technical/decomposer.md
+Switching back to: agents/technical/feature-decomposer.md
 Input: decomposition_draft.md + validation_report.md
 
 Final slices:

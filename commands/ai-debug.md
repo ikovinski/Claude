@@ -133,13 +133,13 @@ Read from each agent file's `triggers` field in frontmatter.
 | code-reviewer | 🔍 |
 | security-reviewer | 🛡️ |
 | planner | 📋 |
-| decomposer | 🧩 |
+| feature-decomposer | 🧩 |
 | tdd-guide | 🧪 |
 | refactor-cleaner | 🧹 |
-| staff-engineer | 🏗️ |
-| devils-advocate | 😈 |
+| architecture-advisor | 🏗️ |
+| decision-challenger | 😈 |
 | technical-writer | 📝 |
-| architecture-documenter | 🏛️ |
+| architecture-doc-collector | 🏛️ |
 
 ---
 

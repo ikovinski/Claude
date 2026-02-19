@@ -17,7 +17,7 @@ Just describe what you need. The system routes automatically:
 | "Plan implementation" | Planner agent |
 | "Cleanup dead code" | Refactor Cleaner agent |
 | "Document this" / "API docs" / "Write docs" | Technical Writer agent |
-| "Architecture docs" / "System profile" / "Integration catalog" | Architecture Documenter agent |
+| "Architecture docs" / "System profile" / "Integration catalog" | Architecture Doc Collector agent |
 
 ## Structure
 
@@ -45,7 +45,7 @@ Quick-invoke workflows via `/command`:
 | `/tdd` | Start TDD workflow | TDD Guide | tdd/* |
 | `/security-check` | Security review | Security Reviewer | security/* |
 | `/docs` | Generate documentation (Stoplight-compatible) | Technical Writer | documentation/* |
-| `/architecture-docs` | System profiles, integration catalogs | Architecture Documenter | documentation/* |
+| `/architecture-docs` | System profiles, integration catalogs | Architecture Doc Collector | documentation/* |
 | `/skill-create` | Generate skill from git history | — | — |
 
 ### Usage Examples
@@ -69,9 +69,9 @@ Quick-invoke workflows via `/command`:
 | Request Pattern | Agent | File |
 |-----------------|-------|------|
 | Code review, PR review | `code-reviewer` | [agents/technical/code-reviewer.md](agents/technical/code-reviewer.md) |
-| Decompose, break down tasks | `decomposer` | [agents/technical/decomposer.md](agents/technical/decomposer.md) |
-| Architecture, technical decision | `staff-engineer` | [agents/technical/staff-engineer.md](agents/technical/staff-engineer.md) |
-| Challenge, what could go wrong | `devils-advocate` | [agents/facilitation/devils-advocate.md](agents/facilitation/devils-advocate.md) |
+| Decompose, break down tasks | `feature-decomposer` | [agents/technical/feature-decomposer.md](agents/technical/feature-decomposer.md) |
+| Architecture, technical decision | `architecture-advisor` | [agents/technical/architecture-advisor.md](agents/technical/architecture-advisor.md) |
+| Challenge, what could go wrong | `decision-challenger` | [agents/facilitation/decision-challenger.md](agents/facilitation/decision-challenger.md) |
 
 ### New Agents (From everything-claude-code)
 
@@ -82,7 +82,7 @@ Quick-invoke workflows via `/command`:
 | Implementation plan, how to build | `planner` | [agents/technical/planner.md](agents/technical/planner.md) |
 | Dead code, cleanup, refactor | `refactor-cleaner` | [agents/technical/refactor-cleaner.md](agents/technical/refactor-cleaner.md) |
 | Document, API docs, feature spec, ADR | `technical-writer` | [agents/technical/technical-writer.md](agents/technical/technical-writer.md) |
-| Architecture docs, system profile, integrations | `architecture-documenter` | [agents/technical/architecture-documenter.md](agents/technical/architecture-documenter.md) |
+| Architecture docs, system profile, integrations | `architecture-doc-collector` | [agents/technical/architecture-doc-collector.md](agents/technical/architecture-doc-collector.md) |
 
 ## Scenario Routing
 
@@ -132,7 +132,7 @@ Quick-invoke workflows via `/command`:
 | Planner | Clarity over speed |
 | Refactor Cleaner | Less code = less bugs |
 | Technical Writer | Audience first, examples > explanations |
-| Architecture Documenter | Diagram first, tables over prose |
+| Architecture Doc Collector | Diagram first, tables over prose |
 
 ## Agent Selection Guide
 
@@ -149,8 +149,8 @@ Quick-invoke workflows via `/command`:
 | Codebase захаращений | Refactor Cleaner |
 | Потрібна документація для інших команд | Technical Writer |
 | Feature spec для менеджерів | Technical Writer |
-| System overview для onboarding | Architecture Documenter |
-| Integration catalog | Architecture Documenter |
+| System overview для onboarding | Architecture Doc Collector |
+| Integration catalog | Architecture Doc Collector |
 
 ### Recommended Sequences
 
@@ -168,7 +168,7 @@ Cross-Team Feature:
 Planner → Technical Writer (feature spec for stakeholders) → Decomposer → Implementation
 
 System Documentation:
-Architecture Documenter (system profile) → Technical Writer (API docs) → Staff Engineer (review)
+Architecture Doc Collector (system profile) → Technical Writer (API docs) → Staff Engineer (review)
 ```
 
 ## Skills System
@@ -196,7 +196,7 @@ skills/
 - Code Reviewer → code-quality/*
 - Devil's Advocate → risk-management/*
 - Technical Writer → documentation/*
-- Architecture Documenter → documentation/*
+- Architecture Doc Collector → documentation/*
 
 ### Project Skills (Auto-generated)
 
@@ -225,7 +225,7 @@ User is in: ~/wellness-backend
 Says: "Decompose feature: Add Apple Health integration"
 
 System loads:
-1. agents/technical/decomposer.md (persona + biases)
+1. agents/technical/feature-decomposer.md (persona + biases)
 2. skills/planning/epic-breakdown.md (universal skill)
 3. skills/planning/vertical-slicing.md (universal skill)
 4. skills/wellness-backend-patterns/SKILL.md (project conventions) ✓

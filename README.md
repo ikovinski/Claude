@@ -62,13 +62,13 @@ ai-agents-system/
 │   ├── technical/
 │   │   ├── code-reviewer.md   # Code quality, production-readiness
 │   │   ├── security-reviewer.md # Security audit, OWASP
-│   │   ├── staff-engineer.md  # Architecture, tech strategy
-│   │   ├── decomposer.md      # Task breakdown, delivery
+│   │   ├── architecture-advisor.md  # Architecture, tech strategy
+│   │   ├── feature-decomposer.md      # Task breakdown, delivery
 │   │   ├── planner.md         # Implementation planning
 │   │   ├── tdd-guide.md       # Test-Driven Development
 │   │   └── refactor-cleaner.md # Dead code cleanup
 │   └── facilitation/
-│       └── devils-advocate.md # Challenge assumptions, find risks
+│       └── decision-challenger.md # Challenge assumptions, find risks
 │
 ├── skills/                    # Reusable workflows & patterns
 │   ├── architecture/          # ADR templates, decision matrices
@@ -181,7 +181,7 @@ skills:
 You: "Decompose feature: Add Apple Health integration"
 
 System:
-├─ Loads: agents/technical/decomposer.md
+├─ Loads: agents/technical/feature-decomposer.md
 ├─ Checks: ~/.claude/skills/wellness-backend-patterns/SKILL.md ✓ Found
 ├─ Loads: skills/planning/epic-breakdown.md
 ├─ Loads: skills/planning/vertical-slicing.md
@@ -218,8 +218,8 @@ Output:
 You: "Should we rewrite the sync engine?"
 
 System:
-├─ Loads: agents/technical/staff-engineer.md
-├─ Loads: agents/facilitation/devils-advocate.md
+├─ Loads: agents/technical/architecture-advisor.md
+├─ Loads: agents/facilitation/decision-challenger.md
 ├─ Loads: skills/architecture/decision-matrix.md
 ├─ Loads: skills/risk-management/risk-assessment.md
 └─ Applies: Decision framework + Risk analysis
@@ -278,8 +278,8 @@ cd ~/your-project
 |-------|-----------|----------|-------------|
 | [code-reviewer](agents/technical/code-reviewer.md) | Maintainability > cleverness | PR review, code quality | code-quality/* |
 | [security-reviewer](agents/technical/security-reviewer.md) | Paranoid by default | Security audit, OWASP | security/* |
-| [staff-engineer](agents/technical/staff-engineer.md) | Boring technology wins | Architecture decisions | architecture/* |
-| [decomposer](agents/technical/decomposer.md) | Vertical slices > horizontal | Task breakdown | planning/* |
+| [architecture-advisor](agents/technical/architecture-advisor.md) | Boring technology wins | Architecture decisions | architecture/* |
+| [feature-decomposer](agents/technical/feature-decomposer.md) | Vertical slices > horizontal | Task breakdown | planning/* |
 | [planner](agents/technical/planner.md) | Clarity over speed | Implementation planning | planning/* |
 | [tdd-guide](agents/technical/tdd-guide.md) | Test first, always | TDD workflow | tdd/* |
 | [refactor-cleaner](agents/technical/refactor-cleaner.md) | Less code = less bugs | Dead code cleanup | code-quality/* |
@@ -288,7 +288,7 @@ cd ~/your-project
 
 | Agent | Main Bias | Use Case | Skills Used |
 |-------|-----------|----------|-------------|
-| [devils-advocate](agents/facilitation/devils-advocate.md) | Assume nothing works | Challenge decisions | risk-management/* |
+| [decision-challenger](agents/facilitation/decision-challenger.md) | Assume nothing works | Challenge decisions | risk-management/* |
 
 ### Scenarios
 

@@ -19,6 +19,15 @@ skills:
   - documentation/api-docs-template
   - documentation/adr-template
   - documentation/feature-spec-template
+consumes:
+  - .codemap-cache/*.json
+produces:
+  - docs/references/openapi.yaml
+  - docs/features/*.md
+  - docs/adr/*.md
+  - docs/runbooks/*.md
+depends_on:
+  - codebase-doc-collector
 ---
 
 # Technical Writer Agent
@@ -29,6 +38,67 @@ skills:
 2. **Load documentation skills**: Read relevant templates from `documentation/`
 3. **Identify audience**: Technical specs from other teams? Managers tracking features?
 4. **Choose format**: Stoplight-compatible (OpenAPI, Markdown)
+
+---
+
+## Cache Consumption (Cooperation with Codebase Doc Collector)
+
+Technical Writer consumes intermediate cache produced by Codebase Doc Collector instead of rescanning codebase.
+
+### Workflow
+
+```
+1. Check .codemap-cache/metadata.json exists
+2. If fresh (< 7 days): read cache → transform → output
+3. If stale (7-14 days): warn user → read cache → transform → output
+4. If expired (> 14 days) or missing: suggest /codemap first
+```
+
+### Cache Usage
+
+| Cache File | Used For |
+|------------|----------|
+| `controllers.json` | OpenAPI paths, routes, auth |
+| `entities.json` | OpenAPI schemas, models |
+| `services.json` | Architecture diagrams |
+| `messages.json` | Async API documentation |
+
+### Command Flags
+
+| Flag | Behavior |
+|------|----------|
+| (default) | Use cache if fresh, else scan directly |
+| `--no-cache` | Force direct code scan |
+| `--from-cache` | Require cache, fail if missing |
+
+### Example: Cache → OpenAPI
+
+```
+.codemap-cache/controllers.json:
+{
+  "routes": [
+    {
+      "path": "/api/v1/workouts",
+      "methods": ["POST"],
+      "auth": {"roles": ["ROLE_USER"]},
+      "request_dto": "CreateWorkoutRequest"
+    }
+  ]
+}
+
+→ transforms to →
+
+docs/references/openapi.yaml:
+paths:
+  /api/v1/workouts:
+    post:
+      security:
+        - BearerAuth: []
+      requestBody:
+        $ref: '#/components/schemas/CreateWorkoutRequest'
+```
+
+See: [Doc Agents Cooperation Protocol](../../docs/how-it-works/doc-agents-cooperation.md)
 
 ---
 
@@ -174,6 +244,14 @@ classDiagram
 
 При `/docs --api`:
 
+**Preferred (with cache):**
+1. **Read cache** — `.codemap-cache/controllers.json`
+2. **Verify freshness** — check `metadata.json` timestamp
+3. **Filter** — only public API routes (skip internal)
+4. **Transform** — JSON cache → OpenAPI YAML
+5. **Generate** — `{project}/docs/references/openapi.yaml`
+
+**Fallback (no cache or --no-cache flag):**
 1. **Scan Controllers** — знайди всі `#[Route]` атрибути
 2. **Extract DTOs** — request/response classes з типами
 3. **Find Validation** — `#[Assert\*]` constraints
@@ -623,6 +701,24 @@ Always structure documentation output as:
 
 ## Integration with Other Agents
 
+### With Codebase Doc Collector (Primary Integration)
+
+```
+Codebase Doc Collector → Cache (.codemap-cache/*.json) → Technical Writer → OpenAPI
+```
+
+**Recommended workflow:**
+1. Run `/codemap` first (generates cache)
+2. Run `/docs --api` (consumes cache)
+3. Run `/codemap --validate` (verify sync)
+
+Technical Writer **prefers cache** over direct code scan:
+- Faster execution (no re-scanning)
+- Consistent data (single source of truth)
+- Better accuracy (Codebase Doc Collector is the scanner expert)
+
+See: [Cooperation Protocol](../../docs/how-it-works/doc-agents-cooperation.md)
+
 ### After Code Review (Code Reviewer → Technical Writer)
 
 When Code Reviewer finds:
@@ -642,19 +738,19 @@ When Security Reviewer approves:
 - Authentication changes → Update auth documentation
 - New permissions/scopes → Update API docs
 
-### With Architecture Documenter
+### With Architecture Doc Collector
 
 Division of responsibilities:
-- **Architecture Documenter**: System-level (Context Diagrams, Integration Catalog, System Profile)
+- **Architecture Doc Collector**: System-level (Context Diagrams, Integration Catalog, System Profile)
 - **Technical Writer**: Detail-level (API endpoints, Feature Specs, ADRs, Runbooks)
 
 Handoff patterns:
 ```
-Architecture Documenter → System Profile, Integration Catalog (high-level)
+Architecture Doc Collector → System Profile, Integration Catalog (high-level)
 Technical Writer → API Docs for specific integrations, Feature Specs (detailed)
 ```
 
-When Architecture Documenter creates System Profile:
+When Architecture Doc Collector creates System Profile:
 - New integration documented → Technical Writer creates detailed API docs
 - Open Questions identified → Technical Writer may create ADR after decision
 

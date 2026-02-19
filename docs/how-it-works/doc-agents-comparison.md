@@ -1,10 +1,10 @@
-# Агенти документації: Technical Writer vs Architecture Documenter vs Doc-Updater
+# Агенти документації: Technical Writer vs Architecture Doc Collector vs Codebase Doc Collector
 
 Три агенти для документації з різними фокусами та підходами.
 
 ## Швидке порівняння
 
-| Аспект | Technical Writer | Architecture Documenter | Doc-Updater |
+| Аспект | Technical Writer | Architecture Doc Collector | Codebase Doc Collector |
 |--------|-----------------|------------------------|-------------|
 | **Bias** | Audience first | Diagram first | Generate, don't write |
 | **Підхід** | Ручний, детальний | Ручний, високорівневий | Автоматизований, code-driven |
@@ -23,9 +23,9 @@ flowchart TD
 
     Q1 -->|Зовнішні команди, менеджери| TW[Technical Writer]
     Q1 -->|Архітектори, нові в команді| Q2{Який рівень?}
-    Q1 -->|Розробники, CI/CD| DU[Doc-Updater]
+    Q1 -->|Розробники, CI/CD| DU[Codebase Doc Collector]
 
-    Q2 -->|Системний, інтеграції| AD[Architecture Documenter]
+    Q2 -->|Системний, інтеграції| AD[Architecture Doc Collector]
     Q2 -->|Структура коду, модулі| DU
 
     TW --> OUT1[API Docs, Feature Specs, ADRs, Runbooks]
@@ -46,7 +46,7 @@ flowchart TD
 - Автоматичної генерації документації
 - Системних оглядів архітектури
 
-### Architecture Documenter
+### Architecture Doc Collector
 
 **Використовуй коли:**
 - Онбордиш нових членів команди (системний контекст)
@@ -59,7 +59,7 @@ flowchart TD
 - Документації модулів на рівні коду
 - Автоматичних/частих оновлень
 
-### Doc-Updater
+### Codebase Doc Collector
 
 **Використовуй коли:**
 - Генеруєш codemaps з codebase
@@ -92,7 +92,7 @@ docs/
 
 **Формат:** Stoplight.io compatible (OpenAPI 3.x, Markdown з frontmatter)
 
-### Architecture Documenter Output
+### Architecture Doc Collector Output
 
 ```
 docs/
@@ -110,7 +110,7 @@ docs/
 
 **Формат:** Confluence-compatible Markdown, Mermaid діаграми
 
-### Doc-Updater Output
+### Codebase Doc Collector Output
 
 ```
 docs/CODEMAPS/
@@ -142,7 +142,7 @@ docs/CODEMAPS/
 - Без внутрішнього жаргону без пояснення
 ```
 
-### Architecture Documenter: "Diagram First"
+### Architecture Doc Collector: "Diagram First"
 
 ```
 Перед написанням будь-чого:
@@ -157,7 +157,7 @@ docs/CODEMAPS/
 - Відстеження невідомого (Open Questions)
 ```
 
-### Doc-Updater: "Generate, Don't Write"
+### Codebase Doc Collector: "Generate, Don't Write"
 
 ```
 Основний принцип:
@@ -178,46 +178,53 @@ docs/CODEMAPS/
 
 ```mermaid
 flowchart LR
-    subgraph Автоматизований
-        DU[Doc-Updater]
+    subgraph Scanner
+        DU[Codebase Doc Collector]
     end
 
-    subgraph Ручний
+    subgraph Cache[".codemap-cache/"]
+        CACHE[(JSON Cache)]
+    end
+
+    subgraph Consumers
         TW[Technical Writer]
-        AD[Architecture Documenter]
+        AD[Architecture Doc Collector]
     end
 
     Code[(Codebase)] --> DU
+    DU -->|scan| CACHE
     DU -->|CODEMAPS| DevDocs[Developer Docs]
-    DU -->|Валідація| TW
-    DU -->|Валідація| AD
+
+    CACHE -->|controllers, entities| TW
+    CACHE -->|integrations, services| AD
 
     TW -->|API Docs| ExtTeams[Зовнішні команди]
     TW -->|Feature Specs| Managers[Менеджери/PM]
-    TW -->|Runbooks| SRE[Ops/SRE]
 
     AD -->|System Profile| NewMembers[Нові в команді]
     AD -->|Integrations| Architects[Архітектори]
 ```
 
-### Workflow співпраці
+### Workflow співпраці (Cache-based)
 
 ```
-1. Doc-Updater генерує CODEMAPS (автоматично)
+1. /codemap — Codebase Doc Collector сканує код, генерує cache + CODEMAPS
          ↓
-2. Doc-Updater валідує всі docs (щотижня)
+2. /docs --api — Technical Writer читає cache → OpenAPI (high automation)
          ↓
-3. Якщо застарілі API docs → Technical Writer оновлює
-4. Якщо застарілий system profile → Architecture Documenter оновлює
-5. Якщо новий код не в CODEMAPS → Doc-Updater регенерує
+3. /architecture-docs — Architecture Doc Collector читає cache → discovery (low automation)
+         ↓
+4. /codemap --validate — перевірка синхронізації
 ```
+
+**Детальніше:** [Doc Agents Cooperation Protocol](./doc-agents-cooperation.md)
 
 ### Крос-посилання
 
-| Коли Doc-Updater знаходить... | Пропонує... |
+| Коли Codebase Doc Collector знаходить... | Пропонує... |
 |-------------------------------|-------------|
 | Новий API endpoint без документації | `/docs --api <endpoint>` (Technical Writer) |
-| Нову інтеграцію не в system profile | `/architecture-docs --integration` (Architecture Documenter) |
+| Нову інтеграцію не в system profile | `/architecture-docs --integration` (Architecture Doc Collector) |
 | Застарілий feature spec | `/docs --feature <name>` (Technical Writer) |
 
 ---
@@ -231,12 +238,12 @@ flowchart LR
 | Technical Writer | `/docs --adr <decision>` | ADR |
 | Technical Writer | `/docs --runbook <service>` | Runbook |
 | Technical Writer | `/docs --validate` | Freshness report |
-| Architecture Documenter | `/architecture-docs` | System profile |
-| Architecture Documenter | `/architecture-docs --integration` | Integration doc |
-| Architecture Documenter | `/architecture-docs --scan` | Integration catalog |
-| Doc-Updater | `/codemap` | Всі CODEMAPS |
-| Doc-Updater | `/codemap --area <area>` | Конкретний codemap |
-| Doc-Updater | `/codemap --validate` | Validation report |
+| Architecture Doc Collector | `/architecture-docs` | System profile |
+| Architecture Doc Collector | `/architecture-docs --integration` | Integration doc |
+| Architecture Doc Collector | `/architecture-docs --scan` | Integration catalog |
+| Codebase Doc Collector | `/codemap` | Всі CODEMAPS |
+| Codebase Doc Collector | `/codemap --area <area>` | Конкретний codemap |
+| Codebase Doc Collector | `/codemap --validate` | Validation report |
 
 ---
 
@@ -245,8 +252,8 @@ flowchart LR
 | Агент | Skills |
 |-------|--------|
 | Technical Writer | `api-docs-template`, `feature-spec-template`, `adr-template`, `runbook-template`, `readme-template` |
-| Architecture Documenter | `system-profile-template`, `integration-template` |
-| Doc-Updater | `codemap-template` |
+| Architecture Doc Collector | `system-profile-template`, `integration-template` |
+| Codebase Doc Collector | `codemap-template` |
 
 ---
 
@@ -258,9 +265,9 @@ flowchart LR
 | Feature Specs | Technical Writer | 14-30 днів |
 | ADRs | Technical Writer | Річний огляд |
 | Runbooks | Technical Writer | 30-60 днів |
-| System Profile | Architecture Documenter | 90-180 днів |
-| Integrations | Architecture Documenter | 30-90 днів |
-| CODEMAPS | Doc-Updater | 7-14 днів |
+| System Profile | Architecture Doc Collector | 90-180 днів |
+| Integrations | Architecture Doc Collector | 30-90 днів |
+| CODEMAPS | Codebase Doc Collector | 7-14 днів |
 
 ---
 
@@ -271,14 +278,14 @@ flowchart LR
 | API docs для інших команд | Technical Writer | `/docs --api` |
 | Feature spec для PM | Technical Writer | `/docs --feature` |
 | Runbook для SRE | Technical Writer | `/docs --runbook` |
-| Системний огляд для нового члена команди | Architecture Documenter | `/architecture-docs` |
-| Документація інтеграцій | Architecture Documenter | `/architecture-docs --integration` |
-| Мапа структури коду | Doc-Updater | `/codemap` |
-| Перевірка свіжості docs | Doc-Updater | `/codemap --validate` або `/docs --validate` |
+| Системний огляд для нового члена команди | Architecture Doc Collector | `/architecture-docs` |
+| Документація інтеграцій | Architecture Doc Collector | `/architecture-docs --integration` |
+| Мапа структури коду | Codebase Doc Collector | `/codemap` |
+| Перевірка свіжості docs | Codebase Doc Collector | `/codemap --validate` або `/docs --validate` |
 
 ---
 
 **Запам'ятай:**
 - **Technical Writer** = детальний, для зовнішньої аудиторії
-- **Architecture Documenter** = високорівневий, для архітекторів
-- **Doc-Updater** = автоматизований, для розробників
+- **Architecture Doc Collector** = високорівневий, для архітекторів
+- **Codebase Doc Collector** = автоматизований, для розробників

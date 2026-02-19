@@ -10,7 +10,7 @@ AI-персони з визначеними упередженнями та сф
 
 ```
 "Review this code" → loads code-reviewer.md
-"Architecture decision" → loads staff-engineer.md
+"Architecture decision" → loads architecture-advisor.md
 ```
 
 ## Expected result
@@ -24,12 +24,12 @@ AI-персони з визначеними упередженнями та сф
 |-------|------|---------|
 | `code-reviewer` | Maintainability > cleverness | PR reviews, якість коду |
 | `security-reviewer` | Paranoid by default | Security аудити, API review |
-| `decomposer` | Vertical slices > horizontal | Декомпозиція задач |
+| `feature-decomposer` | Vertical slices > horizontal | Декомпозиція задач |
 | `planner` | Clarity over speed | Планування імплементації |
 | `tdd-guide` | Test first, always | Написання тестів |
-| `staff-engineer` | Boring technology wins | Архітектурні рішення |
-| `devils-advocate` | Assume nothing works | Челендж рішень |
+| `architecture-advisor` | Boring technology wins | Архітектурні рішення |
+| `decision-challenger` | Assume nothing works | Челендж рішень |
 | `refactor-cleaner` | Less code = less bugs | Очистка dead code |
 | `technical-writer` | Audience first, examples > explanations | API docs, feature specs, ADRs (Stoplight) |
-| `architecture-documenter` | Diagram first, tables over prose | System profiles, integrations (Confluence MD) |
-| `doc-updater` | Generate, don't write | Codemaps, автоматична документація |
+| `architecture-doc-collector` | Diagram first, tables over prose | System profiles, integrations (Confluence MD) |
+| `codebase-doc-collector` | Generate, don't write | Codemaps, автоматична документація |

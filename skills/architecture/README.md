@@ -10,8 +10,8 @@
 ## Використання
 
 ### Agents
-- `staff-engineer` — для архітектурних рішень
-- `devils-advocate` — для evaluation alternatives
+- `architecture-advisor` — для архітектурних рішень
+- `decision-challenger` — для evaluation alternatives
 
 ### Scenarios
 - `rewrite-decision` — для порівняння options

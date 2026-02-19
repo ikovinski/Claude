@@ -41,7 +41,7 @@ Claude Code hooks — це shell команди, які виконуються �
 }
 ```
 
-### 3. Повна конфігурація для Doc-Updater
+### 3. Повна конфігурація для Codebase Doc Collector
 
 ```json
 // .claude/settings.json
@@ -140,5 +140,5 @@ chmod +x scripts/validate-docs.sh
 ## Див. також
 
 - [CI/CD приклад](./cicd-example.md)
-- [Doc-Updater агент](../../../agents/technical/doc-updater.md)
+- [Codebase Doc Collector агент](../../../agents/technical/codebase-doc-collector.md)
 - [/codemap команда](../../../commands/codemap.md)

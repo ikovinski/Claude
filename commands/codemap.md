@@ -2,7 +2,7 @@
 name: codemap
 description: Generate architectural codemaps from PHP/Symfony codebase. Analyzes code structure and creates documentation.
 allowed_tools: ["Read", "Grep", "Glob", "Write", "Bash", "Edit"]
-agent: doc-updater
+agent: codebase-doc-collector
 ---
 
 # /codemap - Architectural Codemap Generator
@@ -205,7 +205,7 @@ flowchart LR
 **Don't use for:**
 - API documentation (use /docs)
 - Feature specs (use Technical Writer)
-- High-level architecture (use Architecture Documenter)
+- High-level architecture (use Architecture Doc Collector)
 
 ## Integration with CI
 
@@ -227,4 +227,4 @@ flowchart LR
 
 ---
 
-*Uses [Doc-Updater Agent](../agents/technical/doc-updater.md)*
+*Uses [Codebase Doc Collector Agent](../agents/technical/codebase-doc-collector.md)*

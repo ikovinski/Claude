@@ -29,9 +29,9 @@ Slash-команди для Claude Code CLI. Швидкий виклик workflo
 | `/security-check` | Security Reviewer | Chat | Security аудит |
 | `/docs` | Technical Writer | Chat / Files | Документація (Stoplight) |
 | `/docs --validate` | Technical Writer | Chat | Перевірка свіжості документації |
-| `/codemap` | Doc-Updater | `docs/CODEMAPS/*.md` | Генерація codemaps з коду |
-| `/codemap --validate` | Doc-Updater | Chat | Валідація codemaps vs код |
-| `/architecture-docs` | Architecture Documenter | Chat / Files | System profiles (Confluence) |
+| `/codemap` | Codebase Doc Collector | `docs/CODEMAPS/*.md` | Генерація codemaps з коду |
+| `/codemap --validate` | Codebase Doc Collector | Chat | Валідація codemaps vs код |
+| `/architecture-docs` | Architecture Doc Collector | Chat / Files | System profiles (Confluence) |
 | `/skill-create` | — | `skills/*.md` | Генерація skill з git |
 | `/ai-debug` | — | Chat | Статус системи, аналіз |
 
@@ -111,7 +111,7 @@ docs/plans/
 ```
 
 **Loads:**
-- Agent: Doc-Updater
+- Agent: Codebase Doc Collector
 - Skills: documentation/codemap-template.md
 
 **Output:**
@@ -136,7 +136,7 @@ docs/CODEMAPS/
 ```
 
 **Loads:**
-- Agent: Architecture Documenter
+- Agent: Architecture Doc Collector
 - Skills: documentation/system-profile-template.md, documentation/integration-template.md
 
 **Output:** System Profile з C4 diagrams, Integration Catalog, Open Questions

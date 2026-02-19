@@ -25,8 +25,8 @@ Skills for creating high-level documentation targeting cross-team communication 
 ## Used By
 
 - **Technical Writer** agent — API docs, feature specs, ADRs, runbooks
-- **Architecture Documenter** agent — System profiles, integration catalogs
-- **Doc-Updater** agent — Codemaps, automated documentation
+- **Architecture Doc Collector** agent — System profiles, integration catalogs
+- **Codebase Doc Collector** agent — Codemaps, automated documentation
 - **Planner** agent (feature specs after planning)
 - **Code Reviewer** agent (suggests docs for undocumented code)
 
@@ -67,9 +67,9 @@ project/
 
 | Level | Agent | Focus |
 |-------|-------|-------|
-| System | Architecture Documenter | Context diagrams, integrations, system boundaries |
+| System | Architecture Doc Collector | Context diagrams, integrations, system boundaries |
 | Detail | Technical Writer | API endpoints, features, decisions, operations |
-| Automated | Doc-Updater | Codemaps, validation, freshness tracking |
+| Automated | Codebase Doc Collector | Codemaps, validation, freshness tracking |
 
 ---
 

@@ -11,16 +11,16 @@
 | `code-reviewer` | `{project}-patterns` | `code-review-checklist` | Перевірки для review коду |
 | `security-reviewer` | `{project}-patterns` | `security-audit-checklist`, `owasp-top-10` | Security перевірки |
 | `planner` | `{project}-patterns` | `planning-template`, `estimation-guide` | Шаблони планування |
-| `decomposer` | `{project}-patterns` | `task-decomposition`, `vertical-slicing` | Методики декомпозиції |
+| `feature-decomposer` | `{project}-patterns` | `task-decomposition`, `vertical-slicing` | Методики декомпозиції |
 | `tdd-guide` | `{project}-patterns` | `tdd-workflow`, `test-patterns` | TDD практики |
 | `refactor-cleaner` | `{project}-patterns` | `refactoring-patterns`, `dead-code-detection` | Рефакторинг техніки |
-| `staff-engineer` | `{project}-patterns` | `architecture-decision-template`, `tech-evaluation` | ADR шаблони |
+| `architecture-advisor` | `{project}-patterns` | `architecture-decision-template`, `tech-evaluation` | ADR шаблони |
 
 ### Facilitation Agents
 
 | Agent | Auto-Generated Skills | Manual Skills | Опис |
 |-------|----------------------|---------------|------|
-| `devils-advocate` | — | `risk-assessment`, `challenge-questions` | Питання для челенджу |
+| `decision-challenger` | — | `risk-assessment`, `challenge-questions` | Питання для челенджу |
 
 ## Commands
 
@@ -37,8 +37,8 @@
 
 | Scenario | Agents Used | Additional Skills |
 |----------|-------------|-------------------|
-| `feature-decomposition` | `decomposer`, `planner` | `epic-breakdown`, `story-mapping` |
-| `rewrite-decision` | `staff-engineer`, `devils-advocate` | `decision-matrix`, `migration-checklist` |
+| `feature-decomposition` | `feature-decomposer`, `planner` | `epic-breakdown`, `story-mapping` |
+| `rewrite-decision` | `architecture-advisor`, `decision-challenger` | `decision-matrix`, `migration-checklist` |
 
 ## Skills Classification
 

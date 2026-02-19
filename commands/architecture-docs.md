@@ -3,7 +3,7 @@
 High-level architecture documentation. Confluence-compatible Markdown.
 
 ## Agent
-Architecture Documenter
+Architecture Doc Collector
 
 ## Usage
 

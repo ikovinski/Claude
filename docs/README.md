@@ -10,7 +10,8 @@ docs/
 ├── how-it-works/                    # Пояснення як працює система
 │   ├── how-scenarios-work.md        # Multi-agent workflows
 │   ├── plan-vs-ai-debug-prompt.md   # Порівняння команд
-│   └── documentation-agents-comparison.md  # Tech Writer vs Arch Doc vs Doc-Updater
+│   ├── doc-agents-comparison.md     # Tech Writer vs Arch Doc Collector vs Codebase Doc Collector
+│   └── doc-agents-cooperation.md    # Codebase Doc Collector + Tech Writer protocol
 ├── plans/                           # Згенеровані плани (output від /plan)
 ├── HOW-TO-USE.md                    # Детальний гайд
 ├── skills-integration-summary.md    # Skills + agents інтеграція
@@ -24,7 +25,8 @@ docs/
 |----------|-------------|
 | [how-scenarios-work.md](how-it-works/how-scenarios-work.md) | Multi-agent workflows, phases, decision points |
 | [plan-vs-ai-debug-prompt.md](how-it-works/plan-vs-ai-debug-prompt.md) | Різниця між /plan та /ai-debug --prompt |
-| [documentation-agents-comparison.md](how-it-works/documentation-agents-comparison.md) | Technical Writer vs Architecture Documenter vs Doc-Updater |
+| [doc-agents-comparison.md](how-it-works/doc-agents-comparison.md) | Technical Writer vs Architecture Doc Collector vs Codebase Doc Collector |
+| [doc-agents-cooperation.md](how-it-works/doc-agents-cooperation.md) | Cache protocol: Codebase Doc Collector → Technical Writer |
 
 ## Generated Plans
 
@@ -54,6 +56,7 @@ docs/plans/
 | Як працюють scenarios | [how-scenarios-work.md](how-it-works/how-scenarios-work.md) |
 | /plan vs /ai-debug | [plan-vs-ai-debug-prompt.md](how-it-works/plan-vs-ai-debug-prompt.md) |
 | Doc agents порівняння | [documentation-agents-comparison.md](how-it-works/documentation-agents-comparison.md) |
+| Doc agents кооперація | [doc-agents-cooperation.md](how-it-works/doc-agents-cooperation.md) |
 | Skills система | [../skills/README.md](../skills/README.md) |
 
 ## Coming Soon

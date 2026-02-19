@@ -12,12 +12,12 @@ I have access to a comprehensive AI agents system.
 |------|--------------|
 | Code review | `~/.claude/agents/technical/code-reviewer.md` |
 | Security review | `~/.claude/agents/technical/security-reviewer.md` |
-| Architecture | `~/.claude/agents/technical/staff-engineer.md` |
-| Task breakdown | `~/.claude/agents/technical/decomposer.md` |
+| Architecture | `~/.claude/agents/technical/architecture-advisor.md` |
+| Task breakdown | `~/.claude/agents/technical/feature-decomposer.md` |
 | Implementation plan | `~/.claude/agents/technical/planner.md` |
 | TDD workflow | `~/.claude/agents/technical/tdd-guide.md` |
 | Dead code cleanup | `~/.claude/agents/technical/refactor-cleaner.md` |
-| Challenge decision | `~/.claude/agents/facilitation/devils-advocate.md` |
+| Challenge decision | `~/.claude/agents/facilitation/decision-challenger.md` |
 
 ### Commands (Slash Commands)
 

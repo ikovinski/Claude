@@ -37,11 +37,11 @@
 | `code-reviewer` | auto:{project}-patterns (вже був) |
 | `security-reviewer` | auto:{project}-patterns, security/security-audit-checklist, security/owasp-top-10 |
 | `planner` | auto:{project}-patterns, planning/planning-template, risk-management/risk-assessment |
-| `decomposer` | auto:{project}-patterns, planning/vertical-slicing, planning/epic-breakdown |
+| `feature-decomposer` | auto:{project}-patterns, planning/vertical-slicing, planning/epic-breakdown |
 | `tdd-guide` | auto:{project}-patterns, tdd/tdd-workflow, code-quality/test-patterns |
 | `refactor-cleaner` | auto:{project}-patterns, code-quality/refactoring-patterns, code-quality/dead-code-detection |
-| `staff-engineer` | auto:{project}-patterns, architecture/architecture-decision-template, architecture/decision-matrix |
-| `devils-advocate` | risk-management/risk-assessment, architecture/decision-matrix |
+| `architecture-advisor` | auto:{project}-patterns, architecture/architecture-decision-template, architecture/decision-matrix |
+| `decision-challenger` | risk-management/risk-assessment, architecture/decision-matrix |
 
 ### 3. Оновлено Scenarios
 
