@@ -19,17 +19,17 @@
 ```mermaid
 flowchart LR
     subgraph Input
-        R[Request: "Add feature X"]
+        R[Request: Add feature X]
     end
 
-    subgraph "/ai-debug --prompt"
+    subgraph ai-debug["/ai-debug --prompt"]
         A1[Parse request]
         A2[Match triggers]
         A3[Identify agent]
         A4[Show workflow]
     end
 
-    subgraph "/plan"
+    subgraph plan["/plan"]
         P1[Load planner agent]
         P2[Analyze codebase]
         P3[Create steps]
@@ -38,7 +38,7 @@ flowchart LR
 
     R --> A1
     A1 --> A2 --> A3 --> A4
-    A4 -->|"Shows: will use planner"| Info[Routing Info]
+    A4 -->|Shows: will use planner| Info[Routing Info]
 
     R --> P1
     P1 --> P2 --> P3 --> P4
@@ -144,15 +144,15 @@ Add ability for users to share completed workouts to social feed...
 ```mermaid
 sequenceDiagram
     participant Dev as Developer
-    participant Debug as /ai-debug --prompt
-    participant Plan as /plan
+    participant Debug as ai-debug --prompt
+    participant Plan as plan
 
-    Dev->>Debug: "Add feature X"
-    Debug-->>Dev: Shows: planner agent, planning/* skills
+    Dev->>Debug: Add feature X
+    Debug-->>Dev: Shows planner agent, planning skills
 
-    Note over Dev: "OK, this will go to planner"
+    Note over Dev: OK, this will go to planner
 
-    Dev->>Plan: "Add feature X"
+    Dev->>Plan: Add feature X
     Plan-->>Dev: Creates docs/plans/001.feature-x.md
 
     Note over Dev: Reviews plan, starts implementation
