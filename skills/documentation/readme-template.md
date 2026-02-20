@@ -3,6 +3,10 @@
 ## Purpose
 Create service/project overview documentation for quick orientation.
 
+## Freshness Metadata
+
+READMEs should reflect current state. Include last updated date.
+
 ## Audience
 - **New team members**: Getting started quickly
 - **Other teams**: Understanding what this service does
@@ -16,6 +20,8 @@ Create service/project overview documentation for quick orientation.
 # {Service Name}
 
 {One-line description of what this service does.}
+
+**Last Updated:** YYYY-MM-DD | **Docs Status:** current
 
 ## Quick Links
 

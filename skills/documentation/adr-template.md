@@ -3,6 +3,10 @@
 ## Purpose
 Document significant technical decisions for future reference and team alignment.
 
+## Freshness Metadata
+
+ADRs are historical records. Status changes (Deprecated/Superseded) must be tracked.
+
 ## Audience
 - **Future maintainers**: Understand why things are built this way
 - **Architects**: Review and approve decisions
@@ -15,6 +19,7 @@ Document significant technical decisions for future reference and team alignment
 ```markdown
 ---
 stoplight-id: adr-{number}-{slug}
+last_reviewed: YYYY-MM-DD
 ---
 
 # ADR-{NNNN}: {Decision Title}
@@ -25,6 +30,7 @@ stoplight-id: adr-{number}-{slug}
 |--------|-------|
 | **Status** | Proposed / Accepted / Deprecated / Superseded |
 | **Date** | YYYY-MM-DD |
+| **Last Reviewed** | YYYY-MM-DD |
 | **Deciders** | @person1, @person2 |
 | **Supersedes** | ADR-XXXX (if applicable) |
 | **Superseded by** | ADR-YYYY (if applicable) |

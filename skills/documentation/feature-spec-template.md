@@ -3,6 +3,10 @@
 ## Purpose
 Document feature scope, status, and dependencies for manager visibility and cross-team coordination.
 
+## Freshness Metadata
+
+Feature specs MUST include freshness tracking in Status section.
+
 ## Audience
 - **Managers/PMs**: Track feature progress and scope
 - **Other team leads**: Understand integration points
@@ -15,6 +19,8 @@ Document feature scope, status, and dependencies for manager visibility and cros
 ```markdown
 ---
 stoplight-id: feature-{feature-slug}
+last_updated: YYYY-MM-DD
+validation_status: current  # current | needs-review | outdated
 ---
 
 # Feature: {Feature Name}
@@ -24,6 +30,7 @@ stoplight-id: feature-{feature-slug}
 | Aspect | Value |
 |--------|-------|
 | **Status** | Draft / In Development / Testing / Released |
+| **Last Updated** | YYYY-MM-DD |
 | **Target Release** | YYYY-QN or specific date |
 | **Owner** | @team-name or @person |
 | **Epic/Ticket** | JIRA-123 or link |

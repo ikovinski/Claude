@@ -1,7 +1,7 @@
 ---
 name: plan
 description: Create detailed implementation plan for a feature or refactoring. Uses Planner agent.
-allowed_tools: ["Read", "Grep", "Glob"]
+allowed_tools: ["Read", "Grep", "Glob", "Write", "Bash"]
 agent: planner
 ---
 
@@ -16,6 +16,24 @@ agent: planner
 /plan "Add workout sharing to social feed"
 /plan "Refactor billing module to use event sourcing"
 ```
+
+## Output
+
+| Flag | Output | Формат | Шлях |
+|------|--------|--------|------|
+| — (default) | File | Markdown | `docs/plans/{version}.{slug}.md` |
+
+### Naming Convention
+
+```
+docs/plans/
+├── 001.workout-pdf-export.md
+├── 002.billing-refactoring.md
+└── 003.apple-health-integration.md
+```
+
+**Version**: auto-increment (001, 002, 003...)
+**Slug**: kebab-case з feature name
 
 ## What It Does
 
@@ -93,6 +111,8 @@ agent: planner
 ```
 > /plan "Add ability to export workout history as PDF"
 
+✅ Plan saved: docs/plans/001.workout-pdf-export.md
+
 # Implementation Plan: Workout PDF Export
 
 ## Overview
@@ -128,6 +148,43 @@ Add feature allowing users to export their workout history as a formatted PDF do
 - Simple bug fixes
 - One-file changes
 - Config updates
+
+---
+
+## File Generation Instructions
+
+### Step 1: Determine Version
+```bash
+# Check existing plans
+ls docs/plans/*.md 2>/dev/null | wc -l
+# Next version = count + 1, padded to 3 digits (001, 002, etc.)
+```
+
+### Step 2: Generate Slug
+```
+Feature: "Add workout sharing to social feed"
+Slug:    workout-sharing-social-feed
+
+Rules:
+- lowercase
+- spaces → hyphens
+- remove articles (a, an, the)
+- max 5 words
+```
+
+### Step 3: Create File
+```bash
+# Ensure directory exists
+mkdir -p docs/plans
+
+# Write plan to file
+# Path: docs/plans/{version}.{slug}.md
+```
+
+### Step 4: Confirm
+```
+✅ Plan saved: docs/plans/001.workout-sharing-social-feed.md
+```
 
 ---
 

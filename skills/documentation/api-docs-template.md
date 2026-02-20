@@ -3,6 +3,19 @@
 ## Purpose
 Document API endpoints for developers from other teams who need to integrate.
 
+## Freshness Metadata
+
+All generated API docs MUST include freshness header:
+
+```yaml
+# Add to top of openapi.yaml
+info:
+  title: API Name
+  version: 1.0.0
+  x-generated-at: "YYYY-MM-DD"
+  x-validation-status: "passed"  # passed | stale | failed
+```
+
 ## Audience
 Technical developers who:
 - Need to call your API

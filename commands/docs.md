@@ -18,6 +18,7 @@ agent: technical-writer
 /docs --adr <decision>          # Create Architecture Decision Record
 /docs --runbook <service>       # Create operational runbook
 /docs --readme                  # Generate service README
+/docs --validate                # Check all docs freshness and validity
 ```
 
 ## What It Does
@@ -38,6 +39,86 @@ agent: technical-writer
 | ADR | Architects, maintainers | `docs/adr/{number}-{slug}.md` |
 | Runbook | Ops, SRE, on-call | `docs/runbooks/{service}.md` |
 | README | All technical audiences | `README.md` |
+| Validation | All | Chat report |
+
+---
+
+## --validate (Freshness Check)
+
+Scans all documentation and reports staleness based on freshness policy.
+
+### What It Checks
+
+1. **Freshness timestamps** — `last_updated` field in frontmatter
+2. **Validation status** — `validation_status` field
+3. **Broken links** — internal doc references
+4. **Missing docs** — code without documentation
+
+### Staleness Thresholds
+
+| Doc Type | Fresh | Stale | Outdated |
+|----------|-------|-------|----------|
+| API Docs | < 7 days | 7-14 days | > 14 days |
+| Feature Specs | < 14 days | 14-30 days | > 30 days |
+| Runbooks | < 30 days | 30-60 days | > 60 days |
+| Integrations | < 30 days | 30-90 days | > 90 days |
+| System Profiles | < 90 days | 90-180 days | > 180 days |
+
+### Output Format
+
+```
+🔍 Documentation Validation
+═══════════════════════════
+
+📁 Scanning: docs/
+
+📊 Summary
+   ├─ Total docs: 24
+   ├─ Fresh: 18 (75%)
+   ├─ Stale: 4 (17%)
+   └─ Outdated: 2 (8%)
+
+⚠️ Stale Documents (needs review):
+
+   docs/features/workout-sharing.md
+   ├─ Last updated: 2024-01-05 (21 days ago)
+   └─ Threshold: 14 days
+
+   docs/runbooks/billing-service.md
+   ├─ Last updated: 2024-01-10 (35 days ago)
+   └─ Threshold: 30 days
+
+🚨 Outdated Documents (requires update):
+
+   docs/api/payments.yaml
+   ├─ Last updated: 2023-12-01 (55 days ago)
+   └─ Threshold: 14 days
+
+   docs/integrations/stripe.md
+   ├─ Last updated: 2023-11-15 (100 days ago)
+   └─ Threshold: 90 days
+
+🔗 Broken Links: 1
+   └─ docs/features/sharing.md:45 → ../api/social.md (not found)
+
+📝 Missing Documentation:
+   └─ src/Controller/Api/NewEndpointController.php (no API docs)
+
+💡 Actions:
+   ├─ /docs --api NewEndpointController  # Add missing docs
+   ├─ /docs --feature workout-sharing    # Update stale feature spec
+   └─ /docs --runbook billing-service    # Update stale runbook
+```
+
+### CI Integration
+
+```yaml
+# .github/workflows/docs-check.yml
+- name: Check Documentation Freshness
+  run: |
+    claude /docs --validate
+    # Fails if any outdated docs found
+```
 
 ## Key Features
 
