@@ -140,5 +140,5 @@ chmod +x scripts/validate-docs.sh
 ## Див. також
 
 - [CI/CD приклад](./cicd-example.md)
-- [Codebase Doc Collector агент](../../../agents/technical/codebase-doc-collector.md)
+- [Codebase Doc Collector агент](../../../agents/codebase-doc-collector.md)
 - [/codemap команда](../../../commands/codemap.md)

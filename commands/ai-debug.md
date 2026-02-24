@@ -9,10 +9,11 @@ description: Show AI agents system status, analyze prompts, explain workflows
 
 ```bash
 /ai-debug                           # Show system status
-/ai-debug --prompt "your request"   # Analyze what will happen
+/ai-debug --prompt "your request"   # Analyze what will happen (agents + scenarios)
 /ai-debug --agents                  # List all agents with biases
+/ai-debug --scenarios               # List all scenarios with triggers
 /ai-debug --commands                # List all commands (summary table)
-/ai-debug --command <name>          # Detailed info about specific command
+/ai-debug --commands <name>         # Detailed info about specific command
 ```
 
 ---
@@ -24,7 +25,7 @@ description: Show AI agents system status, analyze prompts, explain workflows
 1. Get current working directory
 2. Extract project name (last part of path)
 3. Check for project skill: `skills/{project-name}-patterns/SKILL.md`
-4. List components from `commands/`, `agents/`, `rules/`
+4. List components from `commands/`, `agents/`, `scenarios/`, `rules/`
 
 ### Output Format
 
@@ -41,13 +42,16 @@ description: Show AI agents system status, analyze prompts, explain workflows
    -- or --
    └─ ❌ Not found (run /skill-create to generate)
 
-⚡ Commands
+⚡ Commands ({count})
    {list from commands/*.md}
 
 🤖 Agents ({count})
-   {list from agents/**/*.md}
+   {list from agents/*.md}
 
-📋 Rules
+🎬 Scenarios ({count})
+   {list from scenarios/**/*.md}
+
+📋 Rules ({count})
    {list from rules/*.md}
 
 ✅ System ready!
@@ -60,15 +64,69 @@ description: Show AI agents system status, analyze prompts, explain workflows
 ### Instructions
 
 1. Parse the prompt
-2. Match against routing rules (from agents' `triggers` field)
-3. Identify: agent, skills, output type
-4. Generate workflow explanation
+2. **First**: Match against scenario triggers (from `scenarios/**/*.md`)
+3. **Then**: Match against agent triggers (from `agents/*.md`)
+4. Identify: scenario OR agent, skills, output type
+5. Generate workflow explanation
 
-### Routing Rules
+### Routing Priority
+
+1. **Scenarios first** — multi-agent workflows для складних задач
+2. **Agents second** — single-agent для простих задач
+
+### Scenario Triggers
+
+Read from each scenario file's metadata `trigger` field:
+
+| Scenario | Triggers |
+|----------|----------|
+| `feature-decomposition` | "decompose", "break down", "epic breakdown", "task breakdown" |
+| `rewrite-decision` | "should we rewrite", "rewrite vs refactor", "rebuild" |
+
+### Agent Triggers
 
 Read from each agent file's `triggers` field in frontmatter.
 
-### Output Format
+### Output Format (Scenario Match)
+
+```
+🔍 Prompt Analysis: "{prompt}"
+══════════════════════════════
+
+🎬 Scenario Match!
+   ├─ Scenario:      {scenario-name}
+   │                 scenarios/{category}/{scenario}.md
+   ├─ Duration:      {duration from metadata}
+   └─ Phases:        {number of phases}
+
+👥 Agent Chain
+   ├─ Phase 1: {agent-1} (lead)
+   │           bias: {bias}
+   ├─ Phase 2: {agent-2}
+   │           bias: {bias}
+   └─ Phase N: {agent-n}
+               bias: {bias}
+
+📚 Skills
+   ├─ {skill-1}
+   ├─ {skill-2}
+   └─ auto:{project}-patterns (if exists)
+
+⚙️  Workflow
+   1. Phase 1: {agent-1} — {phase description}
+   2. Phase 2: {agent-2} — {phase description}
+   3. Decision point (user input)
+   4. Phase N: {agent-n} — {phase description}
+
+📤 Output
+   ├─ Type:     Multi-phase deliverables
+   ├─ Duration: {duration}
+   └─ Includes: {list of deliverables}
+
+💡 Tip: Scenarios включають decision points де потрібен ваш input
+```
+
+### Output Format (Agent Match)
 
 ```
 🔍 Prompt Analysis: "{prompt}"
@@ -76,7 +134,7 @@ Read from each agent file's `triggers` field in frontmatter.
 
 📦 Routing
    ├─ Agent:         {agent-name}
-   │                 agents/technical/{agent}.md
+   │                 agents/{agent}.md
    ├─ Skills:        {from agent's skills field}
    │                 skills/{category}/
    └─ Project Skill: {project}-patterns (if exists)
@@ -96,13 +154,77 @@ Read from each agent file's `triggers` field in frontmatter.
    {short example based on agent's output template}
 ```
 
+### Examples
+
+**Scenario match:**
+```
+> /ai-debug --prompt "Decompose feature: Add Apple Health integration"
+
+🔍 Prompt Analysis: "Decompose feature: Add Apple Health integration"
+═════════════════════════════════════════════════════════════════════
+
+🎬 Scenario Match!
+   ├─ Scenario:      Feature Decomposition
+   │                 scenarios/delivery/feature-decomposition.md
+   ├─ Duration:      30-90 minutes
+   └─ Phases:        4
+
+👥 Agent Chain
+   ├─ Phase 1-2: Decomposer (lead)
+   │             bias: Vertical slices > horizontal layers
+   ├─ Phase 3:   Staff Engineer (validation)
+   │             bias: Boring technology wins
+   └─ Phase 4:   Decomposer (finalization)
+
+📚 Skills
+   ├─ planning/epic-breakdown
+   ├─ planning/vertical-slicing
+   └─ auto:wellness-backend-patterns ✓
+
+⚙️  Workflow
+   1. Phase 1: Scope Understanding
+   2. Phase 2: Initial Decomposition
+   3. Phase 3: Technical Validation (Staff Engineer)
+   4. Phase 4: Finalization
+
+📤 Output
+   ├─ Type:     Multi-phase deliverables
+   ├─ Duration: 30-90 min
+   └─ Includes: Scope doc, Slices, Dependencies, Execution strategy
+```
+
+**Agent match:**
+```
+> /ai-debug --prompt "Review this code"
+
+🔍 Prompt Analysis: "Review this code"
+══════════════════════════════════════
+
+📦 Routing
+   ├─ Agent:         code-reviewer
+   │                 agents/code-reviewer.md
+   ├─ Skills:        code-quality/*
+   └─ Project Skill: wellness-backend-patterns ✓
+
+⚙️  Workflow
+   1. Load agent: Code Reviewer (bias: Maintainability > cleverness)
+   2. Load skills: code-quality/refactoring-patterns, test-patterns
+   3. Analyze code
+   4. Generate structured review
+
+📤 Output
+   ├─ Type:     Chat
+   ├─ Format:   Markdown
+   └─ Location: Chat response
+```
+
 ---
 
 ## --agents (Agent Reference)
 
 ### Instructions
 
-1. Read all files from `agents/technical/*.md` and `agents/facilitation/*.md`
+1. Read all files from `agents/*.md`
 2. Extract from each file's frontmatter and content:
    - `name` (from frontmatter)
    - `triggers` (from frontmatter)
@@ -143,6 +265,65 @@ Read from each agent file's `triggers` field in frontmatter.
 
 ---
 
+## --scenarios (Scenario Reference)
+
+### Instructions
+
+1. Read all files from `scenarios/**/*.md`
+2. Extract from each file's metadata:
+   - `name`
+   - `trigger`
+   - `participants` (agent chain)
+   - `duration`
+   - `skills`
+3. Generate output using format below
+
+### Output Format
+
+```
+🎬 Available Scenarios
+══════════════════════
+
+📁 {category}/
+
+   🎭 {scenario-name}
+      ├ Trigger:      {trigger phrase}
+      ├ Duration:     {duration}
+      ├ Agent Chain:  {agent-1} → {agent-2} → ...
+      └ Skills:       {skills list}
+
+... repeat for each scenario ...
+
+💡 Scenarios активуються через природну мову, не slash commands
+```
+
+### Example Output
+
+```
+🎬 Available Scenarios
+══════════════════════
+
+📁 delivery/
+
+   🎭 Feature Decomposition
+      ├ Trigger:      "decompose feature", "break down epic", "task breakdown"
+      ├ Duration:     30-90 minutes
+      ├ Agent Chain:  Decomposer → Staff Engineer → Decomposer
+      └ Skills:       planning/epic-breakdown, planning/vertical-slicing
+
+📁 technical-decisions/
+
+   🎭 Rewrite Decision
+      ├ Trigger:      "should we rewrite", "rewrite vs refactor"
+      ├ Duration:     1-2 hours
+      ├ Agent Chain:  Staff Engineer → Devil's Advocate → Staff Engineer
+      └ Skills:       architecture/decision-matrix, risk-management/risk-assessment
+
+💡 Scenarios активуються через природну мову, не slash commands
+```
+
+---
+
 ## --commands (Command Reference - Summary)
 
 ### Instructions
@@ -165,7 +346,7 @@ Read from each agent file's `triggers` field in frontmatter.
 **Послідовність:**
 
 1. Завантажується агент: {agent-id}
-   └─ agents/technical/{agent}.md
+   └─ agents/{agent}.md
 2. Завантажуються skills:
    ├─ {skill-1}
    ├─ {skill-2}
@@ -220,7 +401,7 @@ Read from each agent file's `triggers` field in frontmatter.
 **Послідовність:**
 
 1. Завантажується агент: {agent-name}
-   └─ agents/technical/{agent}.md
+   └─ agents/{agent}.md
 2. Завантажуються skills:
    ├─ {skill-1}
    ├─ {skill-2}

@@ -188,4 +188,4 @@ mkdir -p docs/plans
 
 ---
 
-*Uses [Planner Agent](../agents/technical/planner.md)*
+*Uses [Planner Agent](../agents/planner.md)*

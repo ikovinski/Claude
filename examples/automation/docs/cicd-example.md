@@ -255,5 +255,5 @@ jobs:
 ## Див. також
 
 - [Hooks приклад](./hooks-example.md)
-- [Codebase Doc Collector агент](../../../agents/technical/codebase-doc-collector.md)
+- [Codebase Doc Collector агент](../../../agents/codebase-doc-collector.md)
 - [Freshness Policy](../../../skills/documentation/README.md#freshness-policy)

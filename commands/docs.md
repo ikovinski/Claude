@@ -356,4 +356,4 @@ During documentation:
 
 ---
 
-*Uses [Technical Writer Agent](../agents/technical/technical-writer.md)*
+*Uses [Technical Writer Agent](../agents/technical-writer.md)*

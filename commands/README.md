@@ -8,7 +8,7 @@ Slash-команди для Claude Code CLI. Швидкий виклик workflo
 
 ```
 /plan "Add user authentication"
-/code-review src/Service/PaymentService.php
+/review src/Service/PaymentService.php
 /tdd "CalorieCalculator service"
 /security-check src/Controller/Api/
 /ai-debug
@@ -24,7 +24,7 @@ Slash-команди для Claude Code CLI. Швидкий виклик workflo
 | Command | Agent | Output | Description |
 |---------|-------|--------|-------------|
 | `/plan` | Planner | `docs/plans/*.md` | Створення плану імплементації |
-| `/code-review` | Code Reviewer | Chat | Code review |
+| `/review` | Code Reviewer | Chat | Code review |
 | `/tdd` | TDD Guide | Chat + Files | TDD workflow |
 | `/security-check` | Security Reviewer | Chat | Security аудит |
 | `/docs` | Technical Writer | Chat / Files | Документація (Stoplight) |
@@ -32,6 +32,7 @@ Slash-команди для Claude Code CLI. Швидкий виклик workflo
 | `/codemap` | Codebase Doc Collector | `docs/CODEMAPS/*.md` | Генерація codemaps з коду |
 | `/codemap --validate` | Codebase Doc Collector | Chat | Валідація codemaps vs код |
 | `/architecture-docs` | Architecture Doc Collector | Chat / Files | System profiles (Confluence) |
+| `/docs-suite` | Team (3 agents) | `docs/` (all) | Повна документація (team-based) |
 | `/skill-create` | — | `skills/*.md` | Генерація skill з git |
 | `/ai-debug` | — | Chat | Статус системи, аналіз |
 
@@ -123,6 +124,31 @@ docs/CODEMAPS/
 ├── entities.md
 ├── messages.md
 └── commands.md
+```
+
+---
+
+### `/docs-suite` для Full Documentation
+
+```bash
+/docs-suite                        # Full documentation generation
+/docs-suite --scope architecture   # Architecture only
+/docs-suite --no-cross-review      # Skip cross-review phase
+```
+
+**Loads:**
+- Scenario: delivery/documentation-suite
+- Agents: Codebase Doc Collector, Architecture Doc Collector, Technical Writer
+- Skills: documentation/* (all templates)
+
+**Output:**
+```
+docs/
+├── INDEX.md                    # Unified documentation catalog
+├── CODEMAPS/                   # Code architecture maps
+├── architecture/               # System profiles, integrations
+├── references/                 # OpenAPI specs
+└── features/                   # Feature documentation
 ```
 
 ---

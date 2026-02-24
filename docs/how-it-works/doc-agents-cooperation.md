@@ -638,8 +638,8 @@ To regenerate cache and CODEMAPS.
 
 ## Див. також
 
-- [Documentation Agents Comparison](./documentation-agents-comparison.md)
-- [Codebase Doc Collector Agent](../../agents/technical/codebase-doc-collector.md)
-- [Technical Writer Agent](../../agents/technical/technical-writer.md)
-- [Architecture Doc Collector Agent](../../agents/technical/architecture-doc-collector.md)
+- [Documentation Agents Comparison](./doc-agents-comparison.md)
+- [Codebase Doc Collector Agent](../../agents/codebase-doc-collector.md)
+- [Technical Writer Agent](../../agents/technical-writer.md)
+- [Architecture Doc Collector Agent](../../agents/architecture-doc-collector.md)
 - [CI/CD Automation](../../examples/automation/docs/cicd-example.md)

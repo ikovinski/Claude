@@ -10,20 +10,20 @@ I have access to a comprehensive AI agents system.
 
 | Task | What to Read |
 |------|--------------|
-| Code review | `~/.claude/agents/technical/code-reviewer.md` |
-| Security review | `~/.claude/agents/technical/security-reviewer.md` |
-| Architecture | `~/.claude/agents/technical/architecture-advisor.md` |
-| Task breakdown | `~/.claude/agents/technical/feature-decomposer.md` |
-| Implementation plan | `~/.claude/agents/technical/planner.md` |
-| TDD workflow | `~/.claude/agents/technical/tdd-guide.md` |
-| Dead code cleanup | `~/.claude/agents/technical/refactor-cleaner.md` |
-| Challenge decision | `~/.claude/agents/facilitation/decision-challenger.md` |
+| Code review | `~/.claude/agents/code-reviewer.md` |
+| Security review | `~/.claude/agents/security-reviewer.md` |
+| Architecture | `~/.claude/agents/architecture-advisor.md` |
+| Task breakdown | `~/.claude/agents/feature-decomposer.md` |
+| Implementation plan | `~/.claude/agents/planner.md` |
+| TDD workflow | `~/.claude/agents/tdd-guide.md` |
+| Dead code cleanup | `~/.claude/agents/refactor-cleaner.md` |
+| Challenge decision | `~/.claude/agents/decision-challenger.md` |
 
 ### Commands (Slash Commands)
 
 Available commands (type `/command` to use):
 - `/plan` — Create implementation plan
-- `/code-review` — Code review (uses Code Reviewer agent)
+- `/review` — Code review (uses Code Reviewer agent)
 - `/tdd` — TDD workflow
 - `/security-check` — Security review
 - `/skill-create` — Generate skill from git history

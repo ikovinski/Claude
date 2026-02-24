@@ -158,4 +158,4 @@ $user = $this->userRepository->findOneBy(['email' => $email]);
 
 ---
 
-*Uses [Security Reviewer Agent](../agents/technical/security-reviewer.md)*
+*Uses [Security Reviewer Agent](../agents/security-reviewer.md)*

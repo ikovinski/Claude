@@ -227,4 +227,4 @@ flowchart LR
 
 ---
 
-*Uses [Codebase Doc Collector Agent](../agents/technical/codebase-doc-collector.md)*
+*Uses [Codebase Doc Collector Agent](../agents/codebase-doc-collector.md)*

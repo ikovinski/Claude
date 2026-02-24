@@ -172,4 +172,4 @@ Run tests? [Y/n]
 
 ---
 
-*Uses [TDD Guide Agent](../agents/technical/tdd-guide.md)*
+*Uses [TDD Guide Agent](../agents/tdd-guide.md)*

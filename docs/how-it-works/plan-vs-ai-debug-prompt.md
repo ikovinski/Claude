@@ -71,7 +71,7 @@ flowchart LR
 
 📦 Routing
    ├─ Agent:         planner
-   │                 agents/technical/planner.md
+   │                 agents/planner.md
    ├─ Skills:        planning/planning-template
    │                 risk-management/risk-assessment
    └─ Project Skill: wellness-backend-patterns (if exists)

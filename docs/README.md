@@ -13,10 +13,7 @@ docs/
 │   ├── doc-agents-comparison.md     # Tech Writer vs Arch Doc Collector vs Codebase Doc Collector
 │   └── doc-agents-cooperation.md    # Codebase Doc Collector + Tech Writer protocol
 ├── plans/                           # Згенеровані плани (output від /plan)
-├── HOW-TO-USE.md                    # Детальний гайд
-├── skills-integration-summary.md    # Skills + agents інтеграція
-├── skills-mapping.md                # Agents → skills маппінг
-└── skills-reorganization-summary.md # Історія реорганізації
+└── HOW-TO-USE.md                    # Детальний гайд
 ```
 
 ## How It Works
@@ -41,13 +38,6 @@ docs/plans/
 
 **Naming**: `{version}.{slug}.md`
 
-## Integration Guides
-
-| Document | Description |
-|----------|-------------|
-| [skills-integration-summary.md](skills-integration-summary.md) | Як skills інтегруються з agents/scenarios |
-| [skills-mapping.md](skills-mapping.md) | Маппінг agents → skills |
-
 ## Quick Reference
 
 | Topic | Go to |
@@ -55,7 +45,7 @@ docs/plans/
 | Повний гайд | [HOW-TO-USE.md](HOW-TO-USE.md) |
 | Як працюють scenarios | [how-scenarios-work.md](how-it-works/how-scenarios-work.md) |
 | /plan vs /ai-debug | [plan-vs-ai-debug-prompt.md](how-it-works/plan-vs-ai-debug-prompt.md) |
-| Doc agents порівняння | [documentation-agents-comparison.md](how-it-works/documentation-agents-comparison.md) |
+| Doc agents порівняння | [doc-agents-comparison.md](how-it-works/doc-agents-comparison.md) |
 | Doc agents кооперація | [doc-agents-cooperation.md](how-it-works/doc-agents-cooperation.md) |
 | Skills система | [../skills/README.md](../skills/README.md) |
 

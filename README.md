@@ -59,16 +59,17 @@ This will remove the symlink and optionally restore your previous CLAUDE.md.
 ```
 ai-agents-system/
 ├── agents/                    # AI персонажі з унікальними biases
-│   ├── technical/
-│   │   ├── code-reviewer.md   # Code quality, production-readiness
-│   │   ├── security-reviewer.md # Security audit, OWASP
-│   │   ├── architecture-advisor.md  # Architecture, tech strategy
-│   │   ├── feature-decomposer.md      # Task breakdown, delivery
-│   │   ├── planner.md         # Implementation planning
-│   │   ├── tdd-guide.md       # Test-Driven Development
-│   │   └── refactor-cleaner.md # Dead code cleanup
-│   └── facilitation/
-│       └── decision-challenger.md # Challenge assumptions, find risks
+│   ├── code-reviewer.md       # Code quality, production-readiness
+│   ├── security-reviewer.md   # Security audit, OWASP
+│   ├── architecture-advisor.md # Architecture, tech strategy
+│   ├── feature-decomposer.md  # Task breakdown, delivery
+│   ├── planner.md             # Implementation planning
+│   ├── tdd-guide.md           # Test-Driven Development
+│   ├── refactor-cleaner.md    # Dead code cleanup
+│   ├── technical-writer.md    # API docs, feature specs
+│   ├── architecture-doc-collector.md # System profiles
+│   ├── codebase-doc-collector.md # Codemaps
+│   └── decision-challenger.md # Challenge assumptions, find risks
 │
 ├── skills/                    # Reusable workflows & patterns
 │   ├── architecture/          # ADR templates, decision matrices
@@ -76,6 +77,7 @@ ai-agents-system/
 │   ├── code-quality/          # Refactoring, test patterns
 │   ├── security/              # Security checklists, OWASP
 │   ├── tdd/                   # TDD workflow
+│   ├── documentation/         # API docs, feature specs, codemaps
 │   ├── risk-management/       # Risk assessment
 │   └── {project}-patterns/    # Auto-generated from git history
 │
@@ -128,10 +130,11 @@ After installation, these commands work in any project:
 | Command | Output | Description |
 |---------|--------|-------------|
 | `/plan <task>` | `docs/plans/*.md` | Create implementation plan |
-| `/code-review` | Chat | Code review |
+| `/review` | Chat | Code review |
 | `/tdd <feature>` | Chat + Files | TDD workflow - tests first |
 | `/security-check` | Chat | Security-focused review |
 | `/docs` | Chat / Files | Documentation (Stoplight) |
+| `/codemap` | `docs/CODEMAPS/*.md` | Generate codemaps from code |
 | `/architecture-docs` | Chat / Files | System profiles (Confluence) |
 | `/skill-create` | `skills/*.md` | Generate project skill from git |
 | `/ai-debug` | Chat | System status and analysis |
@@ -143,7 +146,7 @@ After installation, these commands work in any project:
 /plan "Add user authentication with JWT"
 # → Creates: docs/plans/001.user-authentication-jwt.md
 
-/code-review src/Service/PaymentService.php
+/review src/Service/PaymentService.php
 /tdd "CalorieCalculator service"
 /security-check src/Controller/Api/
 /docs --api /api/v1/workouts
@@ -181,7 +184,7 @@ skills:
 You: "Decompose feature: Add Apple Health integration"
 
 System:
-├─ Loads: agents/technical/feature-decomposer.md
+├─ Loads: agents/feature-decomposer.md
 ├─ Checks: ~/.claude/skills/wellness-backend-patterns/SKILL.md ✓ Found
 ├─ Loads: skills/planning/epic-breakdown.md
 ├─ Loads: skills/planning/vertical-slicing.md
@@ -200,7 +203,7 @@ Output:
 You: "/security-check src/Controller/Api/PaymentController.php"
 
 System:
-├─ Loads: agents/technical/security-reviewer.md
+├─ Loads: agents/security-reviewer.md
 ├─ Loads: skills/security/owasp-top-10.md
 ├─ Loads: skills/security/security-audit-checklist.md
 └─ Applies: OWASP checks + Security audit
@@ -218,8 +221,8 @@ Output:
 You: "Should we rewrite the sync engine?"
 
 System:
-├─ Loads: agents/technical/architecture-advisor.md
-├─ Loads: agents/facilitation/decision-challenger.md
+├─ Loads: agents/architecture-advisor.md
+├─ Loads: agents/decision-challenger.md
 ├─ Loads: skills/architecture/decision-matrix.md
 ├─ Loads: skills/risk-management/risk-assessment.md
 └─ Applies: Decision framework + Risk analysis
@@ -272,23 +275,21 @@ cd ~/your-project
 
 ## Available Agents
 
-### Technical Agents
+### All Agents
 
 | Agent | Main Bias | Use Case | Skills Used |
 |-------|-----------|----------|-------------|
-| [code-reviewer](agents/technical/code-reviewer.md) | Maintainability > cleverness | PR review, code quality | code-quality/* |
-| [security-reviewer](agents/technical/security-reviewer.md) | Paranoid by default | Security audit, OWASP | security/* |
-| [architecture-advisor](agents/technical/architecture-advisor.md) | Boring technology wins | Architecture decisions | architecture/* |
-| [feature-decomposer](agents/technical/feature-decomposer.md) | Vertical slices > horizontal | Task breakdown | planning/* |
-| [planner](agents/technical/planner.md) | Clarity over speed | Implementation planning | planning/* |
-| [tdd-guide](agents/technical/tdd-guide.md) | Test first, always | TDD workflow | tdd/* |
-| [refactor-cleaner](agents/technical/refactor-cleaner.md) | Less code = less bugs | Dead code cleanup | code-quality/* |
-
-### Facilitation Agents
-
-| Agent | Main Bias | Use Case | Skills Used |
-|-------|-----------|----------|-------------|
-| [decision-challenger](agents/facilitation/decision-challenger.md) | Assume nothing works | Challenge decisions | risk-management/* |
+| [code-reviewer](agents/code-reviewer.md) | Maintainability > cleverness | PR review, code quality | code-quality/* |
+| [security-reviewer](agents/security-reviewer.md) | Paranoid by default | Security audit, OWASP | security/* |
+| [architecture-advisor](agents/architecture-advisor.md) | Boring technology wins | Architecture decisions | architecture/* |
+| [feature-decomposer](agents/feature-decomposer.md) | Vertical slices > horizontal | Task breakdown | planning/* |
+| [planner](agents/planner.md) | Clarity over speed | Implementation planning | planning/* |
+| [tdd-guide](agents/tdd-guide.md) | Test first, always | TDD workflow | tdd/* |
+| [refactor-cleaner](agents/refactor-cleaner.md) | Less code = less bugs | Dead code cleanup | code-quality/* |
+| [technical-writer](agents/technical-writer.md) | Audience first | API docs, feature specs | documentation/* |
+| [architecture-doc-collector](agents/architecture-doc-collector.md) | Diagram first | System profiles | documentation/* |
+| [codebase-doc-collector](agents/codebase-doc-collector.md) | Generate, don't write | Codemaps | documentation/* |
+| [decision-challenger](agents/decision-challenger.md) | Assume nothing works | Challenge decisions | risk-management/* |
 
 ### Scenarios
 
@@ -378,7 +379,6 @@ cd ~/wellness-backend
 - **[How Scenarios Work](docs/how-it-works/how-scenarios-work.md)** — multi-agent workflows
 - **[/plan vs /ai-debug](docs/how-it-works/plan-vs-ai-debug-prompt.md)** — різниця між командами
 - **[Skills Index](skills/skills-index.md)** — повний каталог skills
-- **[Skills Integration](docs/skills-integration-summary.md)** — як skills інтегруються з agents
 - **[Agent Biases](agents/README.md)** — розуміння agent perspectives
 - **[HOW-TO-USE](docs/HOW-TO-USE.md)** — детальний гайд
 
