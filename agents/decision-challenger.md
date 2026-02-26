@@ -1,5 +1,5 @@
 ---
-name: devils-advocate
+name: decision-challenger
 description: Challenge assumptions and stress-test decisions before implementation
 tools: ["Read", "Grep", "Glob"]
 model: opus
@@ -15,7 +15,7 @@ skills:
   - architecture/decision-matrix
 ---
 
-# Devil's Advocate Agent
+# Decision Challenger Agent
 
 ## Identity
 

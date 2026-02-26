@@ -17,15 +17,14 @@ Just describe what you need. The system routes automatically:
 | "Plan implementation" | Planner agent |
 | "Cleanup dead code" | Refactor Cleaner agent |
 | "Document this" / "API docs" / "Write docs" | Technical Writer agent |
-| "Architecture docs" / "System profile" / "Integration catalog" | Architecture Documenter agent |
+| "Architecture docs" / "System profile" / "Integration catalog" | Architecture Doc Collector agent |
+| "Full documentation" / "Documentation suite" / "Document this project" | Documentation Suite scenario (3 agents team) |
 
 ## Structure
 
 ```
 ai-agents-system/
 ├── agents/           # AI personas with specific biases
-│   ├── technical/    # Code-focused agents
-│   └── facilitation/ # Process-focused agents
 ├── commands/         # Slash commands (/plan, /review, etc.)
 ├── skills/           # Reusable workflows
 ├── scenarios/        # Multi-step processes
@@ -45,7 +44,8 @@ Quick-invoke workflows via `/command`:
 | `/tdd` | Start TDD workflow | TDD Guide | tdd/* |
 | `/security-check` | Security review | Security Reviewer | security/* |
 | `/docs` | Generate documentation (Stoplight-compatible) | Technical Writer | documentation/* |
-| `/architecture-docs` | System profiles, integration catalogs | Architecture Documenter | documentation/* |
+| `/architecture-docs` | System profiles, integration catalogs | Architecture Doc Collector | documentation/* |
+| `/docs-suite` | Complete documentation suite (team-based) | Team (3 agents) | documentation/* |
 | `/skill-create` | Generate skill from git history | — | — |
 
 ### Usage Examples
@@ -59,30 +59,28 @@ Quick-invoke workflows via `/command`:
 /docs --feature "Workout Sharing"
 /architecture-docs
 /architecture-docs --integration "Apple App Store"
+/docs-suite
+/docs-suite --scope architecture
 /skill-create --commits 100
 ```
 
 ## Agent Routing
 
-### Core Agents (Original)
+### All Agents
 
 | Request Pattern | Agent | File |
 |-----------------|-------|------|
-| Code review, PR review | `code-reviewer` | [agents/technical/code-reviewer.md](agents/technical/code-reviewer.md) |
-| Decompose, break down tasks | `decomposer` | [agents/technical/decomposer.md](agents/technical/decomposer.md) |
-| Architecture, technical decision | `staff-engineer` | [agents/technical/staff-engineer.md](agents/technical/staff-engineer.md) |
-| Challenge, what could go wrong | `devils-advocate` | [agents/facilitation/devils-advocate.md](agents/facilitation/devils-advocate.md) |
-
-### New Agents (From everything-claude-code)
-
-| Request Pattern | Agent | File |
-|-----------------|-------|------|
-| Security review, vulnerabilities, OWASP | `security-reviewer` | [agents/technical/security-reviewer.md](agents/technical/security-reviewer.md) |
-| TDD, write tests, coverage | `tdd-guide` | [agents/technical/tdd-guide.md](agents/technical/tdd-guide.md) |
-| Implementation plan, how to build | `planner` | [agents/technical/planner.md](agents/technical/planner.md) |
-| Dead code, cleanup, refactor | `refactor-cleaner` | [agents/technical/refactor-cleaner.md](agents/technical/refactor-cleaner.md) |
-| Document, API docs, feature spec, ADR | `technical-writer` | [agents/technical/technical-writer.md](agents/technical/technical-writer.md) |
-| Architecture docs, system profile, integrations | `architecture-documenter` | [agents/technical/architecture-documenter.md](agents/technical/architecture-documenter.md) |
+| Code review, PR review | `code-reviewer` | [agents/code-reviewer.md](agents/code-reviewer.md) |
+| Decompose, break down tasks | `feature-decomposer` | [agents/feature-decomposer.md](agents/feature-decomposer.md) |
+| Architecture, technical decision | `architecture-advisor` | [agents/architecture-advisor.md](agents/architecture-advisor.md) |
+| Challenge, what could go wrong | `decision-challenger` | [agents/decision-challenger.md](agents/decision-challenger.md) |
+| Security review, vulnerabilities, OWASP | `security-reviewer` | [agents/security-reviewer.md](agents/security-reviewer.md) |
+| TDD, write tests, coverage | `tdd-guide` | [agents/tdd-guide.md](agents/tdd-guide.md) |
+| Implementation plan, how to build | `planner` | [agents/planner.md](agents/planner.md) |
+| Dead code, cleanup, refactor | `refactor-cleaner` | [agents/refactor-cleaner.md](agents/refactor-cleaner.md) |
+| Document, API docs, feature spec, ADR | `technical-writer` | [agents/technical-writer.md](agents/technical-writer.md) |
+| Architecture docs, system profile, integrations | `architecture-doc-collector` | [agents/architecture-doc-collector.md](agents/architecture-doc-collector.md) |
+| Codemap generation, code-driven docs | `codebase-doc-collector` | [agents/codebase-doc-collector.md](agents/codebase-doc-collector.md) |
 
 ## Scenario Routing
 
@@ -90,6 +88,7 @@ Quick-invoke workflows via `/command`:
 |-----------------|----------|------|
 | Feature decomposition, epic breakdown | Feature Decomposition | [scenarios/delivery/feature-decomposition.md](scenarios/delivery/feature-decomposition.md) |
 | Should we rewrite, rebuild vs refactor | Rewrite Decision | [scenarios/technical-decisions/rewrite-decision.md](scenarios/technical-decisions/rewrite-decision.md) |
+| Full documentation, documentation suite, document project | Documentation Suite | [scenarios/delivery/documentation-suite.md](scenarios/delivery/documentation-suite.md) |
 
 ## Rules (Always Applied)
 
@@ -132,7 +131,7 @@ Quick-invoke workflows via `/command`:
 | Planner | Clarity over speed |
 | Refactor Cleaner | Less code = less bugs |
 | Technical Writer | Audience first, examples > explanations |
-| Architecture Documenter | Diagram first, tables over prose |
+| Architecture Doc Collector | Diagram first, tables over prose |
 
 ## Agent Selection Guide
 
@@ -149,8 +148,10 @@ Quick-invoke workflows via `/command`:
 | Codebase захаращений | Refactor Cleaner |
 | Потрібна документація для інших команд | Technical Writer |
 | Feature spec для менеджерів | Technical Writer |
-| System overview для onboarding | Architecture Documenter |
-| Integration catalog | Architecture Documenter |
+| System overview для onboarding | Architecture Doc Collector |
+| Integration catalog | Architecture Doc Collector |
+| Повна документація проєкту | `/docs-suite` (Documentation Suite) |
+| Onboarding documentation | `/docs-suite` (Documentation Suite) |
 
 ### Recommended Sequences
 
@@ -168,7 +169,8 @@ Cross-Team Feature:
 Planner → Technical Writer (feature spec for stakeholders) → Decomposer → Implementation
 
 System Documentation:
-Architecture Documenter (system profile) → Technical Writer (API docs) → Staff Engineer (review)
+/docs-suite (orchestrates: Codebase Doc Collector → Architecture Doc Collector + Technical Writer → Cross-Review → Index)
+  OR manually: Architecture Doc Collector (system profile) → Technical Writer (API docs) → Staff Engineer (review)
 ```
 
 ## Skills System
@@ -196,7 +198,7 @@ skills/
 - Code Reviewer → code-quality/*
 - Devil's Advocate → risk-management/*
 - Technical Writer → documentation/*
-- Architecture Documenter → documentation/*
+- Architecture Doc Collector → documentation/*
 
 ### Project Skills (Auto-generated)
 
@@ -225,7 +227,7 @@ User is in: ~/wellness-backend
 Says: "Decompose feature: Add Apple Health integration"
 
 System loads:
-1. agents/technical/decomposer.md (persona + biases)
+1. agents/feature-decomposer.md (persona + biases)
 2. skills/planning/epic-breakdown.md (universal skill)
 3. skills/planning/vertical-slicing.md (universal skill)
 4. skills/wellness-backend-patterns/SKILL.md (project conventions) ✓
@@ -243,7 +245,7 @@ Output:
 User: "/security-check src/Controller/Api/PaymentController.php"
 
 System loads:
-1. agents/technical/security-reviewer.md (persona + biases)
+1. agents/security-reviewer.md (persona + biases)
 2. skills/security/owasp-top-10.md (universal skill)
 3. skills/security/security-audit-checklist.md (universal skill)
 4. rules/security.md (PII/PHI protection rules)
@@ -281,8 +283,8 @@ Multi-step scenarios:
 
 - **[README.md](README.md)** — System overview, installation, quick start
 - **[How Scenarios Work](docs/how-it-works/how-scenarios-work.md)** — Multi-agent workflows explained
+- **[Documentation Suite vs Individual Commands](docs/how-it-works/docs-suite-vs-individual-commands.md)** — /docs-suite comparison
 - **[Skills Index](skills/skills-index.md)** — Complete skills catalog
-- **[Skills Integration](docs/skills-integration-summary.md)** — How skills connect to agents
 
 ### By Component
 

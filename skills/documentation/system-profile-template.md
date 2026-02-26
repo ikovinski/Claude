@@ -2,9 +2,26 @@
 
 Confluence-compatible. Лаконічний формат.
 
+## Freshness Metadata
+
+System profiles are living documents. Review quarterly or after major changes.
+
+| Review Frequency | Trigger |
+|------------------|---------|
+| Quarterly | Standard review |
+| Immediately | New integration added |
+| Immediately | Major architecture change |
+| Immediately | Team ownership change |
+
 ## Template
 
 ```markdown
+---
+last_updated: YYYY-MM-DD
+last_validated: YYYY-MM-DD
+validation_status: current  # current | needs-review | outdated
+---
+
 # {System Name}
 
 | | |
@@ -13,6 +30,7 @@ Confluence-compatible. Лаконічний формат.
 | **Repo** | [link] |
 | **Owner** | Team Name |
 | **Updated** | YYYY-MM-DD |
+| **Validated** | YYYY-MM-DD |
 
 ## Context Diagram
 

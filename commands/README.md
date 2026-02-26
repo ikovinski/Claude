@@ -8,7 +8,7 @@ Slash-команди для Claude Code CLI. Швидкий виклик workflo
 
 ```
 /plan "Add user authentication"
-/code-review src/Service/PaymentService.php
+/review src/Service/PaymentService.php
 /tdd "CalorieCalculator service"
 /security-check src/Controller/Api/
 /ai-debug
@@ -21,16 +21,20 @@ Slash-команди для Claude Code CLI. Швидкий виклик workflo
 
 ## Available commands
 
-| Command | Description | Agent used | Skills applied |
-|---------|-------------|------------|----------------|
-| `/plan` | Створення плану імплементації | Planner | planning/* |
-| `/code-review` | Code review | Code Reviewer | code-quality/* |
-| `/tdd` | Запуск TDD workflow | TDD Guide | tdd/* |
-| `/security-check` | Security аудит | Security Reviewer | security/* |
-| `/docs` | Документація (Stoplight-compatible) | Technical Writer | documentation/* |
-| `/architecture-docs` | System profiles, integration catalogs | Architecture Documenter | documentation/* |
-| `/skill-create` | Генерація skill з git history | — | — |
-| `/ai-debug` | Показати статус системи | — | — |
+| Command | Agent | Output | Description |
+|---------|-------|--------|-------------|
+| `/plan` | Planner | `docs/plans/*.md` | Створення плану імплементації |
+| `/review` | Code Reviewer | Chat | Code review |
+| `/tdd` | TDD Guide | Chat + Files | TDD workflow |
+| `/security-check` | Security Reviewer | Chat | Security аудит |
+| `/docs` | Technical Writer | Chat / Files | Документація (Stoplight) |
+| `/docs --validate` | Technical Writer | Chat | Перевірка свіжості документації |
+| `/codemap` | Codebase Doc Collector | `docs/CODEMAPS/*.md` | Генерація codemaps з коду |
+| `/codemap --validate` | Codebase Doc Collector | Chat | Валідація codemaps vs код |
+| `/architecture-docs` | Architecture Doc Collector | Chat / Files | System profiles (Confluence) |
+| `/docs-suite` | Team (3 agents) | `docs/` (all) | Повна документація (team-based) |
+| `/skill-create` | — | `skills/*.md` | Генерація skill з git |
+| `/ai-debug` | — | Chat | Статус системи, аналіз |
 
 ## Examples з Skills
 
@@ -45,7 +49,14 @@ cd ~/wellness-backend
 - Agent: Planner
 - Skills: planning/planning-template.md, wellness-backend-patterns/SKILL.md
 
-**Output:** Plan що слідує project conventions
+**Output:** `docs/plans/001.apple-health-integration.md`
+
+```
+docs/plans/
+├── 001.apple-health-integration.md
+├── 002.next-feature.md
+└── ...
+```
 
 ---
 
@@ -92,6 +103,56 @@ cd ~/wellness-backend
 
 ---
 
+### `/codemap` для Code-Driven Docs
+
+```bash
+/codemap                        # Generate all codemaps
+/codemap --area controllers     # Only controllers
+/codemap --validate             # Check codemaps vs code
+```
+
+**Loads:**
+- Agent: Codebase Doc Collector
+- Skills: documentation/codemap-template.md
+
+**Output:**
+```
+docs/CODEMAPS/
+├── INDEX.md
+├── controllers.md
+├── services.md
+├── entities.md
+├── messages.md
+└── commands.md
+```
+
+---
+
+### `/docs-suite` для Full Documentation
+
+```bash
+/docs-suite                        # Full documentation generation
+/docs-suite --scope architecture   # Architecture only
+/docs-suite --no-cross-review      # Skip cross-review phase
+```
+
+**Loads:**
+- Scenario: delivery/documentation-suite
+- Agents: Codebase Doc Collector, Architecture Doc Collector, Technical Writer
+- Skills: documentation/* (all templates)
+
+**Output:**
+```
+docs/
+├── INDEX.md                    # Unified documentation catalog
+├── CODEMAPS/                   # Code architecture maps
+├── architecture/               # System profiles, integrations
+├── references/                 # OpenAPI specs
+└── features/                   # Feature documentation
+```
+
+---
+
 ### `/architecture-docs` для System Overview
 
 ```bash
@@ -101,7 +162,7 @@ cd ~/wellness-backend
 ```
 
 **Loads:**
-- Agent: Architecture Documenter
+- Agent: Architecture Doc Collector
 - Skills: documentation/system-profile-template.md, documentation/integration-template.md
 
 **Output:** System Profile з C4 diagrams, Integration Catalog, Open Questions

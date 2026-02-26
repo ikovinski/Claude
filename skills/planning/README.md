@@ -12,7 +12,7 @@
 
 ### Agents
 - `planner` — для створення implementation plans
-- `decomposer` — для декомпозиції задач
+- `feature-decomposer` — для декомпозиції задач
 
 ### Scenarios
 - `feature-decomposition` — для розбиття features

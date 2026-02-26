@@ -72,7 +72,7 @@ Claude: "Applying Decomposer perspective with bias: Vertical slices > horizontal
 | Staff Engineer | Boring technology wins | Архітектурні рішення |
 | Devil's Advocate | Assume nothing works | Перевірка рішень на міцність |
 
-**Файли**: `agents/technical/`, `agents/facilitation/`
+**Файли**: `agents/`
 
 ### Скіли (Skills)
 
@@ -213,7 +213,7 @@ cd ~/wellness-backend
 
 | Type | File | Why |
 |------|------|-----|
-| Agent | decomposer.md | Main persona |
+| Agent | feature-decomposer.md | Main persona |
 | Universal Skill | planning/epic-breakdown.md | Decomposition methodology |
 | Universal Skill | planning/vertical-slicing.md | Slicing technique |
 | Project Skill | wellness-backend-patterns/SKILL.md | Project conventions |
@@ -270,7 +270,7 @@ class SyncWorkoutHandler
 ```
 
 **Що відбувається**:
-1. Claude читає `agents/technical/code-reviewer.md`
+1. Claude читає `agents/code-reviewer.md`
 2. Застосовує biases (maintainability, production-first, etc.)
 3. Видає структурований output (Summary, Blocking Issues, Suggestions, etc.)
 
@@ -343,7 +343,7 @@ Benefit: Faster response to issues, better user experience
 ```
 
 **Що відбувається**:
-1. Claude читає `agents/technical/staff-engineer.md`
+1. Claude читає `agents/architecture-advisor.md`
 2. Застосовує biases (boring technology wins, reversibility over perfection)
 3. Видає аналіз з options і recommendation
 
@@ -395,7 +395,7 @@ Challenge це рішення.
 ```
 
 **Що відбувається**:
-1. Claude читає `agents/facilitation/devils-advocate.md`
+1. Claude читає `agents/decision-challenger.md`
 2. Застосовує biases (assume nothing works, question consensus)
 3. Знаходить assumptions для challenge, failure scenarios, pre-mortem
 
@@ -523,7 +523,7 @@ rules:
 
 4. Додати до агента який буде використовувати:
    ```yaml
-   # agents/technical/your-agent.md
+   # agents/your-agent.md
    skills:
      - your-category/your-skill
    ```
@@ -646,7 +646,6 @@ Stakes: [що втратимо якщо помилимось]
 2. Подивись приклади в агентах і скілах
 3. Читай документацію:
    - [How Scenarios Work](docs/how-it-works/how-scenarios-work.md)
-   - [Skills Integration](docs/skills-integration-summary.md)
    - [README.md](README.md) — загальний огляд
 4. Запитай Claude про конкретну проблему
 

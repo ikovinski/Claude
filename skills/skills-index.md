@@ -18,7 +18,10 @@ skills/
 │   ├── feature-spec-template.md
 │   ├── adr-template.md
 │   ├── runbook-template.md
-│   └── readme-template.md
+│   ├── readme-template.md
+│   ├── system-profile-template.md
+│   ├── integration-template.md
+│   └── codemap-template.md
 ├── planning/                  # Planning & decomposition
 │   ├── planning-template.md
 │   ├── vertical-slicing.md
@@ -43,8 +46,8 @@ skills/
 
 | Skill | Use for | Used by |
 |-------|---------|---------|
-| `architecture-decision-template.md` | ADR template, decision documentation | staff-engineer, rewrite-decision |
-| `decision-matrix.md` | Weighted decisions, trade-off analysis | staff-engineer, devils-advocate, rewrite-decision |
+| `architecture-decision-template.md` | ADR template, decision documentation | architecture-advisor, rewrite-decision |
+| `decision-matrix.md` | Weighted decisions, trade-off analysis | architecture-advisor, decision-challenger, rewrite-decision |
 
 ### Code Quality
 
@@ -59,14 +62,14 @@ skills/
 | Skill | Use for | Used by |
 |-------|---------|---------|
 | `planning-template.md` | Implementation plan structure | planner, feature-decomposition |
-| `vertical-slicing.md` | Deliverable increments (1-3 days) | decomposer, feature-decomposition |
-| `epic-breakdown.md` | Epic → Feature → Story decomposition | decomposer, feature-decomposition |
+| `vertical-slicing.md` | Deliverable increments (1-3 days) | feature-decomposer, feature-decomposition |
+| `epic-breakdown.md` | Epic → Feature → Story decomposition | feature-decomposer, feature-decomposition |
 
 ### Risk Management
 
 | Skill | Use for | Used by |
 |-------|---------|---------|
-| `risk-assessment.md` | Risk matrix, mitigation strategies | planner, devils-advocate, rewrite-decision |
+| `risk-assessment.md` | Risk matrix, mitigation strategies | planner, decision-challenger, rewrite-decision |
 
 ### Security
 
@@ -87,11 +90,12 @@ skills/
 |-------|---------|---------|
 | `api-docs-template.md` | OpenAPI 3.x endpoint documentation | technical-writer |
 | `feature-spec-template.md` | Feature specs for managers/stakeholders | technical-writer |
-| `adr-template.md` | Architecture Decision Records | technical-writer, staff-engineer |
+| `adr-template.md` | Architecture Decision Records | technical-writer, architecture-advisor |
 | `runbook-template.md` | Operational runbooks for Ops/SRE | technical-writer |
 | `readme-template.md` | Service README structure | technical-writer |
-| `system-profile-template.md` | System context, integrations overview | architecture-documenter |
-| `integration-template.md` | Single integration documentation | architecture-documenter |
+| `system-profile-template.md` | System context, integrations overview | architecture-doc-collector |
+| `integration-template.md` | Single integration documentation | architecture-doc-collector |
+| `codemap-template.md` | Auto-generated architectural maps | codebase-doc-collector |
 
 ### Engineering (Legacy)
 
@@ -107,13 +111,14 @@ skills/
 | **code-reviewer** | — | `{project}-patterns` |
 | **security-reviewer** | Security | `{project}-patterns`, `security/security-audit-checklist`, `security/owasp-top-10` |
 | **planner** | Planning | `{project}-patterns`, `planning/planning-template`, `risk-management/risk-assessment` |
-| **decomposer** | Planning | `{project}-patterns`, `planning/vertical-slicing`, `planning/epic-breakdown` |
+| **feature-decomposer** | Planning | `{project}-patterns`, `planning/vertical-slicing`, `planning/epic-breakdown` |
 | **tdd-guide** | TDD + Quality | `{project}-patterns`, `tdd/tdd-workflow`, `code-quality/test-patterns` |
 | **refactor-cleaner** | Code Quality | `{project}-patterns`, `code-quality/refactoring-patterns`, `code-quality/dead-code-detection` |
-| **staff-engineer** | Architecture | `{project}-patterns`, `architecture/architecture-decision-template`, `architecture/decision-matrix` |
-| **devils-advocate** | Risk + Arch | `risk-management/risk-assessment`, `architecture/decision-matrix` |
+| **architecture-advisor** | Architecture | `{project}-patterns`, `architecture/architecture-decision-template`, `architecture/decision-matrix` |
+| **decision-challenger** | Risk + Arch | `risk-management/risk-assessment`, `architecture/decision-matrix` |
 | **technical-writer** | Documentation | `{project}-patterns`, `documentation/api-docs-template`, `documentation/feature-spec-template`, `documentation/adr-template`, `documentation/runbook-template`, `documentation/readme-template` |
-| **architecture-documenter** | Documentation | `{project}-patterns`, `documentation/system-profile-template`, `documentation/integration-template` |
+| **architecture-doc-collector** | Documentation | `{project}-patterns`, `documentation/system-profile-template`, `documentation/integration-template` |
+| **codebase-doc-collector** | Documentation | `{project}-patterns`, `documentation/codemap-template` |
 
 ## Scenario → Skills Mapping
 

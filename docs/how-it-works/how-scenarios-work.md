@@ -16,8 +16,11 @@ Scenarios активуються через **природну мову**, не 
 | "Should we rewrite this module?" | Rewrite Decision |
 | "Break down this epic" | Feature Decomposition |
 | "Rebuild vs refactor?" | Rewrite Decision |
+| "Generate full documentation" | Documentation Suite |
+| "Document this project" | Documentation Suite |
+| "Full docs from codebase" | Documentation Suite |
 
-**Без `/` команди** — просто опишіть потребу.
+**Без `/` команди** — просто опишіть потребу. Також доступна команда `/docs-suite` для прямого виклику.
 
 ---
 
@@ -129,6 +132,59 @@ Phase 4: Staff Engineer
 
 ---
 
+### 3. Documentation Suite
+
+**Мета**: Згенерувати повну документацію проєкту з codebase, використовуючи 3 агенти як координовану команду
+
+**Ланцюжок виконання**:
+```
+Phase 1: Codebase Doc Collector
+  ↓ Scan codebase
+  ↓ Generate cache + CODEMAPS
+
+Phase 2A: Architecture Doc Collector    Phase 2B: Technical Writer
+  ↓ Read cache                            ↓ Read cache
+  ↓ System profile                        ↓ OpenAPI spec
+  ↓ Integration catalog                   ↓ Feature docs
+  (PARALLEL)                              (PARALLEL)
+
+Phase 3: Team Lead
+  ↓ Compile, check gaps
+
+Phase 4: Cross-Review
+  ↓ Architecture Doc Collector reviews Technical Writer
+  ↓ Technical Writer reviews Architecture Doc Collector
+
+Phase 5: Team Lead
+  ↓ Generate INDEX.md
+  ↓ Final report
+```
+
+**Skills використовує**:
+- `documentation/codemap-template`
+- `documentation/system-profile-template`
+- `documentation/integration-template`
+- `documentation/api-docs-template`
+- `documentation/feature-spec-template`
+- Auto: `{project}-patterns`
+
+**Deliverables**:
+- `.codemap-cache/*.json` (intermediate data)
+- `docs/CODEMAPS/*.md` (code architecture)
+- `docs/architecture/system-profile.md` (system overview)
+- `docs/architecture/integrations/*.md` (integration catalog)
+- `docs/references/openapi.yaml` (API spec)
+- `docs/features/*.md` (feature documentation)
+- `docs/INDEX.md` (unified catalog)
+
+**Тривалість**: 60-120 хвилин
+
+**Особливості**: Перший team-based scenario з паралельним виконанням та cross-review між агентами.
+
+**Порівняння з окремими командами**: [docs-suite-vs-individual-commands.md](./docs-suite-vs-individual-commands.md)
+
+---
+
 ## Як Використовувати Scenarios
 
 ### Приклад 1: Feature Decomposition
@@ -155,6 +211,21 @@ Phase 4: Staff Engineer
 3. Аналізує проблему
 4. Challenge assumptions
 5. Видає ADR з рекомендацією
+```
+
+### Приклад 3: Documentation Suite
+
+```
+Ви: "Generate full documentation for this project"
+
+Система:
+1. Створює Agent Team (docs-suite-{project})
+2. Phase 1: Codebase Doc Collector сканує codebase
+3. Phase 2: Architecture Doc Collector + Technical Writer працюють паралельно
+4. Phase 3: Team Lead перевіряє gaps
+5. Phase 4: Cross-review між агентами
+6. Phase 5: Генерує docs/INDEX.md
+7. Видає final report зі статистикою
 ```
 
 ---
@@ -216,12 +287,13 @@ Scenarios **автоматично** підтягують потрібні skill
 |----------|------------|
 | Новий epic без breakdown | Feature Decomposition scenario |
 | "Легше переписати" discussion | Rewrite Decision scenario |
-| Простий code review | `/code-review` command |
+| Простий code review | `/review` command |
 | Простий implementation plan | `/plan` command |
 | Потрібна швидка відповідь | Один агент |
 | Складне рішення з ризиками | Scenario |
+| Потрібна повна документація | Documentation Suite scenario або `/docs-suite` |
 
-**Правило**: Scenarios для **складних багатокрокових рішень**. Commands для **одноразових дій**.
+**Правило**: Scenarios для **складних багатокрокових рішень**. Commands для **одноразових дій**. Documentation Suite — перший hybrid (і scenario, і slash command).
 
 ---
 
@@ -296,7 +368,7 @@ Phase 2: Staff Engineer active
 
 **Phase 1: Scope Understanding (Decomposer)**
 ```
-Loading: agents/technical/decomposer.md
+Loading: agents/feature-decomposer.md
 Loading: skills/wellness-backend-patterns/SKILL.md
 Applying bias: "Vertical slices > horizontal layers"
 
@@ -325,7 +397,7 @@ Output: decomposition_draft.md
 
 **Phase 3: Technical Validation (Staff Engineer)**
 ```
-Switching to: agents/technical/staff-engineer.md
+Switching to: agents/architecture-advisor.md
 Input: decomposition_draft.md
 Applying bias: "Boring technology wins"
 
@@ -341,7 +413,7 @@ Output: validation_report.md
 
 **Phase 4: Finalization (Decomposer)**
 ```
-Switching back to: agents/technical/decomposer.md
+Switching back to: agents/feature-decomposer.md
 Input: decomposition_draft.md + validation_report.md
 
 Final slices:
@@ -460,4 +532,6 @@ skills:
 - [Skills System](../../skills/README.md) - Як завантажуються skills
 - [Feature Decomposition Scenario](../../scenarios/delivery/feature-decomposition.md)
 - [Rewrite Decision Scenario](../../scenarios/technical-decisions/rewrite-decision.md)
+- [Documentation Suite Scenario](../../scenarios/delivery/documentation-suite.md)
+- [Documentation Suite vs Individual Commands](./docs-suite-vs-individual-commands.md)
 - [Commands Overview](../../commands/README.md) - Відмінність від slash commands

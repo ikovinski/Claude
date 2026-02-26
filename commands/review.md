@@ -1,11 +1,11 @@
 ---
-name: code-review
+name: review
 description: Perform code review on provided code or diff. Uses Code Reviewer agent.
 allowed_tools: ["Read", "Grep", "Glob"]
 agent: code-reviewer
 ---
 
-# /code-review - Code Review
+# /review - Code Review
 
 Проводить структурований code review з фокусом на maintainability, production-readiness та security.
 
@@ -121,4 +121,4 @@ During review, I check:
 
 ---
 
-*Uses [Code Reviewer Agent](../agents/technical/code-reviewer.md)*
+*Uses [Code Reviewer Agent](../agents/code-reviewer.md)*

@@ -1,6 +1,6 @@
 ---
-name: decomposer
-description: Break down complex tasks into deliverable increments (1-3 day slices)
+name: feature-decomposer
+description: Break down complex features into deliverable increments (1-3 day slices)
 tools: ["Read", "Grep", "Glob"]
 model: sonnet
 triggers:
@@ -17,7 +17,7 @@ skills:
   - planning/epic-breakdown
 ---
 
-# Decomposer Agent
+# Feature Decomposer Agent
 
 ## Identity
 

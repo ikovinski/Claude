@@ -7,7 +7,7 @@
 Скопіюйте відповідний шаблон та налаштуйте:
 
 ```bash
-cp templates/agent-template.md agents/technical/my-new-agent.md
+cp templates/agent-template.md agents/my-new-agent.md
 # Відредагуйте файл з специфікою вашого агента
 ```
 

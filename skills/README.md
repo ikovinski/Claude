@@ -92,7 +92,7 @@ Reusable для всіх PHP/Symfony проєктів. Розподілені п
 Агенти автоматично завантажують релевантні skills:
 
 ```yaml
-# agents/technical/decomposer.md
+# agents/feature-decomposer.md
 skills:
   - auto:{project}-patterns      # Автоматично шукає у поточному проєкті
   - planning/epic-breakdown       # Завантажує universal skill
@@ -130,7 +130,7 @@ Directory: ~/wellness-backend
 Task: "Decompose feature: Add Apple Health integration"
 
 System loads:
-├─ agents/technical/decomposer.md
+├─ agents/feature-decomposer.md
 ├─ skills/wellness-backend-patterns/SKILL.md  ← Project-specific
 ├─ skills/planning/epic-breakdown.md          ← Universal
 ├─ skills/planning/vertical-slicing.md        ← Universal
@@ -182,5 +182,3 @@ See [skills-index.md](skills-index.md) для повного списку skills
 ## Related Documentation
 
 - [How Scenarios Work](../docs/how-it-works/how-scenarios-work.md) — Як scenarios використовують skills
-- [Skills Integration Summary](../docs/skills-integration-summary.md) — Огляд інтеграції
-- [Skills Mapping](../docs/skills-mapping.md) — Маппінг agents → skills

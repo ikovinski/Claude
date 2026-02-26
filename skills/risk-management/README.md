@@ -10,7 +10,7 @@
 
 ### Agents
 - `planner` — для assessment ризиків у планах
-- `devils-advocate` — для challenge рішень
+- `decision-challenger` — для challenge рішень
 
 ### Scenarios
 - `rewrite-decision` — для оцінки ризиків rewrite

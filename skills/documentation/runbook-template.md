@@ -3,6 +3,16 @@
 ## Purpose
 Document operational procedures for service management, troubleshooting, and incident response.
 
+## Freshness Metadata
+
+Runbooks are CRITICAL for incident response. Staleness = risk.
+
+| Staleness | Risk Level | Action |
+|-----------|------------|--------|
+| < 30 days | Low | OK |
+| 30-60 days | Medium | Review recommended |
+| > 60 days | High | Must update before next on-call rotation |
+
 ## Audience
 - **Ops/SRE**: Day-to-day operations
 - **On-call engineers**: Incident response
@@ -15,6 +25,9 @@ Document operational procedures for service management, troubleshooting, and inc
 ```markdown
 ---
 stoplight-id: runbook-{service-name}
+last_updated: YYYY-MM-DD
+last_validated: YYYY-MM-DD
+validation_status: tested  # tested | needs-review | outdated
 ---
 
 # Runbook: {Service Name}
@@ -24,6 +37,8 @@ stoplight-id: runbook-{service-name}
 | Aspect | Value |
 |--------|-------|
 | **Description** | {One sentence description} |
+| **Last Updated** | YYYY-MM-DD |
+| **Last Validated** | YYYY-MM-DD |
 | **Repository** | {github link} |
 | **Tech Stack** | {e.g., PHP 8.3, Symfony 6.4} |
 | **Owner Team** | {team name} |

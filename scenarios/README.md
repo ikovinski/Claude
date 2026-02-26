@@ -29,3 +29,4 @@ Scenarios активуються складними запитами:
 |----------|--------|---------|
 | `feature-decomposition` | Analysis → Breakdown → Validation | Декомпозиція epics на tasks |
 | `rewrite-decision` | Assessment → Options → Recommendation | Рішення rebuild vs refactor |
+| `documentation-suite` | Scan → Analyze → Compile → Cross-Review → Index | Повна документація з codebase (3 агенти, team-based) |
