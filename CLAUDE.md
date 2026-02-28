@@ -19,6 +19,7 @@ Just describe what you need. The system routes automatically:
 | "Document this" / "API docs" / "Write docs" | Technical Writer agent |
 | "Architecture docs" / "System profile" / "Integration catalog" | Architecture Doc Collector agent |
 | "Full documentation" / "Documentation suite" / "Document this project" | Documentation Suite scenario (3 agents team) |
+| `/dev "task description"` / "Development workflow" | Dev Workflow — 7-step pipeline (Research → Design → Plan → Implement → Review → Document → PR) |
 
 ## Structure
 
@@ -46,6 +47,7 @@ Quick-invoke workflows via `/command`:
 | `/docs` | Generate documentation (Stoplight-compatible) | Technical Writer | documentation/* |
 | `/architecture-docs` | System profiles, integration catalogs | Architecture Doc Collector | documentation/* |
 | `/docs-suite` | Complete documentation suite (team-based) | Team (3 agents) | documentation/* |
+| `/dev` | Development workflow pipeline (7 steps) | Team (varies per step) | dev-workflow/*, planning/*, tdd/* |
 | `/skill-create` | Generate skill from git history | — | — |
 
 ### Usage Examples
@@ -61,6 +63,10 @@ Quick-invoke workflows via `/command`:
 /architecture-docs --integration "Apple App Store"
 /docs-suite
 /docs-suite --scope architecture
+/dev "Add Apple Health integration"
+/dev --step review
+/dev --step document
+/dev --status
 /skill-create --commits 100
 ```
 
@@ -81,6 +87,7 @@ Quick-invoke workflows via `/command`:
 | Document, API docs, feature spec, ADR | `technical-writer` | [agents/technical-writer.md](agents/technical-writer.md) |
 | Architecture docs, system profile, integrations | `architecture-doc-collector` | [agents/architecture-doc-collector.md](agents/architecture-doc-collector.md) |
 | Codemap generation, code-driven docs | `codebase-doc-collector` | [agents/codebase-doc-collector.md](agents/codebase-doc-collector.md) |
+| Research, AS-IS analysis, codebase exploration | `researcher` | [agents/researcher.md](agents/researcher.md) |
 
 ## Scenario Routing
 
@@ -89,6 +96,7 @@ Quick-invoke workflows via `/command`:
 | Feature decomposition, epic breakdown | Feature Decomposition | [scenarios/delivery/feature-decomposition.md](scenarios/delivery/feature-decomposition.md) |
 | Should we rewrite, rebuild vs refactor | Rewrite Decision | [scenarios/technical-decisions/rewrite-decision.md](scenarios/technical-decisions/rewrite-decision.md) |
 | Full documentation, documentation suite, document project | Documentation Suite | [scenarios/delivery/documentation-suite.md](scenarios/delivery/documentation-suite.md) |
+| `/dev`, development workflow, research→design→plan→implement→review→document→PR | Dev Workflow (7 steps) | [scenarios/dev-workflow/](scenarios/dev-workflow/) |
 
 ## Rules (Always Applied)
 
@@ -132,6 +140,7 @@ Quick-invoke workflows via `/command`:
 | Refactor Cleaner | Less code = less bugs |
 | Technical Writer | Audience first, examples > explanations |
 | Architecture Doc Collector | Diagram first, tables over prose |
+| Researcher | Describe, don't prescribe (AS-IS only) |
 
 ## Agent Selection Guide
 
@@ -152,6 +161,9 @@ Quick-invoke workflows via `/command`:
 | Integration catalog | Architecture Doc Collector |
 | Повна документація проєкту | `/docs-suite` (Documentation Suite) |
 | Onboarding documentation | `/docs-suite` (Documentation Suite) |
+| Нова фіча від research до PR | `/dev "task"` (Dev Workflow) |
+| Code review всього scope | `/dev --step review` (standalone) |
+| Документація фічі + delta scan | `/dev --step document` (standalone) |
 
 ### Recommended Sequences
 
@@ -167,6 +179,9 @@ Staff Engineer → Devil's Advocate → Decomposer (if approved) → Technical W
 
 Cross-Team Feature:
 Planner → Technical Writer (feature spec for stakeholders) → Decomposer → Implementation
+
+Full Feature Development Pipeline:
+/dev "task" → Research → Design (quality gate) → Plan → Implement (TDD + review loop) → Review → Document → PR
 
 System Documentation:
 /docs-suite (orchestrates: Codebase Doc Collector → Architecture Doc Collector + Technical Writer → Cross-Review → Index)
@@ -187,6 +202,7 @@ skills/
 ├── security/            # OWASP checks, security audit
 ├── tdd/                 # TDD workflow
 ├── documentation/       # API docs, feature specs, runbooks (Stoplight-compatible)
+├── dev-workflow/        # /dev pipeline templates (research, design)
 └── risk-management/     # Risk assessment
 ```
 
@@ -285,6 +301,7 @@ Multi-step scenarios:
 - **[How Scenarios Work](docs/how-it-works/how-scenarios-work.md)** — Multi-agent workflows explained
 - **[Documentation Suite vs Individual Commands](docs/how-it-works/docs-suite-vs-individual-commands.md)** — /docs-suite comparison
 - **[Skills Index](skills/skills-index.md)** — Complete skills catalog
+- **[Dev Workflow](docs/dev-workflow/README.md)** — /dev pipeline documentation
 
 ### By Component
 

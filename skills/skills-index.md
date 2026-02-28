@@ -33,6 +33,9 @@ skills/
 │   └── owasp-top-10.md
 ├── tdd/                       # Test-Driven Development
 │   └── tdd-workflow.md
+├── dev-workflow/              # /dev pipeline templates
+│   ├── research-template.md
+│   └── design-template.md
 ├── engineering/               # Legacy/general skills
 │   ├── code-review.md
 │   └── task-decomposition.md
@@ -97,6 +100,13 @@ skills/
 | `integration-template.md` | Single integration documentation | architecture-doc-collector |
 | `codemap-template.md` | Auto-generated architectural maps | codebase-doc-collector |
 
+### Dev Workflow
+
+| Skill | Use for | Used by |
+|-------|---------|---------|
+| `research-template.md` | Templates for research output (5 files: RESEARCH.md, code-analysis, data-model, architecture-analysis, test-coverage) | researcher (dev-workflow/1-research) |
+| `design-template.md` | Templates for design output (DESIGN.md, diagrams, api-contracts, ADR auto-count) | architecture-advisor (dev-workflow/2-design) |
+
 ### Engineering (Legacy)
 
 | Skill | Use for | Used by |
@@ -119,6 +129,7 @@ skills/
 | **technical-writer** | Documentation | `{project}-patterns`, `documentation/api-docs-template`, `documentation/feature-spec-template`, `documentation/adr-template`, `documentation/runbook-template`, `documentation/readme-template` |
 | **architecture-doc-collector** | Documentation | `{project}-patterns`, `documentation/system-profile-template`, `documentation/integration-template` |
 | **codebase-doc-collector** | Documentation | `{project}-patterns`, `documentation/codemap-template` |
+| **researcher** | Dev Workflow | `{project}-patterns`, `dev-workflow/research-template` |
 
 ## Scenario → Skills Mapping
 
@@ -126,6 +137,11 @@ skills/
 |----------|-------------|
 | **feature-decomposition** | `planning/epic-breakdown`, `planning/vertical-slicing`, `planning/planning-template` |
 | **rewrite-decision** | `architecture/architecture-decision-template`, `architecture/decision-matrix`, `risk-management/risk-assessment` |
+| **dev-workflow/1-research** | `dev-workflow/research-template`, `{project}-patterns` |
+| **dev-workflow/2-design** | `dev-workflow/design-template`, `architecture/architecture-decision-template`, `documentation/adr-template` |
+| **dev-workflow/3-plan** | `planning/planning-template`, `planning/vertical-slicing`, `planning/epic-breakdown`, `risk-management/risk-assessment` |
+| **dev-workflow/4-implement** | `tdd/tdd-workflow`, `code-quality/test-patterns`, `{project}-patterns` |
+| **dev-workflow/5-review** | `code-quality/refactoring-patterns`, `security/owasp-top-10`, `security/security-audit-checklist` |
 
 ## How to Use
 
