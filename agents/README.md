@@ -33,3 +33,4 @@ AI-персони з визначеними упередженнями та сф
 | `technical-writer` | Audience first, examples > explanations | API docs, feature specs, ADRs (Stoplight) |
 | `architecture-doc-collector` | Diagram first, tables over prose | System profiles, integrations (Confluence MD) |
 | `codebase-doc-collector` | Generate, don't write | Codemaps, автоматична документація |
+| `researcher` | Describe, don't prescribe | AS-IS codebase analysis, research team lead |

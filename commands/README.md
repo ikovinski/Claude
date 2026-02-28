@@ -35,6 +35,7 @@ Slash-команди для Claude Code CLI. Швидкий виклик workflo
 | `/docs-suite` | Team (3 agents) | `docs/` (all) | Повна документація (team-based) |
 | `/skill-create` | — | `skills/*.md` | Генерація skill з git |
 | `/ai-debug` | — | Chat | Статус системи, аналіз |
+| `/dev` | Team (varies) | `.workflows/` | Dev workflow pipeline (6 кроків) |
 
 ## Examples з Skills
 
@@ -149,6 +150,39 @@ docs/
 ├── architecture/               # System profiles, integrations
 ├── references/                 # OpenAPI specs
 └── features/                   # Feature documentation
+```
+
+---
+
+### `/dev` для Development Pipeline
+
+```bash
+/dev "Add Apple Health integration"          # New workflow → Research
+/dev                                         # Auto-continue next step
+/dev --step design                           # Run specific step
+/dev --step implement --phase 2              # Specific implementation phase
+/dev --step review                           # Standalone review (works outside pipeline too)
+/dev --step pr                               # Create branch + commits, ask before PR
+/dev --status                                # Show pipeline state
+/dev --reset                                 # Reset workflow
+/dev --auto                                  # All steps, pause at quality gates
+```
+
+**Loads:**
+- Scenario: dev-workflow (6 steps)
+- Agents: researcher, architecture-advisor, planner, tdd-guide, code-reviewer, security-reviewer
+- Skills: dev-workflow/*, planning/*, tdd/*, security/*
+
+**Output:**
+```
+.workflows/
+├── state.json
+├── research/
+├── design/
+├── plan/{feature-slug}/
+├── implement/
+├── review/{feature-slug}/
+└── pr/
 ```
 
 ---
