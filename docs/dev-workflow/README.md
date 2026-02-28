@@ -1,6 +1,6 @@
 # /dev Workflow — Development Pipeline
 
-6-кроковий pipeline для розробки фіч: від аналізу до PR.
+7-кроковий pipeline для розробки фіч: від аналізу до PR.
 
 ## Flow
 
@@ -12,10 +12,12 @@ flowchart LR
     I -->|loop| I
     I --> Rev[Review]
     Rev -->|blocking| I
-    Rev --> PR[PR]
+    Rev --> Doc[Document]
+    Doc --> PR[PR]
 
     style D fill:#fff3cd
     style Rev fill:#d4edda
+    style Doc fill:#e1f5fe
 ```
 
 ## Quick Start
@@ -40,7 +42,8 @@ flowchart LR
 | 3 | **Plan** | Single | planner | `.workflows/plan/{name}/001-PLAN.md` |
 | 4 | **Implement** | Agent Team | tdd-guide (developer) + code-reviewer (reviewer) | Code + `.workflows/implement/PROGRESS.md` |
 | 5 | **Review** | Agent Team | code-reviewer + security-reviewer | `.workflows/review/{name}/REVIEW.md` |
-| 6 | **PR** | Single (bash) | gh CLI | Branch + commits + `.workflows/pr/PR.md` |
+| 6 | **Document** | Agent Team | technical-writer + codebase-doc-collector | `.workflows/document/DOCS.md` + `docs/` updates |
+| 7 | **PR** | Single (bash) | gh CLI | Branch + commits + `.workflows/pr/PR.md` |
 
 ## Step Details
 
@@ -75,9 +78,15 @@ Agent Team з developer + reviewer:
 
 Може запускатися окремо: `/dev --step review`
 
-### 6. PR — "Готово"
+### 6. Document — "Документуємо"
 
-Створює гілку + коміти. **НЕ** створює PR автоматично — тільки після явного дозволу.
+Два паралельних треки: Track A генерує bounded-context документацію (feature spec, API delta, ADR finalization), Track B сканує існуючі docs на стейл-посилання і автофіксить.
+
+Може запускатися окремо: `/dev --step document`
+
+### 7. PR — "Готово"
+
+Створює гілку + коміти (включно з документацією). **НЕ** створює PR автоматично — тільки після явного дозволу.
 
 ## Quality Gates
 
@@ -88,7 +97,7 @@ flowchart TD
     QG1 -->|rejected| D
 
     Rev[Review complete] --> QG2{Blocking issues?}
-    QG2 -->|no| PR[PR]
+    QG2 -->|no| Doc[Document] --> PR[PR]
     QG2 -->|yes| I[Back to Implement]
 
     PR --> QG3{Create PR?}
@@ -114,5 +123,5 @@ flowchart TD
 - [Artifacts spec](artifacts.md) — format of each artifact file
 - [State management](state-management.md) — state.json, auto-continue, loops
 - [Command reference](../../commands/dev.md) — full /dev command docs
-- [Scenarios](../../scenarios/dev-workflow/) — 6 scenario files
+- [Scenarios](../../scenarios/dev-workflow/) — 7 scenario files
 - [Researcher agent](../../agents/researcher.md) — Research Team Lead

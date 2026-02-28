@@ -1,6 +1,6 @@
 ---
 name: dev
-description: Development workflow pipeline. 6 atomic steps from Research to PR with Agent Teams.
+description: Development workflow pipeline. 7 atomic steps from Research to PR with Agent Teams.
 allowed_tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 agent: null
 scenario: dev-workflow
@@ -8,7 +8,7 @@ scenario: dev-workflow
 
 # /dev - Development Workflow Pipeline
 
-6-step development pipeline: Research → Design → Plan → Implement → Review → PR. Кожен крок атомарний, запускається окремо або автоматично. Комунікація між кроками через артефакти в `.workflows/`.
+7-step development pipeline: Research → Design → Plan → Implement → Review → Document → PR. Кожен крок атомарний, запускається окремо або автоматично. Комунікація між кроками через артефакти в `.workflows/`.
 
 ## Usage
 
@@ -21,6 +21,7 @@ scenario: dev-workflow
 /dev --step implement                   # All remaining phases
 /dev --step implement --phase 2         # Specific phase
 /dev --step review                      # Standalone review (works outside pipeline too)
+/dev --step document                    # Document feature + review existing docs
 /dev --step pr
 /dev --status                           # Show workflow state
 /dev --reset                            # Reset workflow
@@ -52,7 +53,13 @@ scenario: dev-workflow
 │   └── PROGRESS.md
 ├── review/{feature-name}/         # Step 5: Review findings
 │   └── REVIEW.md
-└── pr/                            # Step 6: PR preparation
+├── document/                      # Step 6: Documentation
+│   ├── DOCS.md                    # Documentation summary
+│   ├── feature-spec.md            # Feature spec (working copy)
+│   ├── api-changes.md             # API delta
+│   ├── adr-updates.md             # ADR status changes
+│   └── delta-report.md            # Existing docs delta scan
+└── pr/                            # Step 7: PR preparation
     └── PR.md                      # PR description draft
 ```
 
@@ -99,11 +106,19 @@ scenario: dev-workflow
 
 Комплексне ревю всього scope. Може запускатися окремо через `/dev --step review`.
 
-### Step 6: PR — "Готово"
+### Step 6: Document — "Документуємо"
+
+**Agent Team**: Lead (technical-writer) + feature-writer (technical-writer) + delta-scanner (codebase-doc-collector)
+
+Два паралельних треки:
+- **Track A**: Feature spec, API delta, ADR finalization (bounded context)
+- **Track B**: Scan existing docs, delta report, auto-fixes (incremental review)
+
+### Step 7: PR — "Готово"
 
 **Single**: bash/gh
 
-Створює гілку + коміти. Генерує PR description draft.
+Створює гілку + коміти (включно з документацією). Генерує PR description draft.
 
 **IMPORTANT**:
 - НЕ створює PR автоматично — тільки після явного дозволу
@@ -125,6 +140,7 @@ scenario: dev-workflow
     "plan":      { "status": "completed" },
     "implement": { "status": "in_progress", "phases_total": 4, "phases_completed": 2 },
     "review":    { "status": "pending" },
+    "document":  { "status": "pending" },
     "pr":        { "status": "pending" }
   }
 }
@@ -148,7 +164,7 @@ scenario: dev-workflow
 |------|-------|----------|
 | Design approval | After Step 2 | **PAUSE** — requires human `/dev` or `/dev --step plan` to continue |
 | Review blocking | After Step 5 | If blocking issues → redirect to Implement |
-| PR creation | Step 6 | **ASK** — requires explicit approval (default: no) |
+| PR creation | Step 7 | **ASK** — requires explicit approval (default: no) |
 
 ## Examples
 
@@ -225,6 +241,7 @@ Started: 2026-02-27
   plan       ✅ completed
   implement  🔄 in_progress (phase 3/4)
   review     ⏳ pending
+  document   ⏳ pending
   pr         ⏳ pending
 ```
 
@@ -250,6 +267,6 @@ Started: 2026-02-27
 
 ---
 
-*Scenarios: [scenarios/dev-workflow/](../scenarios/dev-workflow/)*
+*Scenarios: [scenarios/dev-workflow/](../scenarios/dev-workflow/) (7 scenario files)*
 *Agent: [researcher](../agents/researcher.md)*
 *Reused Agents: architecture-advisor, technical-writer, planner, tdd-guide, code-reviewer, security-reviewer, codebase-doc-collector, architecture-doc-collector*

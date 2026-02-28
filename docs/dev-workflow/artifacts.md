@@ -31,7 +31,14 @@
 ├── review/{feature-slug}/              # Step 5 output
 │   └── REVIEW.md                       # Quality + Security findings
 │
-└── pr/                                 # Step 6 output
+├── document/                           # Step 6 output
+│   ├── DOCS.md                         # Documentation summary
+│   ├── feature-spec.md                 # Feature spec (working copy)
+│   ├── api-changes.md                  # API delta (OpenAPI snippet)
+│   ├── adr-updates.md                  # ADR status change log
+│   └── delta-report.md                 # Existing docs delta scan
+│
+└── pr/                                 # Step 7 output
     └── PR.md                           # PR description draft
 ```
 
@@ -84,11 +91,27 @@
 |-------|--------|------------|
 | `.workflows/design/` + code files | `.workflows/review/{slug}/REVIEW.md` | No blocking issues for PR step |
 
-### Step 6: PR
+### Step 6: Document
 
 | Input | Output | Validation |
 |-------|--------|------------|
-| All artifacts + code | `.workflows/pr/PR.md` + git branch/commits | Branch exists, commits clean |
+| `.workflows/design/` + `.workflows/implement/PROGRESS.md` + `.workflows/review/` + `docs/` | `.workflows/document/` (5 files) + updated `docs/` files | DOCS.md exists, feature spec created |
+
+| File | Producer | Content |
+|------|----------|---------|
+| DOCS.md | Team Lead (technical-writer) | Summary of all doc changes, both tracks |
+| feature-spec.md | feature-writer (technical-writer) | Compact feature spec (working copy) |
+| api-changes.md | feature-writer (technical-writer) | OpenAPI delta snippet for new endpoints |
+| adr-updates.md | feature-writer (technical-writer) | ADR status change log (Proposed → Accepted) |
+| delta-report.md | delta-scanner (codebase-doc-collector) | Stale/missing/broken docs findings |
+
+**Project-level outputs**: `docs/features/{slug}.md`, `docs/adr/*.md`, `docs/references/openapi.yaml`, updated CODEMAPS/INDEX.md
+
+### Step 7: PR
+
+| Input | Output | Validation |
+|-------|--------|------------|
+| All artifacts + code + docs | `.workflows/pr/PR.md` + git branch/commits | Branch exists, commits clean, docs staged |
 
 ## Feature Slug Convention
 
@@ -113,7 +136,8 @@ Design:   .workflows/research/RESEARCH.md must exist
 Plan:     .workflows/design/DESIGN.md must exist
 Implement:.workflows/plan/*/001-PLAN.md must exist
 Review:   .workflows/implement/PROGRESS.md must exist (or standalone mode)
-PR:       .workflows/review/*/REVIEW.md must exist, no blocking issues
+Document: .workflows/review/*/REVIEW.md must exist with APPROVED verdict (or standalone mode)
+PR:       .workflows/document/DOCS.md must exist (or standalone mode)
 ```
 
 ## REPLAN-NEEDED.md

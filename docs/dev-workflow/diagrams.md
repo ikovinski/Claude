@@ -59,11 +59,20 @@ flowchart TB
 
     REV --> QG2{{"🚦 Blocking issues?"}}
     QG2 -->|"🔴 blocking"| I
-    QG2 -->|"🟢 clear"| PR
+    QG2 -->|"🟢 clear"| DOC
 
-    subgraph PR["6. PR"]
+    subgraph DOC["6. DOCUMENT"]
         direction TB
-        PR_DESC["Branch + Commits"]
+        DOC_DESC["Документуємо фічу"]
+        DOC_TEAM["👥 Team: 3 agents"]
+        DOC_OUT["📁 .workflows/document/ + docs/"]
+    end
+
+    DOC --> PR
+
+    subgraph PR["7. PR"]
+        direction TB
+        PR_DESC["Branch + Commits + Docs"]
         PR_TEAM["👤 Single: bash/gh"]
         PR_OUT["📁 .workflows/pr/PR.md"]
     end
@@ -77,6 +86,7 @@ flowchart TB
     style P fill:#f3e5f5,stroke:#7b1fa2
     style I fill:#e8f5e9,stroke:#388e3c
     style REV fill:#fce4ec,stroke:#c62828
+    style DOC fill:#e1f5fe,stroke:#0277bd
     style PR fill:#f5f5f5,stroke:#616161
     style QG1 fill:#fff9c4,stroke:#f9a825
     style QG2 fill:#fff9c4,stroke:#f9a825
@@ -133,7 +143,18 @@ flowchart LR
         REV_S -->|"security\nfindings"| REV_LEAD
     end
 
-    subgraph STEP6["Step 6: PR"]
+    subgraph STEP6["Step 6: Document"]
+        direction TB
+        DOC_LEAD["🎯 technical-writer\n(Lead, opus)"]
+        DOC_FW["📝 technical-writer\n(feature-writer, sonnet)"]
+        DOC_DS["📦 codebase-doc-collector\n(delta-scanner, sonnet)"]
+        DOC_LEAD -->|"Track A"| DOC_FW
+        DOC_LEAD -->|"Track B"| DOC_DS
+        DOC_FW -->|"feature spec\nAPI delta\nADR"| DOC_LEAD
+        DOC_DS -->|"delta\nreport"| DOC_LEAD
+    end
+
+    subgraph STEP7["Step 7: PR"]
         direction TB
         PR_AGENT["⚙️ bash / gh CLI"]
     end
@@ -143,7 +164,8 @@ flowchart LR
     style STEP3 fill:#f3e5f5,stroke:#7b1fa2
     style STEP4 fill:#e8f5e9,stroke:#388e3c
     style STEP5 fill:#fce4ec,stroke:#c62828
-    style STEP6 fill:#f5f5f5,stroke:#616161
+    style STEP6 fill:#e1f5fe,stroke:#0277bd
+    style STEP7 fill:#f5f5f5,stroke:#616161
 ```
 
 ---
@@ -180,6 +202,14 @@ flowchart LR
         RVW1["REVIEW.md"]
     end
 
+    subgraph DOC_OUT["Document Output"]
+        DOC1["DOCS.md"]
+        DOC2["feature-spec.md"]
+        DOC3["api-changes.md"]
+        DOC4["adr-updates.md"]
+        DOC5["delta-report.md"]
+    end
+
     subgraph PR_OUT["PR Output"]
         PR1["PR.md"]
         PR2["git branch"]
@@ -193,6 +223,10 @@ flowchart LR
     PLN_OUT -->|"input"| IMP_OUT
     DES_OUT -->|"compliance\ncheck"| RVW_OUT
     IMP_OUT -->|"code to\nreview"| RVW_OUT
+    DES_OUT -->|"feature\noverview"| DOC_OUT
+    IMP_OUT -->|"file list\n(scope)"| DOC_OUT
+    RVW_OUT -->|"verdict"| DOC_OUT
+    DOC_OUT -->|"docs for\nstaging"| PR_OUT
     RVW_OUT -->|"PR\ndescription"| PR_OUT
     DES_OUT -->|"summary"| PR_OUT
     PLN_OUT -->|"changes\nlist"| PR_OUT
@@ -202,6 +236,7 @@ flowchart LR
     style PLN_OUT fill:#f3e5f5,stroke:#7b1fa2
     style IMP_OUT fill:#e8f5e9,stroke:#388e3c
     style RVW_OUT fill:#fce4ec,stroke:#c62828
+    style DOC_OUT fill:#e1f5fe,stroke:#0277bd
     style PR_OUT fill:#f5f5f5,stroke:#616161
 ```
 
@@ -375,7 +410,48 @@ sequenceDiagram
     L-->>L: REVIEW.md
 ```
 
-### 4.6 PR — 5 Phases
+### 4.6 Document — 3 Phases
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant L as Lead (technical-writer)
+    participant FW as Feature Writer
+    participant DS as Delta Scanner
+
+    Note over L: Phase 1: SCOPE
+    L->>L: Read PROGRESS.md, REVIEW.md, DESIGN.md
+    L->>L: Determine scope: APIs? ADRs? Integrations?
+    L->>L: Create task assignments
+
+    Note over L,DS: Phase 2: GENERATE (parallel)
+    par Track A — Bounded Context
+        L->>FW: "Feature spec + API delta + ADR finalization"
+        FW->>FW: Generate feature-spec.md
+        FW->>FW: Generate api-changes.md (OpenAPI snippet)
+        FW->>FW: Update ADR status: Proposed → Accepted
+        FW-->>L: feature-spec.md, api-changes.md, adr-updates.md
+    and Track B — General Docs Delta
+        L->>DS: "Scan existing docs for stale/missing/broken refs"
+        DS->>DS: STALE scan (changed code, old docs)
+        DS->>DS: MISSING scan (new code, no docs)
+        DS->>DS: BROKEN_LINK scan
+        DS->>DS: Auto-fix CODEMAPS, INDEX.md
+        DS-->>L: delta-report.md + auto-fixes
+    end
+
+    Note over L: Phase 3: COMPILE
+    L->>L: Cross-check consistency
+    L->>L: Create DOCS.md summary
+
+    alt > 10 stale findings
+        L-->>U: Recommend /docs-suite for full review
+    else Normal
+        L-->>U: DOCS.md + Continue / Fix / Skip-docs
+    end
+```
+
+### 4.7 PR — 5 Phases
 
 ```mermaid
 sequenceDiagram
@@ -428,7 +504,8 @@ flowchart TB
         D --> P["3. Plan"]
         P --> I["4. Implement"]
         I --> REV["5. Review"]
-        REV --> PR["6. PR"]
+        REV --> DOC["6. Document"]
+        DOC --> PR["7. PR"]
     end
 
     subgraph LOOPS["Feedback Loops"]
@@ -438,12 +515,14 @@ flowchart TB
         L2["🔄 REPLAN\nImplement → back to Plan\n(REPLAN-NEEDED.md)"]
         L3["🔄 Blocking Issues\nReview → back to Implement"]
         L4["🔄 Internal Review\ndeveloper ↔ reviewer\n(within Implement)"]
+        L5["🔄 CODE-ISSUE\nDocument → user decides\n(CODE-ISSUE.md)"]
     end
 
     D -.->|"❌ rejected"| D
     I -.->|"REPLAN-NEEDED.md"| P
     REV -.->|"🔴 blocking"| I
     I -.->|"🔍 review loop"| I
+    DOC -.->|"CODE-ISSUE.md"| I
 
     style MAIN fill:#f9f9f9,stroke:#333
     style LOOPS fill:#fff9c4,stroke:#f9a825
@@ -451,6 +530,7 @@ flowchart TB
     style L2 fill:#f3e5f5
     style L3 fill:#fce4ec
     style L4 fill:#e8f5e9
+    style L5 fill:#e1f5fe
 ```
 
 ---
@@ -480,7 +560,13 @@ stateDiagram-v2
     state blocking_check <<choice>>
     Review --> blocking_check: review done
     blocking_check --> Implement: blocking issues
-    blocking_check --> PR: no blocking
+    blocking_check --> Document: no blocking
+
+    Document --> Document: Track A ∥ Track B
+    state doc_check <<choice>>
+    Document --> doc_check: docs generated
+    doc_check --> Implement: CODE-ISSUE.md
+    doc_check --> PR: docs ready
 
     state pr_check <<choice>>
     PR --> pr_check: branch pushed
@@ -541,9 +627,17 @@ flowchart TB
 
     REV ==> QG2{{"🚦 Blocking?"}}
     QG2 -.->|"🔴"| I
-    QG2 ==>|"🟢"| PR
+    QG2 ==>|"🟢"| DOC
 
-    subgraph PR["6. PR — Branch + Commits"]
+    subgraph DOC["6. DOCUMENT — Feature Docs + Delta"]
+        direction LR
+        DOC1["🎯 Lead<br/>(technical-writer)"] ==>|"parallel"| DOC2["📝 feature-writer<br/>📦 delta-scanner"]
+        DOC2 ==>|"compile"| DOC3["📁 document/<br/>DOCS.md + specs<br/>+ docs/ updates"]
+    end
+
+    DOC ==> PR
+
+    subgraph PR["7. PR — Branch + Commits + Docs"]
         direction LR
         PR1["⚙️ git + gh"] ==> PR2["📁 pr/PR.md<br/>🌿 branch<br/>📦 commits"]
     end
@@ -557,6 +651,7 @@ flowchart TB
     style P fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
     style I fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
     style REV fill:#fce4ec,stroke:#c62828,stroke-width:2px
+    style DOC fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
     style PR fill:#f5f5f5,stroke:#616161,stroke-width:2px
     style QG1 fill:#fff9c4,stroke:#f9a825,stroke-width:2px
     style QG2 fill:#fff9c4,stroke:#f9a825,stroke-width:2px
@@ -580,6 +675,7 @@ Visual representation of the status table that `/dev --status` outputs:
 │ Plan       │ ✅ done    │ 1 agent       │ .workflows/plan/{slug}/        │
 │ Implement  │ 🔄 3/4    │ 2 agents      │ Code + PROGRESS.md             │
 │ Review     │ ⏳ pending │ 3 agents      │ —                              │
+│ Document   │ ⏳ pending │ 3 agents      │ —                              │
 │ PR         │ ⏳ pending │ bash/gh       │ —                              │
 └────────────┴────────────┴───────────────┴────────────────────────────────┘
 ```
@@ -610,6 +706,7 @@ flowchart LR
         S3["3. Plan"]
         S4["4. Implement"]
         S5["5. Review"]
+        S6["6. Document"]
     end
 
     A1 -->|"Lead"| S1
@@ -622,6 +719,8 @@ flowchart LR
     A8 -->|"reviewer"| S4
     A8 -->|"quality"| S5
     A9 -->|"security"| S5
+    A5 -->|"Lead +\nfeature-writer"| S6
+    A2 -->|"delta-scanner"| S6
 
     style AGENTS fill:#f5f5f5,stroke:#999
     style STEPS fill:#e3f2fd,stroke:#1565c0

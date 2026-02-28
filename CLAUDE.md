@@ -19,7 +19,7 @@ Just describe what you need. The system routes automatically:
 | "Document this" / "API docs" / "Write docs" | Technical Writer agent |
 | "Architecture docs" / "System profile" / "Integration catalog" | Architecture Doc Collector agent |
 | "Full documentation" / "Documentation suite" / "Document this project" | Documentation Suite scenario (3 agents team) |
-| `/dev "task description"` / "Development workflow" | Dev Workflow — 6-step pipeline (Research → Design → Plan → Implement → Review → PR) |
+| `/dev "task description"` / "Development workflow" | Dev Workflow — 7-step pipeline (Research → Design → Plan → Implement → Review → Document → PR) |
 
 ## Structure
 
@@ -47,7 +47,7 @@ Quick-invoke workflows via `/command`:
 | `/docs` | Generate documentation (Stoplight-compatible) | Technical Writer | documentation/* |
 | `/architecture-docs` | System profiles, integration catalogs | Architecture Doc Collector | documentation/* |
 | `/docs-suite` | Complete documentation suite (team-based) | Team (3 agents) | documentation/* |
-| `/dev` | Development workflow pipeline (6 steps) | Team (varies per step) | dev-workflow/*, planning/*, tdd/* |
+| `/dev` | Development workflow pipeline (7 steps) | Team (varies per step) | dev-workflow/*, planning/*, tdd/* |
 | `/skill-create` | Generate skill from git history | — | — |
 
 ### Usage Examples
@@ -65,6 +65,7 @@ Quick-invoke workflows via `/command`:
 /docs-suite --scope architecture
 /dev "Add Apple Health integration"
 /dev --step review
+/dev --step document
 /dev --status
 /skill-create --commits 100
 ```
@@ -95,7 +96,7 @@ Quick-invoke workflows via `/command`:
 | Feature decomposition, epic breakdown | Feature Decomposition | [scenarios/delivery/feature-decomposition.md](scenarios/delivery/feature-decomposition.md) |
 | Should we rewrite, rebuild vs refactor | Rewrite Decision | [scenarios/technical-decisions/rewrite-decision.md](scenarios/technical-decisions/rewrite-decision.md) |
 | Full documentation, documentation suite, document project | Documentation Suite | [scenarios/delivery/documentation-suite.md](scenarios/delivery/documentation-suite.md) |
-| `/dev`, development workflow, research→design→plan→implement→review→PR | Dev Workflow (6 steps) | [scenarios/dev-workflow/](scenarios/dev-workflow/) |
+| `/dev`, development workflow, research→design→plan→implement→review→document→PR | Dev Workflow (7 steps) | [scenarios/dev-workflow/](scenarios/dev-workflow/) |
 
 ## Rules (Always Applied)
 
@@ -162,6 +163,7 @@ Quick-invoke workflows via `/command`:
 | Onboarding documentation | `/docs-suite` (Documentation Suite) |
 | Нова фіча від research до PR | `/dev "task"` (Dev Workflow) |
 | Code review всього scope | `/dev --step review` (standalone) |
+| Документація фічі + delta scan | `/dev --step document` (standalone) |
 
 ### Recommended Sequences
 
@@ -179,7 +181,7 @@ Cross-Team Feature:
 Planner → Technical Writer (feature spec for stakeholders) → Decomposer → Implementation
 
 Full Feature Development Pipeline:
-/dev "task" → Research → Design (quality gate) → Plan → Implement (TDD + review loop) → Review → PR
+/dev "task" → Research → Design (quality gate) → Plan → Implement (TDD + review loop) → Review → Document → PR
 
 System Documentation:
 /docs-suite (orchestrates: Codebase Doc Collector → Architecture Doc Collector + Technical Writer → Cross-Review → Index)

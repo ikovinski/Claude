@@ -52,6 +52,9 @@
     "review": {
       "status": "pending"
     },
+    "document": {
+      "status": "pending"
+    },
     "pr": {
       "status": "pending"
     }
@@ -127,7 +130,7 @@ When user runs /dev or /dev --step plan:
   Continue to Plan step
 ```
 
-### Review Blocking (Step 5 → Step 4 loop)
+### Review Blocking (Step 5 → Step 4 or Step 5 → Step 6)
 
 ```
 After Review completes:
@@ -141,10 +144,30 @@ If blocking issues found:
 If no blocking issues:
   state.json: review.status = "completed"
   state.json: review.has_blocking = false
+  Continue to Document step
+```
+
+### Document (Step 6)
+
+```
+After Review APPROVED:
+  state.json: document.status = "in_progress"
+
+Document completes:
+  state.json: document.status = "completed"
+  state.json: document.artifacts = [
+    ".workflows/document/DOCS.md",
+    ".workflows/document/feature-spec.md",
+    ".workflows/document/api-changes.md",
+    ".workflows/document/adr-updates.md",
+    ".workflows/document/delta-report.md"
+  ]
+  state.json: document.docs_created = ["docs/features/{slug}.md"]
+  state.json: document.docs_updated = ["docs/references/openapi.yaml", ...]
   Continue to PR step
 ```
 
-### PR Creation (Step 6)
+### PR Creation (Step 7)
 
 ```
 PR step creates branch + commits automatically.

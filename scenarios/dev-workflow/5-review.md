@@ -703,7 +703,7 @@ Updated REVIEW.md:
 ## Related
 
 - **Previous step**: [4-implement.md](./4-implement.md) -- Phase-by-phase implementation
-- **Next step**: [6-pr.md](./6-pr.md) -- Create branch and PR
+- **Next step**: [6-document.md](./6-document.md) -- Documentation generation
 - **Redirect to**: [4-implement.md](./4-implement.md) -- When blocking issues found
 - **Agent files**: [code-reviewer](../../agents/code-reviewer.md), [security-reviewer](../../agents/security-reviewer.md)
 - **Skills**: [refactoring-patterns](../../skills/code-quality/refactoring-patterns.md), [owasp-top-10](../../skills/security/owasp-top-10.md), [security-audit-checklist](../../skills/security/security-audit-checklist.md)

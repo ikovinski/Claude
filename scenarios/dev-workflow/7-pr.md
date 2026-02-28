@@ -13,7 +13,7 @@ team_execution: false
 ## Situation
 
 ### Description
-Sixth and final step of the `/dev` workflow. Prepares code for merge by creating a feature branch, staging relevant files, creating commit(s), generating a PR description draft, and optionally creating the PR. This step runs as a single bash-driven process -- no agent team needed, no subagent spawning.
+Seventh and final step of the `/dev` workflow. Prepares code for merge by creating a feature branch, staging relevant files (including documentation from Step 6), creating commit(s), generating a PR description draft, and optionally creating the PR. This step runs as a single bash-driven process -- no agent team needed, no subagent spawning.
 
 **IMPORTANT RULES**:
 - Commits NEVER include `Co-Authored-By` headers
@@ -21,7 +21,7 @@ Sixth and final step of the `/dev` workflow. Prepares code for merge by creating
 - `.workflows/` directory is NEVER committed
 
 ### Common Triggers
-- Automatic progression from Review phase (when REVIEW.md verdict is APPROVED)
+- Automatic progression from Document phase (after documentation generated)
 - `/dev --step pr` (manual trigger after review)
 - "Create PR for [feature]"
 - "Push branch and prepare PR"
@@ -75,8 +75,13 @@ Steps:
    - All new/modified test files from PROGRESS.md
    - All new migration files from PROGRESS.md
    - Configuration changes (messenger.yaml, etc.)
+   - Documentation files from Document step (Step 6):
+     - `docs/features/{slug}.md` (feature spec)
+     - `docs/adr/*.md` (finalized ADRs)
+     - `docs/references/openapi.yaml` (if updated)
+     - Any other `docs/` files updated by delta-scanner (from `.workflows/document/DOCS.md` file list)
 3. Do NOT stage:
-   - `.workflows/` directory (internal pipeline artifacts)
+   - `.workflows/` directory (internal pipeline artifacts, including `.workflows/document/`)
    - `.env` or credentials files
    - `.codemap-cache/` (if exists)
 4. Verify staged files are correct: `git diff --cached --stat`
@@ -90,6 +95,7 @@ Steps:
 1. Determine commit strategy:
    - **1-2 phases**: Single commit
    - **3+ phases**: Per-phase commits (one commit per implementation phase)
+   - **Documentation**: Separate `docs:` commit for documentation changes (always, regardless of phase count)
 2. Create commit(s) using conventional commit format:
    ```
    # Single commit
@@ -133,6 +139,7 @@ Steps:
    - **Architecture Decisions**: From design/adr/ files (one-line per ADR)
    - **Test Plan**: From REVIEW.md (coverage summary + manual test checklist)
    - **Security**: From REVIEW.md security section (OWASP + PII/PHI summary)
+   - **Documentation**: From DOCS.md (feature spec, API delta, ADR finalization, delta fixes)
    - **Migration Notes**: If migrations exist (from PROGRESS.md) -- include backward compatibility assessment
 2. Save draft to `.workflows/pr/PR.md`
 3. Push branch to remote: `git push -u origin feature/{feature-slug}`
@@ -204,6 +211,12 @@ Steps:
 {If applicable: migration description, backward compatibility, rollback procedure}
 {If none: "No migrations in this PR."}
 
+## Documentation
+- Feature spec: `docs/features/{slug}.md`
+- ADRs finalized: {count} ({list of ADR titles})
+- API docs: {Updated / No changes}
+- Existing docs updated: {count} files (delta fixes)
+
 ## Review Notes
 - Blocking issues resolved during review: {count}
 - Suggestions from review: {count} ({which addressed, which deferred})
@@ -237,6 +250,11 @@ When creating the actual GitHub PR, use this condensed format:
 ## Security
 - OWASP: {PASS/summary}
 - PII/PHI: {PASS/summary}
+
+## Documentation
+- Feature spec: `docs/features/{slug}.md`
+- ADRs: {finalized count}
+- Docs updated: {delta fixes count}
 
 ## Migration
 {If applicable, or "None"}
@@ -567,8 +585,8 @@ EOF
 
 ## Related
 
-- **Previous step**: [5-review.md](./5-review.md) -- Full-scope code review
+- **Previous step**: [6-document.md](./6-document.md) -- Documentation generation
 - **Next step**: None (final step of /dev workflow)
-- **Input**: All pipeline artifacts (`.workflows/design/`, `.workflows/plan/`, `.workflows/implement/`, `.workflows/review/`)
-- **Output**: Git branch + commits, `.workflows/pr/PR.md`, PR on GitHub (if user approves)
+- **Input**: All pipeline artifacts (`.workflows/design/`, `.workflows/plan/`, `.workflows/implement/`, `.workflows/review/`, `.workflows/document/`)
+- **Output**: Git branch + commits (including docs), `.workflows/pr/PR.md`, PR on GitHub (if user approves)
 - **No agent team**: This scenario uses bash/gh CLI directly, no subagent spawning
