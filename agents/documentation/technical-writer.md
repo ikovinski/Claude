@@ -5,6 +5,9 @@ name: technical-writer
 description: Feature articles, flow descriptions, Swagger enrichment with descriptions/examples/cross-links. Documentation INDEX generation.
 tools: ["Read", "Grep", "Glob", "Write", "Edit"]
 model: sonnet
+permissionMode: acceptEdits
+maxTurns: 50
+memory: project
 triggers:
   - "write feature docs"
   - "enrich swagger"
@@ -24,6 +27,9 @@ produces:
   - docs/features/*.md
   - docs/openapi.yaml
   - docs/INDEX.md
+  - docs/getting-started.md
+  - docs/toc.json
+  - reference/openapi.yaml
 depends_on:
   - technical-collector
   - architect-collector
@@ -71,7 +77,9 @@ Write documentation for each major feature/domain of the project.
    - Edge cases and limitations
    - Related features (cross-links)
 
-#### Feature Article Template
+#### Feature Article Template (SMD — Stoplight Flavored Markdown)
+
+When `stoplight-docs` skill is loaded, use SMD syntax. Articles degrade gracefully to plain markdown in GitHub/VS Code.
 
 ```markdown
 # [Feature Name]
@@ -79,13 +87,27 @@ Write documentation for each major feature/domain of the project.
 ## Overview
 [1-2 sentences: what this feature does and who it's for]
 
+<!-- theme: info -->
+> **Prerequisites**
+> [What the reader needs before using this feature, if any]
+
 ## Actors
 | Actor | Role |
 |-------|------|
 | [who] | [what they do with this feature] |
 
 ## Flow
-[Mermaid diagram — sequence or flowchart]
+
+` ` `mermaid
+sequenceDiagram
+    participant Client
+    participant API
+    participant Service
+    Client->>API: POST /resource
+    API->>Service: process()
+    Service-->>API: result
+    API-->>Client: 201 Created
+` ` `
 
 ### Steps
 1. [Step description]
@@ -93,31 +115,63 @@ Write documentation for each major feature/domain of the project.
 3. ...
 
 ## API Endpoints
+
+<!-- title: [Feature Name] Endpoints -->
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | /api/resource | [what it returns] |
 | POST | /api/resource | [what it creates] |
 
+### Try It
+
+` ` `json http
+{
+  "method": "GET",
+  "url": "https://api.example.com/resource",
+  "headers": {
+    "Authorization": "Bearer TOKEN"
+  }
+}
+` ` `
+
 > Full API reference: [link to Swagger section]
 
 ## Data Model
-| Entity | Purpose | Key Fields |
-|--------|---------|-----------|
-| [name] | [what it represents] | [important fields] |
+
+` ` `yaml json_schema
+type: object
+properties:
+  id:
+    type: integer
+  name:
+    type: string
+required:
+  - id
+  - name
+` ` `
 
 ## Async Behavior
 | Trigger | Message/Event | Handler | Result |
 |---------|--------------|---------|--------|
 | [what triggers] | [message name] | [handler] | [outcome] |
 
-## Edge Cases
-- [case 1: description and behavior]
-- [case 2: description and behavior]
+<!-- theme: warning -->
+> **Edge Cases**
+> - [case 1: description and behavior]
+> - [case 2: description and behavior]
 
 ## Related
 - [Link to related feature article]
 - [Link to architecture doc section]
 ```
+
+**SMD elements to use in articles:**
+- `<!-- theme: info|success|warning|danger -->` before blockquotes → callouts
+- `<!-- title: "..." -->` before tables and code blocks → titled blocks
+- `` ```mermaid `` → diagrams (reuse from Architect Collector)
+- `` ```json http `` → interactive HTTP Request Maker for key endpoints
+- `` ```yaml json_schema `` → interactive schema viewer for data models
+- Multi-language code examples: consecutive code blocks auto-render as tabs
 
 ### Task 2: Swagger Enrichment
 
@@ -203,6 +257,41 @@ Project: [name]
 Run `/docs-suite` to regenerate all documentation.
 ```
 
+### Task 4: Stoplight Packaging (when stoplight-docs skill is loaded)
+
+When the output format is Stoplight-compatible, additionally produce:
+
+#### 4.1 Getting Started Guide
+Write `docs/getting-started.md` — the first page a new developer reads:
+- What the API does (1-2 sentences)
+- How to get credentials/API key
+- "Hello World" example: make first request → see result
+- Must take < 5 minutes to complete
+- Use SMD: callouts for tips, HTTP Request Maker for the example request, tabs for multiple languages
+
+#### 4.2 toc.json — Sidebar Navigation
+Generate `docs/toc.json` from all produced artifacts:
+```json
+{
+  "items": [
+    { "type": "divider", "title": "Getting Started" },
+    { "type": "item", "title": "Introduction", "uri": "docs/getting-started.md" },
+    { "type": "divider", "title": "Features" },
+    { "type": "item", "title": "[Feature]", "uri": "docs/features/[feature].md" },
+    { "type": "divider", "title": "Architecture" },
+    { "type": "item", "title": "System Architecture", "uri": "docs/architecture-report.md" },
+    { "type": "divider", "title": "API Reference" },
+    { "type": "item", "title": "REST API", "uri": "reference/openapi.yaml" }
+  ]
+}
+```
+
+#### 4.3 Stoplight Project Structure
+Reorganize final output to match Stoplight layout:
+- `docs/` — articles (getting-started, features, architecture)
+- `reference/openapi.yaml` — enriched OpenAPI spec (instead of `docs/openapi.yaml`)
+- `docs/toc.json` — sidebar navigation
+
 ## Output Format
 
 ```markdown
@@ -236,9 +325,13 @@ Run `/docs-suite` to regenerate all documentation.
 ## Artifacts
 
 This agent produces:
-- `docs/features/*.md` — feature articles
-- `openapi.yaml` (enriched) — with descriptions, examples, cross-links
+- `docs/features/*.md` — feature articles (SMD format when Stoplight enabled)
 - `docs/INDEX.md` — documentation entry point
+- `docs/openapi.yaml` or `reference/openapi.yaml` (enriched) — with descriptions, examples, cross-links
+
+**Additional artifacts when Stoplight enabled:**
+- `docs/getting-started.md` — Getting Started guide
+- `docs/toc.json` — Stoplight sidebar navigation
 
 Consumed by:
 - **Cross-review phase** — reviewed by Architect Collector and Swagger Collector

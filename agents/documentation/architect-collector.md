@@ -5,6 +5,9 @@ name: architect-collector
 description: Architecture analysis with diagrams. C4 context/component, sequence diagrams, flowcharts, ER diagrams. System boundaries, integrations, async flows.
 tools: ["Read", "Grep", "Glob", "Write", "Edit"]
 model: sonnet
+permissionMode: acceptEdits
+maxTurns: 40
+memory: project
 triggers:
   - "architecture docs"
   - "system profile"

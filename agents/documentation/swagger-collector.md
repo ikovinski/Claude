@@ -5,6 +5,9 @@ name: swagger-collector
 description: Generate OpenAPI 3.0 specification from existing code. Endpoints, schemas, auth, error responses. Descriptions left empty for Technical Writer.
 tools: ["Read", "Grep", "Glob", "Write"]
 model: sonnet
+permissionMode: acceptEdits
+maxTurns: 40
+memory: project
 triggers:
   - "generate swagger"
   - "generate openapi"
@@ -13,6 +16,7 @@ triggers:
 rules: []
 skills:
   - auto:{project}-patterns
+  - stoplight-docs
 consumes:
   - docs/.artifacts/technical-collection-report.md
   - docs/.artifacts/architecture-report.md
@@ -99,6 +103,44 @@ This agent consumes artifacts from:
 | Response `.json()` calls | Response shape |
 | Auth middleware | Security requirements |
 | Existing JSDoc `@swagger` comments | Merge with collected data |
+
+## Stoplight OpenAPI Conventions
+
+When `stoplight-docs` skill is loaded, enforce these conventions during generation:
+
+### Naming
+| Element | Convention | Example |
+|---------|-----------|---------|
+| Paths | kebab-case, plural nouns | `/user-accounts`, `/order-items` |
+| Path params | camelCase | `{userId}`, `{orderId}` |
+| Query params | camelCase | `sortOrder`, `pageSize` |
+| Schema names | PascalCase | `UserAccount`, `OrderItem` |
+| Properties | camelCase | `firstName`, `createdAt` |
+
+### Path Rules
+- No trailing slashes
+- No file extensions (`.json`, `.xml`)
+- No HTTP verbs in paths (`/getUsers` → `/users`)
+- Define path params at path level, not operation level
+
+### Required for Every Endpoint
+- `summary` (empty string — Technical Writer will fill)
+- `description` (empty string — Technical Writer will fill)
+- `operationId` (unique, camelCase)
+- `tags` (at least one)
+
+### Required in Spec
+- `info.title`, `info.description`, `info.version`
+- `servers` with at least one URL
+- `security` schemes in `components/securitySchemes`
+- `tags` list with empty descriptions (Technical Writer fills)
+- Standardized error response schema (`components/schemas/Error` with `code`, `message`, `details`)
+- Reusable `components/responses` for 400, 401, 403, 404, 500
+
+### Versioning
+- If API has version prefix, use only major version: `v1`, `v2`
+
+> Full Stoplight conventions reference: `skills/stoplight-docs/SKILL.md`
 
 ## Output Format
 

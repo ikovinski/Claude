@@ -5,6 +5,9 @@ name: {kebab-case-name}
 description: {One-line description of what the agent does}
 tools: []
 model: sonnet
+permissionMode: default
+maxTurns: 30
+memory: project
 triggers: []
 rules: []
 skills:

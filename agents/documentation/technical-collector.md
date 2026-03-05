@@ -5,6 +5,9 @@ name: technical-collector
 description: Collect and structure project facts as-is. Components, routes, entities, integrations, config. No analysis, no opinions.
 tools: ["Read", "Grep", "Glob"]
 model: sonnet
+permissionMode: plan
+maxTurns: 30
+memory: project
 triggers:
   - "collect project facts"
   - "scan codebase"

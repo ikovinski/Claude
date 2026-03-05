@@ -20,7 +20,8 @@ participants:
 duration: 60-120 minutes
 skills:
   - auto:{project}-patterns
-team_execution: true
+  - stoplight-docs
+requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 ---
 
 ## Situation
@@ -163,7 +164,12 @@ This is a **scenario phase**, not an agent responsibility. Each agent reviews ot
 
 1. Update `docs/INDEX.md` with final file list
 2. Verify all cross-references are valid (links between docs, swagger refs)
-3. Produce final statistics report
+3. **Stoplight packaging** (if Decision 2 = A):
+   - Verify Technical Writer produced `docs/getting-started.md`
+   - Verify `docs/toc.json` exists and references all generated files
+   - Verify enriched OpenAPI in `reference/openapi.yaml` (Stoplight layout)
+   - Validate SMD syntax in feature articles (callouts use `<!-- theme: -->`, not bold text)
+4. Produce final statistics report
 
 **Output**: Final documentation suite ready for use
 
@@ -171,58 +177,63 @@ This is a **scenario phase**, not an agent responsibility. Each agent reviews ot
 
 ## Team Setup
 
+Team Lead створює команду через `TeamCreate`:
 ```
-Team Lead creates team:
-  team_name: "docs-suite-{project-name}"
-  description: "Documentation Suite generation"
+team_name: "docs-suite-{project-name}"
+description: "Documentation Suite generation"
 ```
 
 ### Teammates
 
-| Name | Agent File | subagent_type | Model | Phases |
-|------|-----------|---------------|-------|--------|
-| scanner | technical-collector | technical-collector | sonnet | 1 |
-| architect | architect-collector | architect-collector | sonnet | 2A, 4 |
-| api-spec | swagger-collector | swagger-collector | sonnet | 2B, 4 |
-| writer | technical-writer | technical-writer | sonnet | 3, 4 |
+| Name | Agent File | Model | Phases |
+|------|-----------|-------|--------|
+| scanner | `agents/documentation/technical-collector.md` | sonnet | 1 |
+| architect | `agents/documentation/architect-collector.md` | sonnet | 2A, 4 |
+| api-spec | `agents/documentation/swagger-collector.md` | sonnet | 2B, 4 |
+| writer | `agents/documentation/technical-writer.md` | sonnet | 3, 4 |
+
+Кожен teammate — окрема сесія Claude Code зі своїм контекстним вікном. Teammate отримує agent file як spawn prompt + CLAUDE.md проєкту автоматично.
 
 ### Phase Execution
 
 ```
 Phase 1 (COLLECT):
-  Team lead spawns "scanner" teammate
-  Assigns collection task
-  Waits for Technical Collection Report
-  scanner goes idle
+  Team Lead spawns "scanner" teammate
+  Assigns task via shared task list
+  Waits for scanner to complete (TeammateIdle notification)
+  Artifact: docs/.artifacts/technical-collection-report.md
 
 Phase 2 (ANALYZE):
-  Team lead spawns "architect" and "api-spec" IN PARALLEL
-  Both read from Technical Collection Report (no write conflicts)
-  Team lead waits for BOTH to complete
+  Team Lead spawns "architect" and "api-spec" IN PARALLEL
+  Creates tasks with dependency on Phase 1 task (auto-unblocks)
+  Both read from Technical Collection Report on disk (no write conflicts)
+  Team Lead waits for BOTH to go idle
 
 Phase 3 (WRITE):
-  Team lead spawns "writer"
-  Provides all artifacts from Phase 1 + Phase 2
-  writer produces feature articles + enriched swagger + INDEX
-  Team lead waits for completion
+  Team Lead spawns "writer"
+  Creates tasks with dependencies on Phase 2 tasks
+  Writer reads all artifacts from docs/.artifacts/
+  Team Lead waits for writer to go idle
 
 Phase 4 (CROSS-REVIEW):
-  Team lead creates cross-review tasks per review matrix
-  Each agent reviews assigned outputs
-  Team lead collects findings, assigns corrections
-  Agents apply fixes
+  Team Lead creates cross-review tasks per review matrix
+  Assigns tasks to existing teammates via shared task list
+  Teammates claim and complete review tasks
+  Team Lead collects findings via SendMessage, assigns corrections
 
 Phase 5 (FINALIZE):
-  Team lead updates INDEX, verifies links
-  Sends shutdown_request to all teammates
-  Calls TeamDelete to clean up
+  Team Lead updates INDEX, verifies links
+  Team Lead shuts down all teammates (shutdown request via SendMessage)
+  Team Lead calls TeamDelete to clean up team resources
 ```
 
 ### Communication Pattern
 
-- **Team lead → teammates**: Task assignments, phase gates, artifacts handoff
-- **Teammates → team lead**: Completion reports, blockers, review findings
-- **Between teammates**: No direct communication; all coordination through Team Lead
+- **Team Lead → teammates**: `SendMessage` для task assignments, artifacts handoff, shutdown requests
+- **Teammates → Team Lead**: Automatic idle notifications, `SendMessage` для blockers/findings
+- **Between teammates**: Не використовується — вся координація через Team Lead
+- **Shared task list**: Основний механізм координації (pending → in_progress → completed)
+- **Artifacts on disk**: `docs/.artifacts/` — спільна файлова система для передачі артефактів
 
 ---
 
@@ -238,7 +249,15 @@ Phase 5 (FINALIZE):
 
 **Recommended**: A for first run, then targeted updates
 
-### Decision 2: Cross-Review Depth
+### Decision 2: Output Format
+**Question**: What output format to use?
+**Options**:
+- A: Stoplight-compatible (SMD articles, toc.json, Stoplight project structure, Getting Started guide)
+- B: Plain markdown (current behavior, no SMD, no toc.json)
+
+**Recommended**: A if project publishes docs via Stoplight; B for internal-only docs
+
+### Decision 3: Cross-Review Depth
 **Question**: How deep should cross-review be?
 **Options**:
 - A: Full review (consistency + quality + completeness)
@@ -270,6 +289,14 @@ Phase 5 (FINALIZE):
 - [ ] `docs/INDEX.md` with full catalog
 - [ ] Open Questions documented
 - [ ] Zero TODO gaps in Swagger
+
+### Stoplight-Ready (when Output Format = Stoplight)
+- [ ] All feature articles use SMD syntax (callouts, titled blocks)
+- [ ] `docs/getting-started.md` exists and takes < 5 min
+- [ ] `docs/toc.json` covers all generated files
+- [ ] `reference/openapi.yaml` follows Stoplight naming conventions
+- [ ] OpenAPI has standardized Error schema with `code`, `message`, `details`
+- [ ] Key endpoints have HTTP Request Maker blocks in articles
 
 ---
 
