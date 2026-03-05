@@ -1,6 +1,11 @@
 ---
 name: ai-debug
 description: Show AI agents system status, analyze prompts, explain workflows
+triggers:
+  - "system status"
+  - "debug agents"
+  - "статус системи"
+skills: []
 ---
 
 # /ai-debug - AI Agents System Status & Analyzer
