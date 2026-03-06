@@ -30,7 +30,7 @@ Runs Phase Planner agent to decompose Design artifacts into implementation phase
 Phase 2 (Design) completed and **approved by engineers**:
 ```
 .workflows/{feature-name}/design/architecture.md   — must exist
-.workflows/{feature-name}/design/adr.md             — must exist (unless --skip-adr was used)
+.workflows/{feature-name}/design/adr/*.md            — must exist (unless --skip-adr was used)
 .workflows/{feature-name}/design/test-strategy.md   — must exist (unless --skip-tests was used)
 ```
 
@@ -61,7 +61,7 @@ mkdir -p .workflows/{feature-name}/plan
 Read all design and research artifacts:
 - `.workflows/{feature-name}/research/research-report.md`
 - `.workflows/{feature-name}/design/architecture.md`
-- `.workflows/{feature-name}/design/adr.md` (if exists)
+- `.workflows/{feature-name}/design/adr/*.md` (if exists)
 - `.workflows/{feature-name}/design/test-strategy.md` (if exists)
 
 ### Step 3: Plan

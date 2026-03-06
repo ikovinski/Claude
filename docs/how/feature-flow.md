@@ -103,7 +103,7 @@
 
 **Результат**: `.workflows/{feature}/design/`
 - `architecture.md` — діаграми + архітектурні рішення
-- `adr.md` — Architecture Decision Record
+- `adr/*.md` — Architecture Decision Records (one per decision)
 - `test-strategy.md` — тестові кейси + покриття
 - `api-contracts.md` — нові/змінені endpoints (якщо є)
 
@@ -245,7 +245,9 @@
 │   └── integration-scan.md
 ├── design/
 │   ├── architecture.md           # C4, DataFlow, Sequence
-│   ├── adr.md                    # Architecture Decision Record
+│   ├── adr/                      # Architecture Decision Records
+│   │   ├── 001-{slug}.md
+│   │   └── ...
 │   ├── test-strategy.md          # Given/When/Then кейси
 │   └── api-contracts.md          # API контракти
 ├── plan/

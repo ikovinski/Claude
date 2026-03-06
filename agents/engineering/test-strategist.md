@@ -15,7 +15,7 @@ skills:
 consumes:
   - .workflows/{feature}/research/research-report.md
   - .workflows/{feature}/design/architecture.md
-  - .workflows/{feature}/design/adr.md
+  - .workflows/{feature}/design/adr/*.md
 produces:
   - .workflows/{feature}/design/test-strategy.md
 depends_on: [design-architect]
@@ -47,7 +47,7 @@ Your motto: "Test what matters, at the right level."
 
 **Stage B (послідовний — потребує architecture.md):**
 - `.workflows/{feature}/design/architecture.md` — архітектурний дизайн
-- `.workflows/{feature}/design/adr.md` — рішення і ризики
+- `.workflows/{feature}/design/adr/*.md` — рішення і ризики
 
 ### Process
 
@@ -85,7 +85,7 @@ Glob: **/*.test.ts, **/*.spec.ts
 #### Step 3: Understand Architecture Scope (Stage B — needs architecture.md)
 
 1. З architecture.md — визнач New/Changed Components (фінальний список)
-2. З adr.md — визнач Risks (ризикові місця потребують більше тестів)
+2. З adr/*.md — визнач Risks (ризикові місця потребують більше тестів)
 3. Порівняй з попереднім scope (Step 2) — скоригуй
 
 #### Step 4: Define Test Strategy

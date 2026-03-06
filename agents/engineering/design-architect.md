@@ -19,7 +19,8 @@ consumes:
   - .workflows/{feature}/research/research-report.md
 produces:
   - .workflows/{feature}/design/architecture.md
-  - .workflows/{feature}/design/adr.md
+  - .workflows/{feature}/design/diagrams.md
+  - .workflows/{feature}/design/adr/*.md
   - .workflows/{feature}/design/api-contracts.md
 depends_on: [research-lead]
 ---
@@ -91,17 +92,31 @@ mcp__context7__query-docs(libraryId: "...", topic: "messenger component")
 
 ##### Step 2b: Architecture Design
 
-Створи `architecture.md`:
+Створи два файли:
 
-1. **Component Diagram (C4 Level 2)** — покажи нові/змінені компоненти в контексті існуючих
+**`diagrams.md`** — всі Mermaid діаграми в одному файлі:
+1. **Component Diagram (C4 Level 2)** — нові/змінені компоненти в контексті існуючих
 2. **Data Flow Diagram** — як дані проходять через систему після змін
-3. **Sequence Diagram** — основний flow (happy path) + error flow (якщо релевантно)
-4. **New/Changed Components table** — що створюється, що змінюється
-5. Якщо API Contracts створені (Step 2a) — Sequence Diagrams повинні відповідати визначеним контрактам
+3. **Sequence Diagram** — main flow (happy path) + error flow (якщо релевантно)
+4. Кожна діаграма має заголовок і 1-2 речення пояснення
+
+**`architecture.md`** — текстовий опис архітектури (без діаграм):
+1. **Overview** — що змінюється, посилання на diagrams.md
+2. **New/Changed Components table** — що створюється, що змінюється
+3. **Async Flows** (якщо є) — events/messages таблиця
+4. **Open Questions** — resolved/carried forward
+5. Якщо API Contracts створені (Step 2a) — Sequence Diagrams в diagrams.md повинні відповідати контрактам
+
+**Design Depth** (визначається оркестратором через `[DEPTH]` в spawn prompt):
+- `light`: тільки C4 Context + 1 Sequence Diagram + components table
+- `standard` (default): all above + DataFlow + error flow + async flows
+- `detailed`: all above + rollback strategy + data migration plan (якщо релевантно)
 
 #### Step 3: ADR (Architecture Decision Record)
 
-Створи `adr.md`:
+Завжди зберігай ADR в директорії `adr/`. Один файл на одне рішення: `adr/001-{slug}.md`, `adr/002-{slug}.md`, etc.
+
+Для кожного рішення:
 
 1. **Context** — з Research Report, що ми знаємо
 2. **Decision** — що вирішили робити
@@ -127,7 +142,7 @@ mcp__context7__query-docs(libraryId: "...", topic: "messenger component")
 
 Перед завершенням — перевір консистентність власних артефактів:
 
-1. **Diagrams ↔ Components table** — кожен компонент на діаграмі є в таблиці і навпаки
+1. **diagrams.md ↔ Components table** — кожен компонент на діаграмі є в architecture.md таблиці і навпаки
 2. **Sequence Diagram ↔ API Contracts** — endpoints в діаграмі відповідають контрактам (method, path, response codes)
 3. **ADR Risks ↔ Architecture** — кожен ризик стосується конкретного компоненту/рішення
 4. **ADR Alternatives** — кожна альтернатива має реальні pros (не strawman). Якщо не можеш назвати сценарій де альтернатива краща — переписуй
@@ -199,6 +214,44 @@ flowchart LR
 
 ## Output Format
 
+> **Note:** Якщо в проєкті є template skills (design-template, adr-template, api-contracts-template), використовуй їх замість форматів нижче. Формати нижче — fallback.
+
+### `.workflows/{feature}/design/diagrams.md`
+
+```markdown
+# Diagrams: {Feature Name}
+
+## Component Diagram (C4 Level 2)
+{1-2 речення — що показує діаграма}
+
+‎```mermaid
+C4Component
+    ...
+‎```
+
+## Data Flow
+{1-2 речення — що показує діаграма}
+
+‎```mermaid
+flowchart LR
+    ...
+‎```
+
+## Sequence Diagrams
+
+### Main Flow (Happy Path)
+‎```mermaid
+sequenceDiagram
+    ...
+‎```
+
+### Error Flow
+‎```mermaid
+sequenceDiagram
+    ...
+‎```
+```
+
 ### `.workflows/{feature}/design/architecture.md`
 
 ```markdown
@@ -206,40 +259,7 @@ flowchart LR
 
 ## Overview
 {1-2 речення — що змінюється в архітектурі}
-
-## Component Diagram
-
-```mermaid
-C4Component
-    ...
-```
-
-### Key Changes
-{Що нового на діаграмі, що змінилось}
-
-## Data Flow
-
-```mermaid
-flowchart LR
-    ...
-```
-
-### Flow Description
-{Покроковий опис потоку даних}
-
-## Sequence Diagrams
-
-### Main Flow (Happy Path)
-```mermaid
-sequenceDiagram
-    ...
-```
-
-### Error Flow
-```mermaid
-sequenceDiagram
-    ...
-```
+Diagrams: see [diagrams.md](diagrams.md)
 
 ## New / Changed Components
 
@@ -247,33 +267,8 @@ sequenceDiagram
 |-----------|------|--------|---------------|
 | {Name} | Service/Controller/Entity/... | NEW / MODIFY / DELETE | {що робить} |
 
-## API Contracts
-
-### {METHOD} {path}
-**Auth:** {Bearer token / API key / none}
-
-**Request:**
-```json
-{
-  "field": "type — description"
-}
-```
-
-**Response 200:**
-```json
-{
-  "field": "type — description"
-}
-```
-
-**Response 422:**
-```json
-{
-  "code": "VALIDATION_ERROR",
-  "message": "string",
-  "details": [{"field": "string", "error": "string"}]
-}
-```
+## Key Design Decisions
+{Короткий перелік рішень — деталі в adr/}
 
 ## Async Flows (якщо є)
 
@@ -288,10 +283,12 @@ sequenceDiagram
 | {question} | resolved / open | {answer or "needs discussion"} |
 ```
 
-### `.workflows/{feature}/design/adr.md`
+### `.workflows/{feature}/design/adr/001-{slug}.md`
+
+Один файл на одне рішення. Slug — kebab-case назва рішення.
 
 ```markdown
-# ADR: {Decision Title}
+# ADR-001: {Decision Title}
 
 ## Status
 Proposed
@@ -338,11 +335,14 @@ Proposed
 ## Gate
 
 Before completing, verify:
-- [ ] C4 Component Diagram covers all new/changed components
-- [ ] At least 1 Sequence Diagram for main flow
-- [ ] ADR has at least 2 alternatives with pros/cons
+- [ ] diagrams.md contains C4 Component Diagram covering all new/changed components
+- [ ] diagrams.md contains at least 1 Sequence Diagram for main flow
+- [ ] ADR has at least 2 alternatives with pros/cons per decision
 - [ ] ADR has Risks table with mitigations
+- [ ] ADR files in adr/ directory (one file per decision)
 - [ ] API Contracts have request/response schemas (if new endpoints)
-- [ ] All Mermaid diagrams are syntactically valid
+- [ ] All Mermaid diagrams in diagrams.md are syntactically valid
+- [ ] architecture.md references diagrams.md (not inline diagrams)
+- [ ] Design depth matches the requested level (light/standard/detailed)
 - [ ] Design is consistent with existing project architecture (from Research Report)
 - [ ] Open Questions from Research are addressed or carried forward with justification

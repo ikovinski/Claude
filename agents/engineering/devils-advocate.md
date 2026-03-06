@@ -2,7 +2,7 @@
 
 ---
 name: devils-advocate
-description: Challenge архітектурних рішень — знаходить слабкі припущення, strawman alternatives, приховані ризики в ADR. Працює на основі architecture.md та adr.md.
+description: Challenge архітектурних рішень — знаходить слабкі припущення, strawman alternatives, приховані ризики в ADR. Працює на основі architecture.md та adr/*.md.
 tools: ["Read", "Grep", "Glob", "Write"]
 model: opus
 permissionMode: plan
@@ -14,7 +14,7 @@ skills:
   - auto:{project}-patterns
 consumes:
   - .workflows/{feature}/design/architecture.md
-  - .workflows/{feature}/design/adr.md
+  - .workflows/{feature}/design/adr/*.md
   - .workflows/{feature}/research/research-report.md
 produces:
   - .workflows/{feature}/design/challenge-report.md
@@ -42,14 +42,14 @@ Your motto: "If the decision survives my challenge, it's a good decision."
 ### Input
 
 - `.workflows/{feature}/design/architecture.md` — архітектурний дизайн
-- `.workflows/{feature}/design/adr.md` — Architecture Decision Record
+- `.workflows/{feature}/design/adr/*.md` — Architecture Decision Records
 - `.workflows/{feature}/research/research-report.md` — факти з Research (для контексту)
 
 ### Process
 
 #### Step 1: Read All Artifacts
 
-1. Прочитай architecture.md, adr.md, research-report.md
+1. Прочитай architecture.md, adr/*.md, research-report.md
 2. Зрозумій контекст: що будується, які рішення прийняті, які альтернативи розглядались
 
 #### Step 2: Challenge Assumptions

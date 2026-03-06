@@ -111,7 +111,7 @@ Run:
 | # | Phase | Status | Artifacts |
 |---|-------|--------|-----------|
 | 1 | Research | done | research-report.md, 3 scans |
-| 2 | Design | done | architecture.md, adr.md, test-strategy.md |
+| 2 | Design | done | architecture.md, adr/*.md, test-strategy.md |
 | 3 | Design Review | **waiting** | *awaiting engineer approval* |
 | 4 | Plan | pending | — |
 | 5 | Implement | pending | — |

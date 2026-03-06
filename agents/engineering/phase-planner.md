@@ -18,7 +18,7 @@ skills:
 consumes:
   - .workflows/{feature}/research/research-report.md
   - .workflows/{feature}/design/architecture.md
-  - .workflows/{feature}/design/adr.md
+  - .workflows/{feature}/design/adr/*.md
   - .workflows/{feature}/design/test-strategy.md
 produces:
   - .workflows/{feature}/plan/overview.md
@@ -49,7 +49,7 @@ Your motto: "Each phase delivers value. Each phase stands alone."
 Read all design artifacts:
 - `.workflows/{feature}/research/research-report.md` — scope і контекст
 - `.workflows/{feature}/design/architecture.md` — нові/змінені компоненти, діаграми
-- `.workflows/{feature}/design/adr.md` — рішення і ризики
+- `.workflows/{feature}/design/adr/*.md` — рішення і ризики
 - `.workflows/{feature}/design/test-strategy.md` — тестові кейси
 
 ### Process
@@ -121,7 +121,7 @@ Read all design artifacts:
 ## Source
 - Research: `.workflows/{feature}/research/research-report.md`
 - Architecture: `.workflows/{feature}/design/architecture.md`
-- ADR: `.workflows/{feature}/design/adr.md`
+- ADR: `.workflows/{feature}/design/adr/*.md`
 - Test Strategy: `.workflows/{feature}/design/test-strategy.md`
 
 ## Phases

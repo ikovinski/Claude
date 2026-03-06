@@ -20,6 +20,9 @@ participants:
 duration: varies (each phase independent)
 skills:
   - auto:{project}-patterns
+  - design-template (Phase 2)
+  - adr-template (Phase 2)
+  - api-contracts-template (Phase 2)
   - stoplight-docs (Phase 5, if applicable)
 requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 ---
@@ -78,6 +81,8 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 │  │   risks, consistency                      │  │
 │  │ Test Strategist (Stage B):                │  │
 │  │   Test cases, levels, coverage            │  │
+│  │ Security Reviewer (optional, --security): │  │
+│  │   PII/auth/payment design concerns        │  │
 │  └───────────────────────────────────────────┘  │
 │                                                 │
 │  Architect addresses CRITICAL/SIGNIFICANT       │
@@ -88,7 +93,7 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 │        Challenge verdict not NEEDS REVISION     │
 └─────────────────┬───────────────────────────────┘
                   │
-              HUMAN CHECKPOINT
+              HUMAN CHECKPOINT (approve/change/reject)
               Engineers review & approve design
                   │
                   ▼
@@ -165,8 +170,9 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 | Role | Agent File | Model | When |
 |------|-----------|-------|------|
 | Design Architect | `agents/engineering/design-architect.md` | opus | always |
-| Devil's Advocate | `agents/engineering/devils-advocate.md` | opus | after Architect completes |
+| Devil's Advocate | `agents/engineering/devils-advocate.md` | opus | after Architect (skip with --skip-challenge) |
 | Test Strategist | `agents/engineering/test-strategist.md` | sonnet | Stage A parallel with Architect, Stage B parallel with Devil's Advocate |
+| Security Reviewer | `agents/engineering/code-reviewer.md` (scope: security) | sonnet | optional (--security or PII/auth/payment detected) |
 
 ### Phase 3: Plan
 | Role | Agent File | Model |
@@ -205,11 +211,13 @@ Phase 1 produces:
 
 Phase 2 produces:
   .workflows/{feature}/design/
+    ├── diagrams.md                 ◄── consumed by Phase 3, 4, 6 (visual reference)
     ├── architecture.md             ◄── consumed by Phase 3, 4
-    ├── adr.md                      ◄── consumed by Phase 3, 6
+    ├── adr/*.md                     ◄── consumed by Phase 3, 6
     ├── api-contracts.md            ◄── consumed by Phase 4
     ├── test-strategy.md            ◄── consumed by Phase 3, 4, 6
-    └── challenge-report.md         ◄── consumed by Phase 6 (PR context)
+    ├── challenge-report.md         ◄── consumed by Phase 6 (PR context)
+    └── security-review.md          ◄── optional, consumed by Phase 4, 6
 
 Phase 3 produces:
   .workflows/{feature}/plan/

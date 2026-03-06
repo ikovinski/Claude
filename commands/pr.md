@@ -27,7 +27,7 @@ Creates a Pull Request with a structured description built from workflow artifac
 
 Implementation phase completed:
 ```
-.workflows/{feature-name}/design/adr.md              — design context
+.workflows/{feature-name}/design/adr/*.md             — design context
 .workflows/{feature-name}/design/test-strategy.md     — test plan source
 .workflows/{feature-name}/implement/                  — review reports
 ```
@@ -60,7 +60,7 @@ git branch -vv
 
 Read available artifacts to build PR description:
 
-1. `.workflows/{feature-name}/design/adr.md` → Summary and context
+1. `.workflows/{feature-name}/design/adr/*.md` → Summary and context
 2. `.workflows/{feature-name}/design/test-strategy.md` → Test plan
 3. `.workflows/{feature-name}/design/architecture.md` → Architecture changes summary
 4. `.workflows/{feature-name}/plan/overview.md` → Phases breakdown
@@ -73,7 +73,7 @@ Read available artifacts to build PR description:
 {1-3 bullets from ADR context — WHY this change}
 
 ## Architecture Decision
-{Key decision from adr.md — what approach was chosen and why}
+{Key decision from adr/*.md — what approach was chosen and why}
 
 ## Changes by Phase
 
@@ -104,7 +104,7 @@ Read available artifacts to build PR description:
 ## Design References
 - Research: `.workflows/{feature-name}/research/research-report.md`
 - Architecture: `.workflows/{feature-name}/design/architecture.md`
-- ADR: `.workflows/{feature-name}/design/adr.md`
+- ADR: `.workflows/{feature-name}/design/adr/*.md`
 - Test Strategy: `.workflows/{feature-name}/design/test-strategy.md`
 - Plan: `.workflows/{feature-name}/plan/overview.md`
 ```

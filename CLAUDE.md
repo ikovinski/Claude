@@ -9,6 +9,7 @@ ai-agents-system/
 ├── commands/         # Slash commands (main interface)
 ├── agents/           # Agent personas referenced by commands
 ├── scenarios/        # Multi-agent workflows referenced by commands
+├── skills/           # Reusable skills (templates, project patterns)
 └── templates/        # Templates for creating new agents, scenarios, skills
 ```
 
@@ -33,7 +34,7 @@ ai-agents-system/
 |-------|------|---------|
 | Research Lead | `agents/engineering/research-lead.md` | Decompose task, orchestrate research, synthesize report |
 | Codebase Researcher | `agents/engineering/codebase-researcher.md` | Scan codebase AS IS — facts only |
-| Design Architect | `agents/engineering/design-architect.md` | C4, DataFlow, Sequence diagrams, ADR |
+| Design Architect | `agents/engineering/design-architect.md` | Diagrams, architecture, ADR, API contracts (contract-first) |
 | Test Strategist | `agents/engineering/test-strategist.md` | Test strategy, cases, coverage expectations |
 | Phase Planner | `agents/engineering/phase-planner.md` | Decompose design into vertical-slice phases |
 | Implement Lead | `agents/engineering/implement-lead.md` | Orchestrate implementation, coordinate team |
