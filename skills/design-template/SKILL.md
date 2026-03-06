@@ -110,6 +110,17 @@ Diagrams: see [diagrams.md](diagrams.md)
 1. **{Decision title}** — {chosen option and why in 1 sentence}
 2. **{Decision title}** — {chosen option and why in 1 sentence}
 
+## Non-Functional Requirements
+
+| Requirement | Target | Basis |
+|------------|--------|-------|
+| Expected throughput | {N requests/sec or messages/sec} | {source of estimate} |
+| Latency (p95) | {N ms} | {acceptable for UX/SLA} |
+| Data volume (1 year) | {estimate} | {growth rate} |
+| Availability | {N% or "same as current"} | {business requirement} |
+
+*Omit rows that are not relevant. For `light` depth — omit entire section.*
+
 ## Async Flows
 
 | Event/Message | Producer | Consumer | Purpose |
@@ -117,6 +128,17 @@ Diagrams: see [diagrams.md](diagrams.md)
 | {Name} | {Component} | {Handler} | {what it does} |
 
 *Omit this section if no async flows.*
+
+## Operations (detailed depth only)
+
+| Aspect | Plan |
+|--------|------|
+| Deployment | {how to deploy — feature flag, rolling, blue-green} |
+| Monitoring | {what metrics/logs to watch} |
+| Alerting | {what triggers alerts} |
+| Rollback | {how to rollback if something goes wrong} |
+
+*Only for `detailed` depth. Omit for `light` and `standard`.*
 
 ## Open Questions (from Research)
 
@@ -130,8 +152,8 @@ Diagrams: see [diagrams.md](diagrams.md)
 | Level | diagrams.md | architecture.md |
 |-------|------------|-----------------|
 | **light** | C4 Context + 1 Sequence | Components table + Key Decisions |
-| **standard** | C4 Component + DataFlow + Sequence (happy + error) | All sections |
-| **detailed** | All standard + deployment diagram | All standard + Rollback Strategy + Data Migration Plan |
+| **standard** | C4 Component + DataFlow + Sequence (happy + error) | All sections including NFR |
+| **detailed** | All standard + deployment diagram | All standard + NFR + Operations (deployment, monitoring, alerting, rollback) + Data Migration Plan |
 
 ## Mermaid Conventions
 
