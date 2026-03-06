@@ -16,11 +16,13 @@ ai-agents-system/
 
 | Command | Agent | Description |
 |---------|-------|-------------|
+| `/feature` | Meta-command | Full feature flow navigator with state tracking |
 | `/research` | Research Lead + Codebase Researcher | Investigate codebase before implementation |
 | `/design` | Design Architect + Test Strategist | Architecture decisions, ADR, test strategy |
 | `/plan` | Phase Planner | Decompose design into implementation phases |
 | `/implement` | Implement Lead + Writer + Reviewers + Gate | Execute one implementation phase |
 | `/docs-suite` | Team Lead + 4 agents | Full documentation suite |
+| `/pr` | Direct command | Create PR with design references |
 | `/skill-from-git` | -- | Extract project skill from git history |
 | `/ai-debug` | -- | System status and prompt analysis |
 
