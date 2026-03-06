@@ -43,8 +43,14 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 ┌─────────────────────────────────────────────────┐
 │  Phase 1: RESEARCH                /research     │
 │                                                 │
-│  Research Lead декомпозує задачу                 │
-│  Codebase Researcher(s) сканують AS IS          │
+│  Research Lead:                                 │
+│    Quick Reconnaissance (read entry points)     │
+│    Complexity Assessment (Small/Medium/Large)   │
+│                                                 │
+│  Small → Lead сканує сам, без команди           │
+│  Medium → 2 Codebase Researcher(s)              │
+│  Large → 3-4 Codebase Researcher(s)             │
+│                                                 │
 │  Sentry MCP для bug-fix контексту               │
 │  Context7 для документації фреймворків          │
 │                                                 │
@@ -135,10 +141,12 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 ## Participants
 
 ### Phase 1: Research
-| Role | Agent File | Model |
-|------|-----------|-------|
-| Research Lead | `agents/engineering/research-lead.md` | opus |
-| Codebase Researcher | `agents/engineering/codebase-researcher.md` | sonnet |
+| Role | Agent File | Model | When |
+|------|-----------|-------|------|
+| Research Lead | `agents/engineering/research-lead.md` | opus | always |
+| Codebase Researcher (x2-4) | `agents/engineering/codebase-researcher.md` | sonnet | Medium/Large only |
+
+*Small tasks: Lead scans solo, no team needed. Complexity determined by Quick Reconnaissance.*
 
 ### Phase 2: Design
 | Role | Agent File | Model |
