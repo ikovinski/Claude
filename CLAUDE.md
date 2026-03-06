@@ -17,6 +17,7 @@ ai-agents-system/
 | Command | Agent | Description |
 |---------|-------|-------------|
 | `/research` | Research Lead + Codebase Researcher | Investigate codebase before implementation |
+| `/design` | Design Architect + Test Strategist | Architecture decisions, ADR, test strategy |
 | `/docs-suite` | Team Lead + 4 agents | Full documentation suite |
 | `/skill-from-git` | -- | Extract project skill from git history |
 | `/ai-debug` | -- | System status and prompt analysis |
@@ -28,6 +29,8 @@ ai-agents-system/
 |-------|------|---------|
 | Research Lead | `agents/engineering/research-lead.md` | Decompose task, orchestrate research, synthesize report |
 | Codebase Researcher | `agents/engineering/codebase-researcher.md` | Scan codebase AS IS — facts only |
+| Design Architect | `agents/engineering/design-architect.md` | C4, DataFlow, Sequence diagrams, ADR |
+| Test Strategist | `agents/engineering/test-strategist.md` | Test strategy, cases, coverage expectations |
 
 ### Documentation
 | Agent | File | Purpose |
