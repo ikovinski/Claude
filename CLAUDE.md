@@ -16,11 +16,18 @@ ai-agents-system/
 
 | Command | Agent | Description |
 |---------|-------|-------------|
+| `/research` | Research Lead + Codebase Researcher | Investigate codebase before implementation |
 | `/docs-suite` | Team Lead + 4 agents | Full documentation suite |
 | `/skill-from-git` | -- | Extract project skill from git history |
 | `/ai-debug` | -- | System status and prompt analysis |
 
 ## Agents
+
+### Engineering
+| Agent | File | Purpose |
+|-------|------|---------|
+| Research Lead | `agents/engineering/research-lead.md` | Decompose task, orchestrate research, synthesize report |
+| Codebase Researcher | `agents/engineering/codebase-researcher.md` | Scan codebase AS IS — facts only |
 
 ### Documentation
 | Agent | File | Purpose |
@@ -41,4 +48,5 @@ ai-agents-system/
 
 | Scenario | Command | Agents |
 |----------|---------|--------|
+| feature-development | `/research` → `/design` → `/plan` → `/implement` → `/docs-suite` → `/pr` | Engineering + Documentation agents |
 | documentation-suite | `/docs-suite` | Technical Collector, Architect Collector, Swagger Collector, Technical Writer |
