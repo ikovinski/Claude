@@ -56,6 +56,10 @@ Your motto: "Report what IS, not what should be."
    - Що цей компонент робить (з назв класів/методів, не з коментарів)
 3. Побудуй таблицю залежностей між компонентами
 4. Визнач boundaries — що викликає зовнішні сервіси
+5. **Test Coverage** — знайди тести для компонентів у scope:
+   - Glob `tests/` по назвах класів зі scope (e.g., `*PaymentServiceTest*`)
+   - Для кожного знайденого тесту: файл, кількість test methods, що тестується
+   - Зафіксуй компоненти БЕЗ тестів
 
 #### Scan Type: data
 
@@ -204,6 +208,13 @@ Write to `.workflows/{feature}/research/{scan-type}.md`:
 | 2 | Service | :78 | Calls external API |
 | 3 | Client | :23 | API returns 500, throws exception |
 | 4 | Service | :80 | Exception not caught, propagates |
+
+## [Architecture Scan] Test Coverage
+
+| Component | Test File | Test Methods | What's Tested |
+|-----------|----------|-------------|--------------|
+| PaymentService | tests/Service/PaymentServiceTest.php | 8 | process(), validate(), cancel() |
+| RefundService | — | 0 | NO TESTS |
 
 ## Out of Scope Dependencies
 

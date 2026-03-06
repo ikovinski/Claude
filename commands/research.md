@@ -109,11 +109,11 @@ This step replaces guessing with informed decomposition. You now know what files
 
 Based on Quick Reconnaissance, determine research strategy:
 
-| Level | Criteria | Strategy |
-|-------|----------|----------|
-| **Small** | 1 component, ≤ 5 files, no external deps | Lead scans alone, no team. Write Research Report directly |
-| **Medium** | 2-3 components, 6-15 files | 2 scanners (architecture + data, or error + component) |
-| **Large** | 4+ components, cross-boundary, external integrations | 3-4 scanners (architecture + data + integration + optional) |
+| Level | Criteria | Strategy | Time Budget |
+|-------|----------|----------|-------------|
+| **Small** | 1 component, ≤ 5 files, no external deps | Lead scans alone, no team | ~5 min |
+| **Medium** | 2-3 components, 6-15 files | 2 scanners (architecture + data, or error + component) | ~15 min |
+| **Large** | 4+ components, cross-boundary, external integrations | 3-4 scanners (architecture + data + integration + optional) | ~25 min |
 
 **If Small** — skip to Phase 6 (Solo Scan):
 - Scan files yourself following the codebase-researcher output format
@@ -266,6 +266,8 @@ After all scanners complete (wait for TeammateIdle notifications):
 - [ ] Components Involved table is not empty
 - [ ] Data Flow is described
 - [ ] Current Behavior (AS IS) section is filled
+- [ ] Test Coverage section filled — components with and without tests
+- [ ] Cross-Cutting Concerns section filled (or justified why empty)
 - [ ] Open Questions section exists
 - [ ] [bug] Error Analysis is filled
 - [ ] [Medium/Large] All scanner sub-tasks produced output files
@@ -349,6 +351,152 @@ Grep: "Payment" in src/services/
 - If a scanner fails, report the error and continue with remaining scans — partial research is better than none
 - Always call `TeamDelete` at the end, even if some scanners failed
 - The target project may be a **different directory** than ai-agents-system — detect or ask
+
+---
+
+## Time Budget
+
+| Complexity | Expected Time | Warning Sign |
+|-----------|--------------|-------------|
+| **Small** | ~5 minutes | > 10 minutes — scope probably underestimated, re-assess complexity |
+| **Medium** | ~15 minutes | > 25 minutes — scanners may have too wide scope, check sub-tasks |
+| **Large** | ~25 minutes | > 40 minutes — consider splitting task or narrowing research areas |
+
+Time includes all phases: intake, recon, scanning, synthesis. If you exceed the warning threshold, stop and re-evaluate before continuing.
+
+---
+
+## Anti-Patterns
+
+1. **Proposing Solutions During Research** — Research describes AS-IS. Any "we should", "consider", "recommend" violates the research contract and biases the Design phase
+2. **Scanning Everything** — Resist scanning the entire `src/`. Focus on areas relevant to the task. A 30-controller scan when only 2 are affected wastes time and adds noise
+3. **Skipping Open Questions** — Pretending everything is clear when business context is missing. Research should surface unknowns, not hide them
+4. **Prose-Heavy Output** — Research artifacts should be tables, code references, and diagrams — not essays. Scanners produce inventories, not narratives
+5. **Ignoring Test Coverage** — Not checking what's tested leads to blind spots in Design and Plan phases. Always scan for existing tests
+6. **Sequential Scanning** — Running scanners one by one when they produce independent files. Always launch in parallel
+
+### Warning Signs
+
+- Research files contain words like "should", "recommend", "suggest", "improve" — opinions leaked
+- RESEARCH.md has no Open Questions — not looking hard enough
+- Scanner outputs lack file:line references — too abstract
+- Research exceeds Time Budget — scope too wide
+- Lead does not read scanner outputs before synthesizing — copy-paste without synthesis
+- No Test Coverage section — critical context missing for Design phase
+- Scope Extension Requests > 2 per scanner — initial scope was wrong
+
+---
+
+## Example Walkthrough
+
+### Context
+Task: `/research "Add refund functionality to payments"`
+Project: PHP/Symfony e-commerce backend
+
+### Phase 1: Task Analysis + Intake
+```
+Type: feature (determined from description)
+Initial scope: payment-related code
+Intake: context sufficient — no questions needed
+```
+
+### Phase 2: Quick Reconnaissance
+```
+Lead runs:
+  Glob: src/Controller/**/*Payment*     → found PaymentController.php
+  Glob: src/Service/*Payment*           → found PaymentService.php
+  Glob: src/Entity/*Payment*            → found Payment.php, PaymentMethod.php
+  Grep: "refund" in src/                → found nothing — refund doesn't exist yet
+
+  Read: PaymentController.php           → depends on PaymentService
+  Read: PaymentService.php              → depends on StripeClient, OrderRepository
+  Read: Payment.php                     → has status field, relations to Order
+
+  git log --oneline -10 -- src/Service/Payment*
+    abc123 Refactor PaymentService to use events (3 days ago)
+    def456 Add retry logic to StripeClient (1 week ago)
+
+  git log --oneline -10 -- src/Entity/Payment*
+    ghi789 Add 'refundedAt' column to payments (5 days ago)
+
+Findings: 3 components (Controller, Service, Entity), StripeClient dependency,
+recent activity on PaymentService and Payment entity
+```
+
+### Phase 3: Complexity Assessment
+```
+Complexity: Medium
+Reason: 2-3 components, ~10 files, one external dep (Stripe)
+Strategy: 2 scanners — architecture + data
+```
+
+### Phase 5: Launch Scanners (parallel)
+```
+scanner-arch:
+  Type: architecture
+  Scope: src/Service/Payment*, src/Controller/*Payment*, src/Client/StripeClient.php
+  Focus: Payment processing flow, dependencies, boundaries
+  → produces: architecture-scan.md
+
+scanner-data:
+  Type: data
+  Scope: src/Entity/Payment*, src/Repository/Payment*, migrations/
+  Focus: Payment data model, relations, recent schema changes
+  → produces: data-scan.md
+```
+
+### Phase 5b: Scope Extension
+```
+scanner-arch sends:
+  [SCOPE_EXTENSION_REQUEST]
+  Scanner: scanner-arch
+  Reason: PaymentService dispatches PaymentProcessedEvent, handler in src/EventListener/PaymentEventListener.php
+  Requested files: src/EventListener/PaymentEventListener.php
+  Impact: Cannot document event-driven flow without this
+
+Lead approves:
+  [SCOPE_EXTENSION_APPROVED]
+  Additional files: src/EventListener/PaymentEventListener.php
+```
+
+### Phase 7: Synthesize
+```
+Lead reads both scan outputs:
+  - architecture-scan.md: 6 components mapped, event flow discovered
+  - data-scan.md: Payment entity with 12 fields, 3 relations, recent migration
+
+Cross-cutting concerns:
+  - PaymentService uses events (discovered in recent refactor) — refund will need its own event
+  - StripeClient has retry logic — refund API calls should reuse it
+
+Test coverage:
+  - PaymentServiceTest: 8 methods, covers process() and validate()
+  - No tests for PaymentEventListener
+  - StripeClientTest: 5 methods, covers createCharge()
+
+Open questions:
+  1. Should refund create a new entity or add status to Payment?
+  2. Partial refunds — supported by Stripe, but no business rules defined
+  3. Refund notifications — which channels? (email, push, in-app)
+```
+
+### Phase 8: Gate & Cleanup
+```
+Research Complete: payment-refund
+
+Files Generated:
+  .workflows/payment-refund/research/research-report.md
+  .workflows/payment-refund/research/architecture-scan.md
+  .workflows/payment-refund/research/data-scan.md
+
+Summary:
+  Type: feature
+  Components found: 8
+  Open Questions: 3
+  Complexity: Medium
+
+Next Step: /design payment-refund
+```
 
 ---
 

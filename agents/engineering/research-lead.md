@@ -268,6 +268,18 @@ flowchart LR
 ### Reproduction Path
 {Як відтворити — якщо зрозуміло з коду}
 
+## Test Coverage
+
+| Component | Test File | Test Methods | Status |
+|-----------|----------|-------------|--------|
+| {name} | {path or "—"} | {count} | covered / no tests |
+
+## Cross-Cutting Concerns
+
+| Concern | Affected Components | Details |
+|---------|-------------------|---------|
+| {concern} | {list of components} | {чому це важливо для задачі} |
+
 ## Recent Activity
 
 | File/Directory | Last Change | Commit | Relevance |
@@ -298,6 +310,8 @@ Before completing, verify:
 - [ ] Components Involved table is not empty
 - [ ] Data Flow is described (text or diagram)
 - [ ] Current Behavior (AS IS) section is filled
+- [ ] Test Coverage section filled — components with and without tests listed
+- [ ] Cross-Cutting Concerns section filled (or justified why empty)
 - [ ] Open Questions section exists (even if empty — but justify why)
 - [ ] [bug] Error Analysis section is filled with Sentry data or manual analysis
 - [ ] [Medium/Large] All scanner sub-tasks produced output files
