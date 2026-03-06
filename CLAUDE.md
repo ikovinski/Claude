@@ -18,6 +18,7 @@ ai-agents-system/
 |---------|-------|-------------|
 | `/research` | Research Lead + Codebase Researcher | Investigate codebase before implementation |
 | `/design` | Design Architect + Test Strategist | Architecture decisions, ADR, test strategy |
+| `/plan` | Phase Planner | Decompose design into implementation phases |
 | `/docs-suite` | Team Lead + 4 agents | Full documentation suite |
 | `/skill-from-git` | -- | Extract project skill from git history |
 | `/ai-debug` | -- | System status and prompt analysis |
@@ -31,6 +32,7 @@ ai-agents-system/
 | Codebase Researcher | `agents/engineering/codebase-researcher.md` | Scan codebase AS IS — facts only |
 | Design Architect | `agents/engineering/design-architect.md` | C4, DataFlow, Sequence diagrams, ADR |
 | Test Strategist | `agents/engineering/test-strategist.md` | Test strategy, cases, coverage expectations |
+| Phase Planner | `agents/engineering/phase-planner.md` | Decompose design into vertical-slice phases |
 
 ### Documentation
 | Agent | File | Purpose |
