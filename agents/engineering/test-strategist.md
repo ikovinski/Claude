@@ -41,19 +41,20 @@ Your motto: "Test what matters, at the right level."
 
 ### Input
 
+**Stage A (паралельний — не потребує architecture.md):**
 - `.workflows/{feature}/research/research-report.md` — факти про поточний стан
+- Codebase — існуючі тести проєкту
+
+**Stage B (послідовний — потребує architecture.md):**
 - `.workflows/{feature}/design/architecture.md` — архітектурний дизайн
 - `.workflows/{feature}/design/adr.md` — рішення і ризики
 
 ### Process
 
-#### Step 1: Understand Scope
+> **Note for orchestrator:** Steps 1-2 (Stage A) можуть виконуватись паралельно з Design Architect.
+> Steps 3-4 (Stage B) потребують завершення архітектури.
 
-1. З architecture.md — визнач New/Changed Components
-2. З adr.md — визнач Risks (ризикові місця потребують більше тестів)
-3. З research-report.md — визнач існуючі тестові паттерни проєкту
-
-#### Step 2: Analyze Existing Test Patterns
+#### Step 1: Analyze Existing Test Patterns (Stage A — parallel-safe)
 
 Переглянь існуючі тести в проєкті:
 
@@ -72,14 +73,29 @@ Glob: **/*.test.ts, **/*.spec.ts
 - Fixtures/factories паттерн
 - Naming conventions
 
-#### Step 3: Define Test Strategy
+#### Step 2: Pre-analyze Research Report (Stage A — parallel-safe)
+
+З research-report.md:
+1. Визнач Technology Profile проєкту
+2. Визнач компоненти які будуть змінені (попередній scope)
+3. Визнач існуючий test coverage і gaps
+
+> Результат Steps 1-2: ти вже знаєш тестові паттерни і маєш попередній scope. Коли architecture.md буде готовий — перехід до Stage B буде швидким.
+
+#### Step 3: Understand Architecture Scope (Stage B — needs architecture.md)
+
+1. З architecture.md — визнач New/Changed Components (фінальний список)
+2. З adr.md — визнач Risks (ризикові місця потребують більше тестів)
+3. Порівняй з попереднім scope (Step 2) — скоригуй
+
+#### Step 4: Define Test Strategy
 
 Для кожного нового/зміненого компонента визнач:
 1. Чи потрібен unit test (є бізнес-логіка?)
 2. Чи потрібен functional/API test (є endpoint?)
 3. Чи потрібен integration test (є зовнішній сервіс?)
 
-#### Step 4: Write Test Cases
+#### Step 5: Write Test Cases
 
 Для кожного тесту — конкретний case з:
 - Given (preconditions / input data)

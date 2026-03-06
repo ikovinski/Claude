@@ -18,7 +18,7 @@ ai-agents-system/
 |---------|-------|-------------|
 | `/feature` | Meta-command | Full feature flow navigator with state tracking |
 | `/research` | Research Lead + Codebase Researcher | Investigate codebase before implementation |
-| `/design` | Design Architect + Test Strategist | Architecture decisions, ADR, test strategy |
+| `/design` | Design Architect + Test Strategist + Devil's Advocate | Architecture decisions, ADR, test strategy, design challenge |
 | `/plan` | Phase Planner | Decompose design into implementation phases |
 | `/implement` | Implement Lead + Writer + Reviewers + Gate | Execute one implementation phase |
 | `/docs-suite` | Team Lead + 4 agents | Full documentation suite |
@@ -40,6 +40,7 @@ ai-agents-system/
 | Code Writer | `agents/engineering/code-writer.md` | Write code strictly per plan |
 | Code Reviewer | `agents/engineering/code-reviewer.md` | Review with configurable scope (security/quality/design) |
 | Quality Gate | `agents/engineering/quality-gate.md` | Run build, tests, linters, Sentry check |
+| Devil's Advocate | `agents/engineering/devils-advocate.md` | Challenge architecture decisions, find weak assumptions in ADR |
 
 ### Documentation
 | Agent | File | Purpose |

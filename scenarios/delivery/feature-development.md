@@ -12,7 +12,7 @@ triggers:
   - "Зроби фічу від початку до кінця"
 participants:
   - Research Lead + Codebase Researcher (Phase 1)
-  - Design Architect + Test Strategist (Phase 2)
+  - Design Architect + Test Strategist + Devil's Advocate (Phase 2)
   - Phase Planner (Phase 3)
   - Implement Lead + Code Writer + Code Reviewers + Quality Gate (Phase 4)
   - Documentation Suite team (Phase 5)
@@ -62,17 +62,30 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 ┌─────────────────────────────────────────────────┐
 │  Phase 2: DESIGN                  /design       │
 │                                                 │
-│  Design Architect:                              │
-│    C4 Component + DataFlow + Sequence diagrams  │
-│    ADR з альтернативами та ризиками             │
-│    API contracts (нові endpoints)               │
-│  Test Strategist:                               │
-│    Test cases (Given/When/Then)                  │
-│    Test levels (unit/functional/integration)     │
-│    Coverage expectations                        │
+│  ┌─ Parallel Wave 1 ─────────────────────────┐  │
+│  │ Design Architect:                         │  │
+│  │   Contract-first (якщо нові endpoints)    │  │
+│  │   C4 Component + DataFlow + Sequence      │  │
+│  │   ADR з альтернативами та ризиками        │  │
+│  │   Self-Review перед завершенням           │  │
+│  │ Test Strategist (Stage A):                │  │
+│  │   Аналіз існуючих тестових паттернів      │  │
+│  └───────────────────────────────────────────┘  │
+│                                                 │
+│  ┌─ Parallel Wave 2 ─────────────────────────┐  │
+│  │ Devil's Advocate:                         │  │
+│  │   Challenge assumptions, alternatives,    │  │
+│  │   risks, consistency                      │  │
+│  │ Test Strategist (Stage B):                │  │
+│  │   Test cases, levels, coverage            │  │
+│  └───────────────────────────────────────────┘  │
+│                                                 │
+│  Architect addresses CRITICAL/SIGNIFICANT       │
+│  challenges (якщо є)                            │
 │                                                 │
 │  Output: .workflows/{feature}/design/           │
-│  Gate: Diagrams valid, ADR has alternatives     │
+│  Gate: Diagrams valid, ADR has alternatives,    │
+│        Challenge verdict not NEEDS REVISION     │
 └─────────────────┬───────────────────────────────┘
                   │
               HUMAN CHECKPOINT
@@ -149,10 +162,11 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 *Small tasks: Lead scans solo, no team needed. Complexity determined by Quick Reconnaissance.*
 
 ### Phase 2: Design
-| Role | Agent File | Model |
-|------|-----------|-------|
-| Design Architect | `agents/engineering/design-architect.md` | opus |
-| Test Strategist | `agents/engineering/test-strategist.md` | sonnet |
+| Role | Agent File | Model | When |
+|------|-----------|-------|------|
+| Design Architect | `agents/engineering/design-architect.md` | opus | always |
+| Devil's Advocate | `agents/engineering/devils-advocate.md` | opus | after Architect completes |
+| Test Strategist | `agents/engineering/test-strategist.md` | sonnet | Stage A parallel with Architect, Stage B parallel with Devil's Advocate |
 
 ### Phase 3: Plan
 | Role | Agent File | Model |
@@ -194,7 +208,8 @@ Phase 2 produces:
     ├── architecture.md             ◄── consumed by Phase 3, 4
     ├── adr.md                      ◄── consumed by Phase 3, 6
     ├── api-contracts.md            ◄── consumed by Phase 4
-    └── test-strategy.md            ◄── consumed by Phase 3, 4, 6
+    ├── test-strategy.md            ◄── consumed by Phase 3, 4, 6
+    └── challenge-report.md         ◄── consumed by Phase 6 (PR context)
 
 Phase 3 produces:
   .workflows/{feature}/plan/

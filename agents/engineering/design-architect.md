@@ -70,13 +70,34 @@ mcp__context7__query-docs(libraryId: "...", topic: "messenger component")
 
 #### Step 2: Architecture Design
 
+**Визнач підхід на основі scope:**
+
+- **Є нові/змінені API endpoints?** → Contract-first: почни з API Contracts (Step 2a), потім Architecture (Step 2b)
+- **Немає нових endpoints?** → Architecture-first: пропусти Step 2a, одразу Step 2b
+
+##### Step 2a: API Contracts FIRST (тільки якщо є нові/змінені endpoints)
+
+Створи `api-contracts.md` ДО архітектури:
+
+1. Визнач consumer perspective — що клієнт очікує від API?
+2. Для кожного нового/зміненого endpoint:
+   - Method + path
+   - Request body schema
+   - Response schemas (success + errors)
+   - Auth requirements
+   - Headers
+3. Формат — pseudo-OpenAPI для читабельності
+4. Архітектура (Step 2b) будуватиметься під ці контракти
+
+##### Step 2b: Architecture Design
+
 Створи `architecture.md`:
 
 1. **Component Diagram (C4 Level 2)** — покажи нові/змінені компоненти в контексті існуючих
 2. **Data Flow Diagram** — як дані проходять через систему після змін
 3. **Sequence Diagram** — основний flow (happy path) + error flow (якщо релевантно)
 4. **New/Changed Components table** — що створюється, що змінюється
-5. **API Contracts** — якщо є нові/змінені endpoints
+5. Якщо API Contracts створені (Step 2a) — Sequence Diagrams повинні відповідати визначеним контрактам
 
 #### Step 3: ADR (Architecture Decision Record)
 
@@ -88,9 +109,11 @@ mcp__context7__query-docs(libraryId: "...", topic: "messenger component")
 4. **Risks** — таблиця з probability/impact/mitigation
 5. **Consequences** — що зміниться в системі
 
-#### Step 4: API Contracts (якщо є нові endpoints)
+#### Step 4: API Contracts (тільки якщо НЕ створені в Step 2a)
 
-Створи `api-contracts.md`:
+Якщо API Contracts вже створені в Step 2a (Contract-first підхід), пропусти цей крок.
+
+Інакше створи `api-contracts.md`:
 
 1. Для кожного нового/зміненого endpoint:
    - Method + path
@@ -99,6 +122,18 @@ mcp__context7__query-docs(libraryId: "...", topic: "messenger component")
    - Auth requirements
    - Headers
 2. Формат — pseudo-OpenAPI для читабельності
+
+#### Step 5: Self-Review
+
+Перед завершенням — перевір консистентність власних артефактів:
+
+1. **Diagrams ↔ Components table** — кожен компонент на діаграмі є в таблиці і навпаки
+2. **Sequence Diagram ↔ API Contracts** — endpoints в діаграмі відповідають контрактам (method, path, response codes)
+3. **ADR Risks ↔ Architecture** — кожен ризик стосується конкретного компоненту/рішення
+4. **ADR Alternatives** — кожна альтернатива має реальні pros (не strawman). Якщо не можеш назвати сценарій де альтернатива краща — переписуй
+5. **Consistency with Research** — рішення не суперечить фактам з Research Report
+
+Якщо знайшов неконсистентність — виправ одразу, не залишай для Quality Check.
 
 ### What NOT to Do
 
