@@ -71,8 +71,9 @@ Follow the Phase Planner agent process:
 1. **Inventory** — list all New/Changed Components from architecture.md
 2. **Dependencies** — build dependency graph between components
 3. **Group** — organize into vertical-slice phases
-4. **Assign tests** — distribute test cases from test-strategy.md
-5. **Write files** — generate overview.md + phase-{N}.md files
+4. **Detect parallel phases** — analyze dependency graph for independent phases, group into execution waves, identify critical path
+5. **Assign tests** — distribute test cases from test-strategy.md
+6. **Write files** — generate overview.md (with execution strategy) + phase-{N}.md files
 
 Apply options:
 - `--max-phases N` → merge smallest phases until count ≤ N
@@ -84,6 +85,7 @@ Apply options:
 Verify before completing:
 - [ ] Every component from architecture.md is covered
 - [ ] No dependency cycles in phase graph
+- [ ] Execution waves correctly reflect dependency graph
 - [ ] Each phase is self-contained
 - [ ] Each phase has acceptance criteria
 - [ ] Tests are distributed (not a separate phase)
@@ -95,11 +97,16 @@ Verify before completing:
 
 ### Phases
 
-| # | Phase | Size | Risk | Command |
-|---|-------|------|------|---------|
-| 1 | {title} | S | low | `/implement {feature-name} --phase 1` |
-| 2 | {title} | M | med | `/implement {feature-name} --phase 2` |
-| N | {title} | M | low | `/implement {feature-name} --phase N` |
+| # | Phase | Size | Risk | Wave | Command |
+|---|-------|------|------|------|---------|
+| 1 | {title} | S | low | 1 | `/implement {feature-name} --phase 1` |
+| 2 | {title} | M | med | 2 | `/implement {feature-name} --phase 2` |
+| N | {title} | M | low | 2 | `/implement {feature-name} --phase N` |
+
+### Execution Strategy
+- **Waves:** {N} (phases within same wave can run in parallel)
+- **Critical path:** Phase 1 → Phase 2 → ...
+- **Parallelism gain:** {N} waves instead of {M} sequential phases
 
 ### Files Generated
 | File | Content |

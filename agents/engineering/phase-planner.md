@@ -84,6 +84,28 @@ Read all design artifacts:
 - Мати тести з test-strategy.md
 - Бути можливою для merge без наступних фаз
 
+#### Step 3.1: Detect Parallel Phases
+
+На основі dependency graph визначити які фази незалежні і можуть виконуватись паралельно:
+
+1. **Побудувати DAG фаз** — directed acyclic graph залежностей між фазами
+2. **Знайти паралельні групи** — фази без взаємних залежностей формують одну групу
+3. **Сформувати Execution Waves** — послідовність груп для виконання:
+   - Wave 1: фази без залежностей (зазвичай foundation — міграції, базові entities)
+   - Wave 2: фази що залежать тільки від Wave 1
+   - Wave N: фази що залежать від попередніх waves
+4. **Визначити critical path** — найдовший ланцюг послідовних фаз
+
+Приклад:
+```
+Wave 1: [Phase 1]              — послідовно (foundation)
+Wave 2: [Phase 2, Phase 3]     — паралельно (незалежні use cases)
+Wave 3: [Phase 4]              — послідовно (залежить від 2 і 3)
+Critical path: Phase 1 → Phase 2 → Phase 4
+```
+
+Для малих планів (2-3 фази) waves можуть бути тривіальними — це нормально, все одно документуємо.
+
 #### Step 4: Assign Tests
 
 З test-strategy.md — розподілити test cases по фазах:
@@ -141,6 +163,17 @@ graph LR
     P2 --> P4[Phase 4: Async Processing]
     P3 --> P5[Phase 5: External Integration]
 ```
+
+## Execution Strategy
+
+| Wave | Phases | Execution | Rationale |
+|------|--------|-----------|-----------|
+| 1 | Phase 1 | sequential | foundation — DB schema |
+| 2 | Phase 2, Phase 3 | **parallel** | незалежні use cases, обидва залежать тільки від Wave 1 |
+| 3 | Phase 4 | sequential | залежить від Phase 2 і Phase 3 |
+
+**Critical path:** Phase 1 → Phase 2 → Phase 4
+**Parallelism gain:** {N} waves замість {M} послідовних фаз
 
 ## Scope Summary
 
@@ -223,6 +256,7 @@ Before completing, verify:
 - [ ] Each phase is self-contained (can be merged without later phases)
 - [ ] Tests from test-strategy.md are distributed across phases
 - [ ] Each phase has concrete acceptance criteria (not "works correctly")
-- [ ] overview.md has dependency graph
+- [ ] overview.md has dependency graph and execution strategy
+- [ ] Execution waves correctly reflect dependency graph (no phase runs before its dependencies)
 - [ ] Phase sizes are reasonable (no XL phases)
 - [ ] High-risk phases are identified (integrations, migrations)

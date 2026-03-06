@@ -103,11 +103,14 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 │  Phase Planner:                                 │
 │    Vertical-slice decomposition                 │
 │    Dependency graph                             │
+│    Parallel phases detection (execution waves)  │
+│    Critical path identification                 │
 │    Acceptance criteria per phase                │
 │    Each phase = separate file                   │
 │                                                 │
 │  Output: .workflows/{feature}/plan/             │
-│  Gate: No cycles, all components covered        │
+│  Gate: No cycles, all components covered,       │
+│        execution waves valid                    │
 └─────────────────┬───────────────────────────────┘
                   │
                   ▼
