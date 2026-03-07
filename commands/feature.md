@@ -22,6 +22,7 @@ Meta-command that guides through the full feature development flow. Tracks state
 /feature {feature-name} --status                              # Check current state
 /feature {feature-name} --resume                              # Continue from last phase
 /feature {feature-name} --type bug --sentry PROJ-123          # Bug fix flow
+/feature --from docs/tasks/task-1-amqp-transport/issue.md "Fix AMQP transport errors"  # From sentry-triage
 ```
 
 ## How It Works
@@ -33,6 +34,15 @@ This command does NOT run all phases automatically. It:
 4. Tracks progress in `state.json`
 
 Each phase is run separately by the user — this command is the **navigator**.
+
+### --from (Sentry Triage Integration)
+
+When started with `--from {path-to-issue.md}`:
+1. Read the issue.md file
+2. Extract Sentry issue IDs from the Issues table
+3. Auto-set `--type bug` and `--sentry {PRIMARY-ISSUE-ID}`
+4. Copy issue.md content into `.workflows/{feature}/research/sentry-context.md` as pre-research input
+5. Continue with normal flow (Research phase will use this context)
 
 ## Execution
 
@@ -195,6 +205,10 @@ For common flows:
 
 # Feature without docs update
 /feature "Internal refactoring" --skip-docs
+
+# From sentry-triage output
+/feature --from docs/tasks/task-1-amqp-transport/issue.md "Fix AMQP transport errors"
+# → Auto-detects: --type bug --sentry {primary issue ID from file}
 ```
 
 ---

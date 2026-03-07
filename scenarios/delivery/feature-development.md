@@ -35,6 +35,25 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 
 Кожна фаза — окрема команда. Кожна фаза може бути запущена незалежно. Між фазами — human checkpoints.
 
+### Entry Points
+
+Задача може потрапити у flow двома шляхами:
+
+1. **Пряма задача** — опис від людини (issue, feature request, bug report)
+   ```bash
+   /feature "Add refund functionality to payments"
+   ```
+
+2. **Sentry Triage** — автоматично зібрані та категоризовані production issues
+   ```bash
+   /sentry-triage --project bodyfit-api --org bodyfit
+   # → створює docs/tasks/task-{N}-{slug}/issue.md
+   # → потім для кожного task:
+   /feature --from docs/tasks/task-1-amqp-transport/issue.md "Fix AMQP transport errors"
+   ```
+
+   `issue.md` містить Sentry контекст (stacktrace, events, tags), що автоматично використовується в Phase 1 (Research) як вхідні дані.
+
 ---
 
 ## Process Flow
@@ -42,7 +61,16 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 ```
 Задача (issue / feature request / bug report)
     │
-    ▼
+    │   ┌─ OR ──────────────────────────────────────┐
+    │   │                                           │
+    │   │  /sentry-triage                           │
+    │   │    → docs/tasks/triage-report.md               │
+    │   │    → docs/tasks/task-{N}-{slug}/issue.md       │
+    │   │                                           │
+    │   │  Pick task → /feature --from issue.md     │
+    │   └───────────────────────────┬───────────────┘
+    │                               │
+    ▼                               ▼
 ┌─────────────────────────────────────────────────┐
 │  Phase 1: RESEARCH                /research     │
 │                                                 │
@@ -283,6 +311,7 @@ Phase 6 produces:
 
 | MCP | Phase | Usage |
 |-----|-------|-------|
+| **Sentry** | Pre (Triage) | Collect issues, details, tags for task creation |
 | **Sentry** | 1 (Research) | Bug context — issue details, events, stack traces |
 | **Sentry** | 4 (Implement) | Quality Gate — verify no new issues post-implementation |
 | **Context7** | 1 (Research) | Framework/library documentation for understanding code |

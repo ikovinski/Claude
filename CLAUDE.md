@@ -24,6 +24,7 @@ ai-agents-system/
 | `/implement` | Implement Lead + Writer + Reviewers + Gate | Execute one implementation phase |
 | `/docs-suite` | Team Lead + 4 agents | Full documentation suite |
 | `/pr` | Direct command | Create PR with design references |
+| `/sentry-triage` | Sentry Triager | Collect & categorize Sentry issues into tasks |
 | `/skill-from-git` | -- | Extract project skill from git history |
 | `/ai-debug` | -- | System status and prompt analysis |
 
@@ -45,6 +46,7 @@ ai-agents-system/
 | Design Reviewer | `agents/engineering/design-reviewer.md` | Verify implementation matches design artifacts |
 | Quality Gate | `agents/engineering/quality-gate.md` | Run build, tests, linters, Sentry check |
 | Devil's Advocate | `agents/engineering/devils-advocate.md` | Challenge architecture decisions, find weak assumptions in ADR |
+| Sentry Triager | `agents/engineering/sentry-triager.md` | Collect, categorize, group Sentry issues into tasks |
 
 ### Documentation
 | Agent | File | Purpose |
@@ -66,4 +68,5 @@ ai-agents-system/
 | Scenario | Command | Agents |
 |----------|---------|--------|
 | feature-development | `/research` → `/design` → `/plan` → `/implement` → `/docs-suite` → `/pr` | Engineering + Documentation agents |
+| sentry-triage | `/sentry-triage` → `docs/tasks/` → `/feature` per task | Sentry Triager → feature-development flow |
 | documentation-suite | `/docs-suite` | Technical Collector, Architect Collector, Swagger Collector, Technical Writer |
