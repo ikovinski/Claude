@@ -175,6 +175,21 @@ This is a **scenario phase**, not an agent responsibility. Each agent reviews ot
 
 ---
 
+## Feature Context (--feature)
+
+When invoked via `/docs-suite --feature {name}`, Team Lead resolves `.workflows/{name}/` artifacts before spawning teammates. Each artifact is optional — if missing, the teammate gets a standard prompt without that context.
+
+| Teammate | Feature Artifact | How It's Used |
+|----------|-----------------|---------------|
+| scanner | `research/research-report.md`, `implement/phase-*-report.md` | Focus collection on affected components |
+| architect | `design/architecture.md`, `design/diagrams.md`, `design/adr/*.md` | Baseline for architecture analysis, reuse accurate diagrams |
+| api-spec | `design/api-contracts.md` | Starting point for endpoint extraction |
+| writer | (no direct feature artifacts) | Benefits indirectly from enriched Phase 1-2 outputs |
+
+**Graceful degradation**: if `.workflows/{name}/` doesn't exist or is empty, all teammates work exactly as without `--feature` — scan code from scratch.
+
+---
+
 ## Team Setup
 
 Team Lead створює команду через `TeamCreate`:

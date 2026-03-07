@@ -19,6 +19,7 @@ Orchestrates 4 documentation agents as an **agent team** to produce a complete p
 
 ```bash
 /docs-suite                          # Full suite (all phases)
+/docs-suite --feature payment-refund # Feature-aware mode (uses .workflows/ artifacts as context)
 /docs-suite --format stoplight       # Stoplight-compatible output (SMD, toc.json, Getting Started)
 /docs-suite --scope architecture     # Architecture only (Phase 1 + 2A)
 /docs-suite --scope api              # API only (Phase 1 + 2B)
@@ -53,6 +54,28 @@ TeamCreate:
   description: "Documentation Suite generation for {project-name}"
 ```
 
+## Feature Context Resolution (--feature)
+
+When `--feature {name}` is provided, Team Lead resolves available artifacts **before** spawning teammates:
+
+```
+feature_path = ".workflows/{feature-name}"
+
+Resolve each artifact independently:
+  research_report  = Glob("{feature_path}/research/research-report.md")  → file or null
+  architecture     = Glob("{feature_path}/design/architecture.md")       → file or null
+  diagrams         = Glob("{feature_path}/design/diagrams.md")           → file or null
+  api_contracts    = Glob("{feature_path}/design/api-contracts.md")      → file or null
+  adr_files        = Glob("{feature_path}/design/adr/*.md")              → files or []
+  impl_reports     = Glob("{feature_path}/implement/phase-*-report.md")  → files or []
+```
+
+**Rule**: each artifact is optional. If a file doesn't exist — skip it silently, teammate gets standard prompt without that section. No errors, no warnings.
+
+The resolved artifacts are injected as `[FEATURE CONTEXT]` sections into teammate spawn prompts (see phases below).
+
+---
+
 ## Phase Execution
 
 ### Phase 1: COLLECT (blocking)
@@ -65,6 +88,12 @@ TeamCreate:
 ```
 [CONTEXT]
 Project path: {target_project_path}
+
+[FEATURE CONTEXT — only if --feature and artifacts exist]
+Research report: .workflows/{feature}/research/research-report.md
+Implementation reports: .workflows/{feature}/implement/phase-*-report.md
+→ Focus collection on components mentioned in these artifacts.
+→ Still scan the full project, but prioritize affected areas.
 
 [TASK]
 Execute the full collection process as described in your Task section.
@@ -94,6 +123,13 @@ Project path: {target_project_path}
 [INPUT — Technical Collection Report]
 Read from: docs/.artifacts/technical-collection-report.md
 
+[FEATURE CONTEXT — only if --feature and artifacts exist]
+Design architecture: .workflows/{feature}/design/architecture.md
+Design diagrams: .workflows/{feature}/design/diagrams.md
+ADR files: .workflows/{feature}/design/adr/*.md
+→ Use these as baseline. Verify against actual code, update/extend as needed.
+→ Reuse diagrams that are still accurate. Update diagrams that diverged during implementation.
+
 [TASK]
 Execute architecture analysis as described in your Task section.
 Write output to: docs/.artifacts/architecture-report.md
@@ -111,6 +147,11 @@ Project path: {target_project_path}
 
 [INPUT — Technical Collection Report]
 Read from: docs/.artifacts/technical-collection-report.md
+
+[FEATURE CONTEXT — only if --feature and artifacts exist]
+API contracts: .workflows/{feature}/design/api-contracts.md
+→ Use as starting point for endpoint extraction. Contracts define intended API shape.
+→ Verify contracts against actual implemented code — implementation may differ from design.
 
 [TASK]
 Execute OpenAPI generation as described in your Task section.
@@ -262,6 +303,7 @@ docs/INDEX.md
 | Flag | Phases | Teammates | Notes |
 |------|--------|-----------|-------|
 | (default) | 1 → 2 → 3 → 4 → 5 | All 4 | Plain markdown output |
+| `--feature {name}` | 1 → 2 → 3 → 4 → 5 | All 4 | Injects `.workflows/{name}/` artifacts as context per teammate |
 | `--format stoplight` | 1 → 2 → 3 → 4 → 5 | All 4 | SMD articles, toc.json, Getting Started, Stoplight layout |
 | `--scope architecture` | 1 → 2A | scanner, architect | |
 | `--scope api` | 1 → 2B → 3 (swagger enrichment only) | scanner, api-spec, writer | |
@@ -278,6 +320,7 @@ docs/INDEX.md
 - If a teammate fails, report the error and ask the user whether to retry or skip
 - The target project may be a **different directory** than ai-agents-system — always ask or detect
 - Always call `TeamDelete` at the end, even if some phases were skipped
+- **`--feature` is a hint, not a hard dependency** — if `.workflows/{name}/` doesn't exist or has no artifacts, all teammates work as usual (scan code from scratch). Each artifact is checked independently; missing ones are silently skipped
 
 ---
 

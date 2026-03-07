@@ -144,10 +144,19 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
                   ▼
 ┌─────────────────────────────────────────────────┐
 │  Phase 5: DOCUMENTATION           /docs-suite   │
-│  (EXISTING — повністю перевикористовується)      │
+│  --feature {feature-name}                       │
 │                                                 │
-│  Technical Collector → Architect Collector       │
-│  → Swagger Collector → Technical Writer         │
+│  Team Lead перевіряє наявність артефактів:       │
+│    .workflows/{feature}/research/               │
+│    .workflows/{feature}/design/                 │
+│    .workflows/{feature}/implement/              │
+│  Знайдені → передає як контекст агентам         │
+│  Не знайдені → агенти працюють як звичайно      │
+│                                                 │
+│  Technical Collector (focused on affected code)  │
+│  → Architect Collector (design as baseline)      │
+│  → Swagger Collector (api-contracts as start)    │
+│  → Technical Writer                             │
 │                                                 │
 │  Output: docs/                                  │
 └─────────────────┬───────────────────────────────┘
@@ -205,6 +214,8 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 |------|-----------|-------|
 | (see documentation-suite scenario) | `agents/documentation/*.md` | sonnet |
 
+*When invoked with `--feature {name}`: Team Lead checks `.workflows/{feature}/` for design artifacts and passes them as context to teammates. Missing artifacts are silently skipped — agents fall back to scanning code directly.*
+
 ### Phase 6: PR
 | Role | Agent File | Model |
 |------|-----------|-------|
@@ -250,6 +261,14 @@ Phase 4 produces:
   On structural blocker:
   .workflows/{feature}/plan/
     └── replan-needed.md            ◄── consumed by Phase 3 (replan loop)
+
+Phase 5 consumes (if --feature):
+  .workflows/{feature}/research/research-report.md
+  .workflows/{feature}/design/architecture.md
+  .workflows/{feature}/design/diagrams.md
+  .workflows/{feature}/design/api-contracts.md
+  .workflows/{feature}/design/adr/*.md
+  .workflows/{feature}/implement/phase-*-report.md
 
 Phase 5 produces:
   docs/                             ◄── committed with PR

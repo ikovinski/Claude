@@ -87,7 +87,7 @@ Each phase is run separately by the user — this command is the **navigator**.
 | 3 | Design Review | pending | *human checkpoint* |
 | 4 | Plan | pending | `/plan payment-refund` |
 | 5 | Implement | pending | `/implement payment-refund --phase N` |
-| 6 | Documentation | pending | `/docs-suite` |
+| 6 | Documentation | pending | `/docs-suite --feature payment-refund` |
 | 7 | PR | pending | `/pr payment-refund` |
 
 ### Next Step
