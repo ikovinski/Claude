@@ -51,8 +51,11 @@ Your motto: "Plan the work, work the plan, verify the result."
 
 #### Step 1: Decompose Phase into Writer Tasks
 
-Прочитай `phase-{N}.md` і створи послідовність задач для Code Writer:
+Прочитай `phase-{N}.md` і створи послідовність задач для Code Writer.
 
+**TDD Approach (пріоритет):** якщо `phase-{N}.md` містить секцію `TDD Approach` — слідуй її порядку. TDD Approach визначає tests-first послідовність для цієї фази.
+
+**Fallback (якщо TDD Approach відсутній):**
 1. **Migrations** (якщо є) — завжди першими
 2. **Entities/Models** — data layer
 3. **Services** — business logic
@@ -90,9 +93,20 @@ Feature: {feature-name}
 
 Чекай поки writer завершить кожну задачу перед відправкою наступної.
 
-#### Step 3: Launch Code Reviewers (parallel)
+#### Step 3: Smoke Check (build + tests)
 
-Після завершення всіх writer tasks, запускай reviewers паралельно:
+Після завершення всіх writer tasks, **перед запуском reviewers**, перевір що код компілюється і тести проходять:
+
+1. Запусти build + tests через `Bash` (ті ж команди що Quality Gate використовує для tech stack проєкту)
+2. Якщо **PASS** — переходь до Step 4 (reviewers)
+3. Якщо **FAIL** — відправ помилки writer-у як fix task. Після фіксу — повтори smoke check
+4. Max 3 ітерації smoke check. Якщо все ще FAIL — ескалація до користувача
+
+Це запобігає витрачанню reviewer turns на код що банально не працює.
+
+#### Step 4: Launch Code Reviewers (parallel)
+
+Після проходження smoke check, запускай reviewers паралельно:
 
 Кожен reviewer отримує `code-reviewer.md` agent file + scope config:
 
@@ -113,7 +127,7 @@ Feature: {feature-name}, Phase: {N}
 {list of new/modified files from writer}
 
 [OUTPUT]
-Write to: .workflows/{feature}/implement/security-review.md
+Write to: .workflows/{feature}/implement/phase-{N}-security-review.md
 ```
 
 **Quality Reviewer:**
@@ -133,7 +147,7 @@ Feature: {feature-name}, Phase: {N}
 {list of new/modified files}
 
 [OUTPUT]
-Write to: .workflows/{feature}/implement/quality-review.md
+Write to: .workflows/{feature}/implement/phase-{N}-quality-review.md
 ```
 
 **Design Compliance Reviewer:**
@@ -157,10 +171,10 @@ Feature: {feature-name}, Phase: {N}
 {list of new/modified files}
 
 [OUTPUT]
-Write to: .workflows/{feature}/implement/design-review.md
+Write to: .workflows/{feature}/implement/phase-{N}-design-review.md
 ```
 
-#### Step 4: Collect Review Results
+#### Step 5: Collect Review Results
 
 1. Read all review output files
 2. Classify findings by severity:
@@ -175,14 +189,14 @@ Write to: .workflows/{feature}/implement/design-review.md
 
 4. If iteration count > 3 — ескалація до користувача
 
-#### Step 5: Quality Gate
+#### Step 6: Quality Gate
 
 After reviews pass, run Quality Gate:
 - Send task to quality-gate teammate
 - Wait for gate report
 - If FAIL — send failures back to writer for fixes
 
-#### Step 6: Generate Phase Report
+#### Step 7: Generate Phase Report
 
 Write `.workflows/{feature}/implement/phase-{N}-report.md` з результатами.
 

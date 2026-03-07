@@ -14,7 +14,7 @@ skills:
   - auto:{project}-patterns
 consumes: []
 produces:
-  - .workflows/{feature}/implement/quality-gate-report.md
+  - .workflows/{feature}/implement/phase-{N}-quality-gate-report.md
 depends_on: [code-writer]
 ---
 

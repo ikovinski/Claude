@@ -82,8 +82,11 @@ Each reviewer gets the same agent file but different scope config in spawn promp
 
 ### Phase 1: Write Code (sequential tasks)
 
-Decompose `phase-{N}.md` into ordered writer tasks:
+Decompose `phase-{N}.md` into ordered writer tasks.
 
+**TDD Approach (priority):** if `phase-{N}.md` contains a `TDD Approach` section — follow its order. It defines the tests-first sequence for this phase.
+
+**Fallback (if TDD Approach is absent):**
 1. **Migrations** (if any)
 2. **Entities/Models**
 3. **Services** (business logic)
@@ -120,7 +123,20 @@ After all tasks complete, collect list of all created/modified files.
 
 ---
 
-### Phase 2: Code Review (parallel reviewers)
+### Phase 2: Smoke Check (build + tests)
+
+Before sending code to reviewers, verify it compiles and tests pass:
+
+1. Run build + tests via `Bash` (same commands as Quality Gate for the project's tech stack)
+2. If **PASS** — proceed to Phase 3 (reviewers)
+3. If **FAIL** — send errors back to writer as fix task. After fix — re-run smoke check
+4. Max 3 iterations. If still FAIL — escalate to user
+
+This prevents wasting reviewer turns on fundamentally broken code.
+
+---
+
+### Phase 3: Code Review (parallel reviewers)
 
 Skip if `--skip-review` is set.
 
@@ -142,7 +158,7 @@ Feature: {feature-name}, Phase: {N}
 {list all new/modified files from Phase 1}
 
 [OUTPUT]
-Write to: .workflows/{feature-name}/implement/security-review.md
+Write to: .workflows/{feature-name}/implement/phase-{N}-security-review.md
 ```
 
 **To reviewer-quality (scope: quality):**
@@ -161,7 +177,7 @@ Feature: {feature-name}, Phase: {N}
 {list all new/modified files}
 
 [OUTPUT]
-Write to: .workflows/{feature-name}/implement/quality-review.md
+Write to: .workflows/{feature-name}/implement/phase-{N}-quality-review.md
 ```
 
 **To reviewer-design (scope: design-compliance):**
@@ -184,14 +200,14 @@ Feature: {feature-name}, Phase: {N}
 {list all new/modified files}
 
 [OUTPUT]
-Write to: .workflows/{feature-name}/implement/design-review.md
+Write to: .workflows/{feature-name}/implement/phase-{N}-design-review.md
 ```
 
 Wait for ALL reviewers to complete.
 
 ---
 
-### Phase 3: Fix Iteration (if needed)
+### Phase 4: Fix Iteration (if needed)
 
 Read all review outputs. For each finding with severity high or medium:
 
@@ -211,7 +227,7 @@ Suggested Fix: {from reviewer}
 
 ---
 
-### Phase 4: Quality Gate
+### Phase 5: Quality Gate
 
 After reviews pass (or are skipped), run Quality Gate:
 
@@ -224,7 +240,7 @@ Technology: {detected}
 Files changed: {list}
 
 Run all checks and write report to:
-.workflows/{feature-name}/implement/quality-gate-report.md
+.workflows/{feature-name}/implement/phase-{N}-quality-gate-report.md
 ```
 
 If gate FAILS:
@@ -270,7 +286,7 @@ This is for **structural blockers only** — not for code bugs or review finding
 
 ---
 
-### Phase 5: Cleanup & Report
+### Phase 6: Cleanup & Report
 
 1. Generate phase report: `.workflows/{feature-name}/implement/phase-{N}-report.md`
    (Follow output format from `agents/engineering/implement-lead.md`)

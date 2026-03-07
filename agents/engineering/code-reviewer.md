@@ -14,7 +14,7 @@ skills:
   - auto:{project}-patterns
 consumes: []
 produces:
-  - .workflows/{feature}/implement/{scope}-review.md
+  - .workflows/{feature}/implement/phase-{N}-{scope}-review.md
 depends_on: [code-writer]
 ---
 

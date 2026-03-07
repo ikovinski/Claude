@@ -125,6 +125,8 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 │                                                 │
 │  Implement Lead координує:                      │
 │    Code Writer — пише код за планом             │
+│      (TDD порядок з phase-{N}.md)               │
+│    Smoke Check — build + tests перед reviews    │
 │    Code Reviewers (паралельно):                 │
 │      - Security (OWASP)                         │
 │      - Quality (complexity, SOLID)              │
@@ -239,10 +241,10 @@ Phase 4 produces:
   code changes (in project)
   .workflows/{feature}/implement/
     ├── phase-{N}-report.md         ◄── consumed by Phase 6
-    ├── security-review.md
-    ├── quality-review.md
-    ├── design-review.md
-    └── quality-gate-report.md
+    ├── phase-{N}-security-review.md
+    ├── phase-{N}-quality-review.md
+    ├── phase-{N}-design-review.md
+    └── phase-{N}-quality-gate-report.md
   On structural blocker:
   .workflows/{feature}/plan/
     └── replan-needed.md            ◄── consumed by Phase 3 (replan loop)
