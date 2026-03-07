@@ -39,6 +39,7 @@ ai-agents-system/
 | Phase Planner | `agents/engineering/phase-planner.md` | Decompose design into vertical-slice phases |
 | Implement Lead | `agents/engineering/implement-lead.md` | Orchestrate implementation, coordinate team |
 | Code Writer | `agents/engineering/code-writer.md` | Write code strictly per plan |
+| TDD Guide | `agents/engineering/tdd-guide.md` | TDD coach — test-first discipline, test quality, isolation |
 | Code Reviewer | `agents/engineering/code-reviewer.md` | Review with configurable scope (security/quality/design) |
 | Quality Gate | `agents/engineering/quality-gate.md` | Run build, tests, linters, Sentry check |
 | Devil's Advocate | `agents/engineering/devils-advocate.md` | Challenge architecture decisions, find weak assumptions in ADR |
