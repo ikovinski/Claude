@@ -74,6 +74,7 @@ This agent consumes artifacts from **Technical Collector**:
 - Do NOT evaluate "good" vs "bad" patterns
 - Do NOT create diagrams for trivial interactions
 - Do NOT duplicate Technical Collector's raw lists — add analysis value
+- Do NOT use ASCII art for diagrams — **ONLY Mermaid** syntax inside ` ```mermaid ` code blocks. No box-drawing characters (─│┌┐└┘├┤), no text-art layouts. Every diagram MUST be a ` ```mermaid ` block
 
 ## Diagram Standards
 

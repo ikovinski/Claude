@@ -77,6 +77,7 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 │  Research Lead:                                 │
 │    Quick Reconnaissance (read entry points)     │
 │    Complexity Assessment (Small/Medium/Large)   │
+│    → writes complexity to state.json            │
 │                                                 │
 │  Small → Lead сканує сам, без команди           │
 │  Medium → 2 Codebase Researcher(s)              │
@@ -89,7 +90,39 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 │  Gate: Components, DataFlow, Open Questions     │
 └─────────────────┬───────────────────────────────┘
                   │
-                  ▼
+          ┌───────┼───────────────────────┐
+          │       │                       │
+        Small   Medium                 Large
+          │       │                       │
+          │       ▼                       ▼
+          │  ┌──────────────┐   ┌──────────────────┐
+          │  │ /design      │   │ /design           │
+          │  │ --depth light│   │ --depth standard  │
+          │  │ --skip-      │   │ (full)            │
+          │  │  challenge   │   └────────┬─────────┘
+          │  └──────┬───────┘            │
+          │         │              HUMAN CHECKPOINT
+          │         │                    │
+          │         ▼                    ▼
+          │  ┌──────────────┐   ┌──────────────────┐
+          │  │ /plan        │   │ /plan             │
+          │  │ (standard)   │   │ (standard)        │
+          │  └──────┬───────┘   └────────┬─────────┘
+          │         │                    │
+          ▼         ▼                    ▼
+┌─────────────────────────────────────────────────┐
+│  IMPLEMENT                                      │
+│  Small:  1 reviewer (quality)                   │
+│  Medium: 2 reviewers (security, quality)        │
+│  Large:  3 reviewers (security, quality, design)│
+└─────────────────┬───────────────────────────────┘
+                  │
+                  ▼  (continues to Docs → PR)
+
+---
+
+**Full flow (Large / explicit override):**
+
 ┌─────────────────────────────────────────────────┐
 │  Phase 2: DESIGN                  /design       │
 │                                                 │
@@ -329,17 +362,26 @@ Phase 6 produces:
 - B: Bug fix — Research includes Sentry context, Design may be lighter
 - C: Hotfix — skip Design/Plan, go Research → Implement (--skip-review) → PR
 
-### Decision 2: Documentation Scope
+### Decision 2: Complexity-Adaptive Flow (auto, after Research)
+**Question**: How complex is the task? (determined by Research Lead)
+**Options**:
+- A: **Small** (≤5 files, 1 component) — fast track: Research → Implement (1 reviewer) → PR
+- B: **Medium** (6-15 files, 2-3 components) — lighter: Research → Design (light) → Plan → Implement (2 reviewers) → PR
+- C: **Large** (15+ files, 4+ components) — full flow: all phases, all reviewers
+
+This decision is **automatic** — Research writes `complexity` to state.json, and `/feature --resume` adapts the suggested flow. User can override with "full flow".
+
+### Decision 3: Documentation Scope
 **Question**: Update docs after implementation?
 **Options**:
 - A: Full docs-suite (new endpoints, architecture changes)
 - B: Architecture only (structural changes, no API)
-- C: Skip docs (internal refactoring, bug fix)
+- C: Skip docs (internal refactoring, bug fix, small task)
 
-### Decision 3: PR Strategy
+### Decision 4: PR Strategy
 **Question**: One PR or per-phase PRs?
 **Options**:
-- A: Single PR after all phases (default for small features)
+- A: Single PR after all phases (default for small/medium features)
 - B: Per-phase PRs (for large features — each phase = separate PR)
 
 ---
@@ -383,3 +425,5 @@ Phase 6 produces:
 8. **Monolith PR** — 50+ files PR → impossible to review → rubber stamp → bugs
 9. **Ignoring replan signal** — /implement creates replan-needed.md but developer continues with broken plan → wasted effort
 10. **Plan without TDD** — phases without test-first order → Code Writer writes code first, adds tests as afterthought
+11. **Full flow for small tasks** — running Design + Plan + 3 reviewers for a 3-file change → 76% wasted tokens. Trust the complexity assessment and use fast track
+12. **Ignoring complexity override** — blindly following auto-skip when task has hidden complexity (e.g., "small" change touches auth logic). Always review fast-track suggestion before confirming

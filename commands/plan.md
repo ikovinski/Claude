@@ -45,12 +45,23 @@ When this command runs, YOU (Claude) become the **Phase Planner**. This is a sin
 
 ## Execution
 
-### Step 0: Validate Prerequisites & Check Replan
+### Step 0: Validate Prerequisites & Complexity Check
 
-1. Check `.workflows/{feature-name}/design/architecture.md` exists
-2. If missing — tell user to run `/design` first
-3. Verify design was reviewed (ask user: "Has the design been reviewed and approved?")
-4. Check if `.workflows/{feature-name}/plan/replan-needed.md` exists:
+1. Read `.workflows/{feature-name}/state.json` — check `complexity` field
+2. **If complexity = "small"**: Plan is unnecessary for single-phase tasks. Report:
+   ```
+   Complexity: small — skipping /plan (single implementation phase, no decomposition needed).
+   Proceed directly with: /implement {feature-name} --phase 1 --reviewers quality
+   ```
+   Create a minimal plan file for artifact chain consistency:
+   ```bash
+   mkdir -p .workflows/{feature-name}/plan
+   ```
+   Write `.workflows/{feature-name}/plan/overview.md` with a single phase derived from the research report. Write `.workflows/{feature-name}/plan/phase-1.md` with file list from research. Mark plan as "done" in state.json. **Stop here — do not proceed to full planning.**
+3. Check `.workflows/{feature-name}/design/architecture.md` exists
+4. If missing — tell user to run `/design` first
+5. Verify design was reviewed (ask user: "Has the design been reviewed and approved?")
+6. Check if `.workflows/{feature-name}/plan/replan-needed.md` exists:
    - **If exists** — this is a **replan**. Read the file to understand what went wrong. Inform user: "Replan requested by /implement: {summary of issues}". Delete existing `plan/phase-*.md` and `plan/overview.md`. Proceed with full re-planning from scratch, using replan-needed.md as additional context
    - **If not exists** — normal planning flow
 

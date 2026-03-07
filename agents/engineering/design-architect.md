@@ -162,6 +162,7 @@ mcp__context7__query-docs(libraryId: "...", topic: "messenger component")
 - Do NOT create diagrams without purpose — кожна діаграма відповідає на конкретне питання
 - Do NOT ignore existing patterns — якщо проєкт використовує певний паттерн, слідуй йому
 - Do NOT skip alternatives in ADR — "очевидне рішення" все одно потребує альтернатив
+- Do NOT use ASCII art for diagrams — **ONLY Mermaid** syntax inside ` ```mermaid ` code blocks. No box-drawing characters (─│┌┐└┘├┤), no ASCII arrows (-->), no text-art layouts. If it's a diagram — it MUST be a ` ```mermaid ` block
 
 ## Mermaid Guidelines
 
@@ -357,6 +358,7 @@ Before completing, verify:
 - [ ] ADR has Risks table with mitigations
 - [ ] ADR files in adr/ directory (one file per decision)
 - [ ] API Contracts have request/response schemas (if new endpoints)
+- [ ] All diagrams use ` ```mermaid ` code blocks — NO ASCII art, NO box-drawing characters
 - [ ] All Mermaid diagrams in diagrams.md are syntactically valid
 - [ ] architecture.md references diagrams.md (not inline diagrams)
 - [ ] Design depth matches the requested level (light/standard/detailed)

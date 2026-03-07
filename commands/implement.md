@@ -50,11 +50,26 @@ When this command runs, YOU (Claude) are the **Implementation Lead orchestrator*
 
 ## Setup
 
-### Step 0: Validate Prerequisites
+### Step 0: Validate Prerequisites & Complexity Check
 
 1. Check `.workflows/{feature-name}/plan/phase-{N}.md` exists
 2. If missing — tell user to run `/plan` first
 3. Read phase plan to understand scope
+4. Read `.workflows/{feature-name}/state.json` — check `complexity` field
+
+**Complexity auto-defaults for reviewers** (applied when no explicit `--reviewers` or `--skip-review` flag):
+
+| Complexity | Default reviewers | Rationale |
+|-----------|------------------|-----------|
+| **small** | `quality` only | No architecture decisions to verify, minimal attack surface |
+| **medium** | `security,quality` | Skip design-reviewer (lighter design = less to verify) |
+| **large** | `security,quality,design` | Full review — all 3 scopes |
+| **null** | `security,quality,design` | Unknown complexity = full review |
+
+Explicit `--reviewers` or `--skip-review` flags always override auto-defaults. Announce:
+```
+Complexity: {value} — auto-selecting reviewers: {list}
+```
 
 ### Step 1: Create Team
 

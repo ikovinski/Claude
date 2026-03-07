@@ -162,7 +162,8 @@ Write coverage report to: docs/.artifacts/swagger-coverage-report.md
 3. Create task with dependency on Phase 1 task
 
 **Gate**: Wait for BOTH teammates to go idle. Verify:
-- `docs/.artifacts/architecture-report.md` contains at least one Mermaid diagram (```mermaid block)
+- `docs/.artifacts/architecture-report.md` contains at least one Mermaid diagram (` ```mermaid ` code block)
+- `docs/.artifacts/architecture-report.md` contains NO ASCII art diagrams — if box-drawing characters (─│┌┐└┘├┤) found instead of ` ```mermaid ` blocks, send architect a fix request
 - `docs/.artifacts/openapi.yaml` exists and has `paths:` section
 
 ---

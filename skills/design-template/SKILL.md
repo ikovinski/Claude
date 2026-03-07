@@ -157,6 +157,7 @@ Diagrams: see [diagrams.md](diagrams.md)
 
 ## Mermaid Conventions
 
+- **ONLY Mermaid** — every diagram MUST be a ` ```mermaid ` code block. ASCII art, box-drawing characters (─│┌┐└┘├┤), and text-art layouts are FORBIDDEN
 - Use `C4Component` for component diagrams (not `graph` or `flowchart`)
 - Mark new components with `"NEW: description"` in the description field
 - Use `flowchart LR` (left-to-right) for data flow, `flowchart TD` for hierarchies

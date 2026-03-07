@@ -55,11 +55,26 @@ When this command runs, YOU (Claude) are the **Design Lead orchestrator**. You:
 
 ## Setup
 
-### Step 0: Validate Prerequisites
+### Step 0: Validate Prerequisites & Complexity Check
 
 1. Check `.workflows/{feature-name}/research/research-report.md` exists
 2. If missing — tell user to run `/research` first
 3. Read Research Report to understand scope
+4. Read `.workflows/{feature-name}/state.json` — check `complexity` field
+
+**Complexity auto-defaults** (applied when no explicit flags override):
+
+| Complexity | Auto-applied defaults |
+|-----------|----------------------|
+| **small** | Should not reach /design — `/feature` skips it. If called directly: `--depth light --skip-challenge --skip-adr --skip-api --skip-tests` |
+| **medium** | `--depth light --skip-challenge` |
+| **large** | `--depth standard` (or `--depth detailed` if 6+ components) |
+| **null** | No auto-defaults, use explicit flags or standard |
+
+Explicit flags always override auto-defaults. Announce applied defaults:
+```
+Complexity: {value} — auto-applying: {list of defaults}
+```
 
 ### Step 1: Create Team
 
@@ -140,7 +155,8 @@ Wait for further instructions.
 **Wait**: Both teammates finish Phase 1.
 
 **Gate for architect**: Verify:
-- `diagrams.md` contains at least one Mermaid diagram
+- `diagrams.md` contains at least one Mermaid diagram (` ```mermaid ` code block)
+- `diagrams.md` contains NO ASCII art diagrams — all diagrams must use Mermaid syntax. If you find box-drawing characters (─│┌┐└┘├┤) or text-art layouts instead of ` ```mermaid ` blocks, send the architect a fix request: "All diagrams must use Mermaid syntax in ```mermaid code blocks. Rewrite ASCII diagrams as Mermaid."
 - `architecture.md` has New/Changed Components table and references diagrams.md
 - ADR exists in adr/*.md with at least 2 alternatives per decision (unless --skip-adr)
 - API contracts exist if architecture mentions new endpoints (unless --skip-api)

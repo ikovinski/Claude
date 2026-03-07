@@ -65,6 +65,8 @@ When started with `--from {path-to-issue.md}`:
      "description": "Add refund functionality to payments",
      "type": "feature",
      "created": "2026-03-06",
+     "complexity": null,
+     "complexity_reason": null,
      "phases": {
        "research": "pending",
        "design": "pending",
@@ -169,11 +171,13 @@ After each phase command completes, the user runs `/feature {name} --status` to 
   "description": "Add refund functionality to payments",
   "type": "feature|bug",
   "created": "2026-03-06",
+  "complexity": "small|medium|large|null",
+  "complexity_reason": "1 component, 3 files, no external deps|null",
   "phases": {
     "research": "pending|in_progress|done",
-    "design": "pending|in_progress|done",
-    "design-review": "pending|approved|changes-requested",
-    "plan": "pending|in_progress|done",
+    "design": "pending|in_progress|done|skipped",
+    "design-review": "pending|approved|changes-requested|skipped",
+    "plan": "pending|in_progress|done|skipped",
     "implement": "pending|in_progress|done",
     "docs": "pending|in_progress|done|skipped",
     "pr": "pending|done"
@@ -188,6 +192,69 @@ After each phase command completes, the user runs `/feature {name} --status` to 
   "pr_url": "https://github.com/org/repo/pull/123|null"
 }
 ```
+
+---
+
+## Complexity-Adaptive Flow
+
+After Research completes, `/feature --resume` reads `complexity` from state.json and adapts the suggested flow. The user can always override with "I want the full flow".
+
+### Adaptation Matrix
+
+| Complexity | Design | Plan | Implement | Docs |
+|-----------|--------|------|-----------|------|
+| **Small** | **skip** | **skip** | `--reviewers quality` (1 reviewer) | skip (suggest `--skip-docs`) |
+| **Medium** | `--depth light --skip-challenge` | standard | `--reviewers security,quality` (2 reviewers) | standard |
+| **Large** | `--depth standard` or `--depth detailed` | standard | all 3 reviewers | standard |
+| **null** (not assessed) | standard | standard | standard | standard |
+
+### Small Task — Fast Track
+
+When complexity = "small", `/feature --resume` after Research:
+
+1. Set phases `design`, `design-review`, `plan` to `"skipped"` in state.json
+2. Suggest direct implementation:
+
+```markdown
+### Research Complete — Small Task Detected
+
+**Complexity:** Small — {complexity_reason}
+
+This task is too small for a full design/plan cycle. Suggested fast track:
+- ~~Design~~ skipped (no architecture decisions needed)
+- ~~Plan~~ skipped (single implementation phase)
+- Implement with lightweight review
+
+**Next step:**
+/implement {feature-name} --phase 1 --reviewers quality
+
+Override: reply "full flow" to proceed with Design → Plan → Implement as usual.
+```
+
+If user replies "full flow" — reset skipped phases back to "pending" and suggest `/design`.
+
+### Medium Task — Lighter Design
+
+When complexity = "medium", suggest lighter design options:
+
+```markdown
+### Research Complete — Medium Task
+
+**Complexity:** Medium — {complexity_reason}
+
+Suggested optimizations:
+- Design with `--depth light --skip-challenge` (saves ~40% design time)
+- Full review in Implement phase
+
+**Next step:**
+/design {feature-name} --depth light --skip-challenge
+
+Override: reply "full design" for standard depth with Devil's Advocate challenge.
+```
+
+### Large Task — Full Flow
+
+No changes — full flow is the right approach for large tasks.
 
 ---
 

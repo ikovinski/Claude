@@ -33,5 +33,9 @@
       "Bash(python3 -m json.tool)",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); [print\\(json.dumps\\(p,indent=2\\)\\) for p in d.get\\(''plugins'',[]\\) if ''sentry'' in p.get\\(''name'',''''\\).lower\\(\\)]\")"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "context7",
+    "sentry"
+  ]
 }

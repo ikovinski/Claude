@@ -123,6 +123,17 @@ Based on Quick Reconnaissance, determine research strategy:
 
 **If Medium/Large** — continue to Phase 4.
 
+**Write complexity to state.json** — if `.workflows/{feature-name}/state.json` exists, update it:
+
+```json
+{
+  "complexity": "small|medium|large",
+  "complexity_reason": "{short justification}"
+}
+```
+
+This enables downstream phases (`/design`, `/plan`, `/implement`) to auto-adapt their depth and skip unnecessary steps. See `/feature` for the full adaptation matrix.
+
 Announce your assessment to the user:
 ```
 Complexity: {Small|Medium|Large}
