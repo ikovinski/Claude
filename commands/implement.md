@@ -232,6 +232,42 @@ If gate FAILS:
 2. Re-run gate after fixes
 3. Max 3 iterations
 
+### Plan Blocker — Replan Needed
+
+If during any phase the writer or lead discovers that the plan is **fundamentally unworkable** (not a simple fix, but a structural problem):
+
+1. **Stop implementation** — do not continue with broken assumptions
+2. **Create replan file**: `.workflows/{feature-name}/plan/replan-needed.md`
+
+```markdown
+# Replan Needed: {feature-name}
+
+## Blocked Phase
+Phase {N}: {title}
+
+## Problem
+{What makes the plan unworkable — be specific}
+
+## Root Cause
+{Why the plan is wrong — e.g., missing dependency, wrong assumption, API changed}
+
+## Affected Phases
+- Phase {N}: {how it's affected}
+- Phase {M}: {how it's affected}
+
+## Suggestion
+{What the planner should consider when re-planning}
+```
+
+3. **Report to user**: "Implementation blocked — plan needs revision. Created replan-needed.md. Run `/plan {feature-name}` to re-plan."
+4. **Cleanup**: send shutdown to teammates, call TeamDelete
+
+This is for **structural blockers only** — not for code bugs or review findings. Examples:
+- Plan assumes a service exists but it was removed
+- Phase 2 depends on Phase 3 output (dependency cycle)
+- API contract from design doesn't match actual external API
+- Migration is incompatible with existing data
+
 ---
 
 ### Phase 5: Cleanup & Report

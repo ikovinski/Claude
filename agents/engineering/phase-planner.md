@@ -15,11 +15,13 @@ triggers:
 rules: [language]
 skills:
   - auto:{project}-patterns
+  - tdd-approach
 consumes:
   - .workflows/{feature}/research/research-report.md
   - .workflows/{feature}/design/architecture.md
   - .workflows/{feature}/design/adr/*.md
   - .workflows/{feature}/design/test-strategy.md
+  - .workflows/{feature}/plan/replan-needed.md (optional — from failed /implement)
 produces:
   - .workflows/{feature}/plan/overview.md
   - .workflows/{feature}/plan/phase-*.md
@@ -51,6 +53,7 @@ Read all design artifacts:
 - `.workflows/{feature}/design/architecture.md` — нові/змінені компоненти, діаграми
 - `.workflows/{feature}/design/adr/*.md` — рішення і ризики
 - `.workflows/{feature}/design/test-strategy.md` — тестові кейси
+- `.workflows/{feature}/plan/replan-needed.md` — **якщо існує**: feedback від `/implement` про проблеми з попереднім планом. Прочитати, врахувати при плануванні, видалити після успішного перепланування
 
 ### Process
 
@@ -175,6 +178,14 @@ graph LR
 **Critical path:** Phase 1 → Phase 2 → Phase 4
 **Parallelism gain:** {N} waves замість {M} послідовних фаз
 
+## Risk Mitigation
+
+{Тільки для фаз з risk = med/high. Якщо всі фази low-risk — секцію не включати.}
+
+| Phase | Risk | Impact | Mitigation |
+|-------|------|--------|------------|
+| Phase {N} | {що може піти не так} | {наслідки} | {конкретна дія для зменшення ризику} |
+
 ## Scope Summary
 
 | Metric | Value |
@@ -224,11 +235,32 @@ graph LR
 - {Які constraints з Design}
 - {Як інтегрувати з існуючим кодом}
 
-## Tests
+## TDD Approach
 
-| Test | Type | Case | From Strategy |
-|------|------|------|--------------|
-| {TestClass::method} | unit/functional | {Given/When/Then summary} | test-strategy.md #{N} |
+### Write Tests First
+
+| # | Test | Type | Behavior | From Strategy |
+|---|------|------|----------|---------------|
+| 1 | {TestClass::testMethodName} | unit | Given {context}, When {action}, Then {expected} | test-strategy.md #{N} |
+| 2 | {TestClass::testEdgeCase} | unit | Given {context}, When {edge case}, Then {expected} | test-strategy.md #{N} |
+| 3 | {FunctionalTest::testEndpoint} | functional | Given {setup}, When {API call}, Then {response} | test-strategy.md #{N} |
+
+### Test Skeleton
+
+```
+test {testMethodName}:
+    // Arrange: {what to set up}
+    // Act: {what action to perform}
+    // Assert: {what to verify}
+```
+
+### Red-Green-Refactor Order
+
+1. {Write test X — RED}
+2. {Minimal code to make X GREEN}
+3. {Write test Y — RED}
+4. {Extend code — Y GREEN}
+5. {Refactor — all GREEN}
 
 ## Acceptance Criteria
 
@@ -238,6 +270,19 @@ graph LR
 - [ ] No existing tests broken
 - [ ] Build passes
 - [ ] Linters pass
+
+## Verification
+
+| # | Check | Command / Action | Expected |
+|---|-------|-----------------|----------|
+| 1 | Unit tests | {run unit tests for this phase} | All pass |
+| 2 | Functional tests | {run functional tests} | All pass |
+| 3 | Full test suite | {run all tests} | No regressions |
+| 4 | Linter | {run linter} | No new violations |
+| 5 | Build | {run build} | Build succeeds |
+
+### Smoke Test
+- {Concrete end-to-end check proving the phase works}
 
 ## Size: {S/M/L}
 
@@ -256,7 +301,10 @@ Before completing, verify:
 - [ ] Each phase is self-contained (can be merged without later phases)
 - [ ] Tests from test-strategy.md are distributed across phases
 - [ ] Each phase has concrete acceptance criteria (not "works correctly")
+- [ ] Each phase has TDD Approach with tests-first order and strategy references
+- [ ] Each phase has Verification section with runnable checks
 - [ ] overview.md has dependency graph and execution strategy
+- [ ] overview.md has Risk Mitigation for med/high-risk phases (if any)
 - [ ] Execution waves correctly reflect dependency graph (no phase runs before its dependencies)
 - [ ] Phase sizes are reasonable (no XL phases)
 - [ ] High-risk phases are identified (integrations, migrations)

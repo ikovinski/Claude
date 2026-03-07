@@ -8,6 +8,7 @@ triggers:
   - "implementation plan"
 skills:
   - auto:{project}-patterns
+  - tdd-approach
 ---
 
 # /plan - Implementation Planning
@@ -44,11 +45,14 @@ When this command runs, YOU (Claude) become the **Phase Planner**. This is a sin
 
 ## Execution
 
-### Step 0: Validate Prerequisites
+### Step 0: Validate Prerequisites & Check Replan
 
 1. Check `.workflows/{feature-name}/design/architecture.md` exists
 2. If missing — tell user to run `/design` first
 3. Verify design was reviewed (ask user: "Has the design been reviewed and approved?")
+4. Check if `.workflows/{feature-name}/plan/replan-needed.md` exists:
+   - **If exists** — this is a **replan**. Read the file to understand what went wrong. Inform user: "Replan requested by /implement: {summary of issues}". Delete existing `plan/phase-*.md` and `plan/overview.md`. Proceed with full re-planning from scratch, using replan-needed.md as additional context
+   - **If not exists** — normal planning flow
 
 ### Step 1: Prepare Workspace
 
@@ -63,6 +67,7 @@ Read all design and research artifacts:
 - `.workflows/{feature-name}/design/architecture.md`
 - `.workflows/{feature-name}/design/adr/*.md` (if exists)
 - `.workflows/{feature-name}/design/test-strategy.md` (if exists)
+- `.workflows/{feature-name}/plan/replan-needed.md` (if exists — replan context from /implement)
 
 ### Step 3: Plan
 
@@ -88,7 +93,11 @@ Verify before completing:
 - [ ] Execution waves correctly reflect dependency graph
 - [ ] Each phase is self-contained
 - [ ] Each phase has acceptance criteria
+- [ ] Each phase has TDD Approach (tests-first order, strategy references)
+- [ ] Each phase has Verification section (runnable checks + smoke test)
 - [ ] Tests are distributed (not a separate phase)
+- [ ] Risk Mitigation in overview.md for med/high-risk phases
+- [ ] If replan: replan-needed.md issues addressed and file deleted
 
 ### Step 5: Report
 

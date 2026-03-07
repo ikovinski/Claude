@@ -105,12 +105,18 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 │    Dependency graph                             │
 │    Parallel phases detection (execution waves)  │
 │    Critical path identification                 │
+│    TDD Approach per phase (tests-first order)   │
+│    Verification criteria per phase              │
+│    Risk mitigation for med/high-risk phases     │
 │    Acceptance criteria per phase                │
 │    Each phase = separate file                   │
 │                                                 │
+│  Replan loop: reads replan-needed.md from       │
+│    /implement if exists → full re-plan          │
+│                                                 │
 │  Output: .workflows/{feature}/plan/             │
 │  Gate: No cycles, all components covered,       │
-│        execution waves valid                    │
+│        execution waves valid, TDD + verify      │
 └─────────────────┬───────────────────────────────┘
                   │
                   ▼
@@ -237,6 +243,9 @@ Phase 4 produces:
     ├── quality-review.md
     ├── design-review.md
     └── quality-gate-report.md
+  On structural blocker:
+  .workflows/{feature}/plan/
+    └── replan-needed.md            ◄── consumed by Phase 3 (replan loop)
 
 Phase 5 produces:
   docs/                             ◄── committed with PR
@@ -298,6 +307,8 @@ Phase 6 produces:
 - [ ] All 3 review scopes pass
 - [ ] Test coverage ≥ 80% for new code
 - [ ] PR description references design artifacts
+- [ ] Each phase has TDD Approach and Verification sections
+- [ ] Risk Mitigation documented for med/high-risk phases
 
 ### Excellent
 - [ ] Zero high/medium issues in reviews without iterations
@@ -318,3 +329,5 @@ Phase 6 produces:
 6. **Ignoring Quality Gate** — "tests will be fixed later" → technical debt accumulates
 7. **PR without design refs** — reviewer has no context for WHY decisions were made
 8. **Monolith PR** — 50+ files PR → impossible to review → rubber stamp → bugs
+9. **Ignoring replan signal** — /implement creates replan-needed.md but developer continues with broken plan → wasted effort
+10. **Plan without TDD** — phases without test-first order → Code Writer writes code first, adds tests as afterthought
