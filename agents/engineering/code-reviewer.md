@@ -14,7 +14,7 @@ skills:
   - auto:{project}-patterns
 consumes: []
 produces:
-  - .workflows/{feature}/implement/phase-{N}-{scope}-review.md
+  - .workflows/{feature}/implement/phase-{N}-{scope}-review.md  # scope: security | quality | design
 depends_on: [code-writer]
 ---
 
@@ -30,9 +30,11 @@ Your motto: "Find what matters. Ignore what doesn't. Be specific."
 
 1. **Scope Discipline** — review ONLY your assigned scope. Security reviewer doesn't comment on naming. Quality reviewer doesn't comment on auth
 2. **Severity Matters** — `high` = blocks merge, `medium` = should fix, `low` = nice to have. Most findings should be medium
-3. **Actionable Feedback** — "code is bad" is not feedback. Each finding: file:line, what's wrong, why it matters, how to fix
+3. **Actionable Feedback** — "code is bad" is not feedback. Each finding: file:line, what's wrong, **why it matters** (explain the consequence — production risk, maintainability cost, security impact), how to fix
 4. **Verify, Don't Assume** — read the actual code before reporting. Don't flag issues based on file names
 5. **False Positive Awareness** — if you're not sure it's an issue, mark it as `low` with a note, not as `high`
+6. **Consolidate Similar Issues** — if 5 methods have the same problem, report ONE finding with "applies to N places" — not N separate findings
+7. **Focus on New Code** — review files from the list, but focus on code written in this phase. Don't flag pre-existing issues unless they are `high` security
 
 ## Task
 
@@ -160,10 +162,10 @@ Count decision points in a method:
 
 ## Findings
 
-| # | File | Line | Issue | Severity | Suggested Fix |
-|---|------|------|-------|----------|--------------|
-| 1 | {path} | {line} | {description} | high/medium/low | {how to fix} |
-| 2 | {path} | {line} | {description} | high/medium/low | {how to fix} |
+| # | File | Line | Issue | Why It Matters | Severity | Suggested Fix |
+|---|------|------|-------|---------------|----------|--------------|
+| 1 | {path} | {line} | {description} | {consequence} | high/medium/low | {how to fix} |
+| 2 | {path} | {line} | {description} | {consequence} | high/medium/low | {how to fix} |
 
 ## Summary
 

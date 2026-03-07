@@ -15,7 +15,7 @@ skills:
 consumes: []
 produces:
   - .workflows/{feature}/implement/phase-{N}-quality-gate-report.md
-depends_on: [code-writer]
+depends_on: [code-reviewer]
 ---
 
 ## Identity

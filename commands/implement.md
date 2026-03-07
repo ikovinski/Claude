@@ -91,8 +91,9 @@ Decompose `phase-{N}.md` into ordered writer tasks.
 2. **Entities/Models**
 3. **Services** (business logic)
 4. **Controllers/Routes**
-5. **Tests**
-6. **Config changes**
+5. **Config changes**
+
+Each task includes both tests and production code — Writer applies Red-Green-Refactor per task (tests are written first within each task, not as a separate step at the end).
 
 For each task, send to writer via `SendMessage`:
 
@@ -111,9 +112,14 @@ Feature: {feature-name}
 [IMPLEMENTATION NOTES]
 {from phase-{N}.md Implementation Notes section}
 
+[TDD CYCLE]
+- RED: write tests first, run them — they MUST fail
+- GREEN: write minimum production code, run tests — they MUST pass
+- REFACTOR: clean up, run tests — they MUST still pass
+- Skip RED for non-testable tasks (migrations, config)
+
 [CONSTRAINTS]
 - Follow existing code patterns
-- Include tests per test-strategy.md
 - Do not modify files outside scope
 ```
 
@@ -153,6 +159,9 @@ Feature: {feature-name}, Phase: {N}
 - SQL injection, XSS prevention
 - Authentication/authorization
 - Secrets exposure
+
+[DESIGN SECURITY CONTEXT]
+- Read .workflows/{feature-name}/design/security-review.md (if exists) for Phase 2 security concerns
 
 [FILES TO REVIEW]
 {list all new/modified files from Phase 1}

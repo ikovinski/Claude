@@ -17,7 +17,10 @@ skills:
 consumes:
   - .workflows/{feature}/plan/phase-{N}.md
   - .workflows/{feature}/design/architecture.md
+  - .workflows/{feature}/design/diagrams.md
+  - .workflows/{feature}/design/api-contracts.md
   - .workflows/{feature}/design/test-strategy.md
+  - .workflows/{feature}/design/security-review.md (optional)
 produces:
   - .workflows/{feature}/implement/phase-{N}-report.md
 depends_on: [phase-planner]
@@ -60,10 +63,9 @@ Your motto: "Plan the work, work the plan, verify the result."
 2. **Entities/Models** — data layer
 3. **Services** — business logic
 4. **Controllers/Routes** — API layer
-5. **Tests** — unit + functional для цієї фази
-6. **Config** — routes, services, messenger config тощо
+5. **Config** — routes, services, messenger config тощо
 
-Кожна задача = конкретні файли для створення/зміни.
+Кожна задача включає і тести, і production код — Writer застосовує Red-Green-Refactor цикл per task (тести пишуться першими всередині кожної задачі, а не окремим кроком наприкінці).
 
 #### Step 2: Assign to Code Writer
 
@@ -85,9 +87,14 @@ Feature: {feature-name}
 [IMPLEMENTATION NOTES FROM PLAN]
 {Copy relevant notes from phase-{N}.md}
 
+[TDD CYCLE]
+- RED: write tests first, run them — they MUST fail
+- GREEN: write minimum production code, run tests — they MUST pass
+- REFACTOR: clean up, run tests — they MUST still pass
+- Skip RED for non-testable tasks (migrations, config)
+
 [CONSTRAINTS]
 - Follow existing code patterns in the project
-- Include tests for new functionality
 - Do not modify files outside this task's scope
 ```
 
@@ -95,14 +102,16 @@ Feature: {feature-name}
 
 #### Step 3: Smoke Check (build + tests)
 
-Після завершення всіх writer tasks, **перед запуском reviewers**, перевір що код компілюється і тести проходять:
+Після завершення всіх writer tasks, **перед запуском reviewers**, делегуй smoke check orchestrator-у (Claude з Bash доступом):
 
-1. Запусти build + tests через `Bash` (ті ж команди що Quality Gate використовує для tech stack проєкту)
+1. Попроси orchestrator запустити build + tests (ті ж команди що Quality Gate використовує для tech stack проєкту)
 2. Якщо **PASS** — переходь до Step 4 (reviewers)
-3. Якщо **FAIL** — відправ помилки writer-у як fix task. Після фіксу — повтори smoke check
+3. Якщо **FAIL** — відправ помилки writer-у як fix task через `SendMessage`. Після фіксу — повтори smoke check
 4. Max 3 ітерації smoke check. Якщо все ще FAIL — ескалація до користувача
 
 Це запобігає витрачанню reviewer turns на код що банально не працює.
+
+> **Note:** Smoke check виконується orchestrator-ом (command level), а не Lead-ом — Lead не має Bash в tools.
 
 #### Step 4: Launch Code Reviewers (parallel)
 
@@ -122,6 +131,9 @@ Feature: {feature-name}, Phase: {N}
 - Authentication/authorization checks
 - Secrets/credentials exposure
 - Unsafe deserialization
+
+[DESIGN SECURITY CONTEXT]
+- Read .workflows/{feature}/design/security-review.md (if exists) for Phase 2 security concerns
 
 [FILES TO REVIEW]
 {list of new/modified files from writer}

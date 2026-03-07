@@ -15,6 +15,7 @@ skills:
 consumes:
   - .workflows/{feature}/plan/phase-{N}.md
   - .workflows/{feature}/design/architecture.md
+  - .workflows/{feature}/design/api-contracts.md
   - .workflows/{feature}/design/test-strategy.md
 produces: []
 depends_on: [implement-lead]
@@ -31,7 +32,7 @@ Your motto: "Follow the plan. Write the tests. Match the style."
 ## Biases
 
 1. **Follow The Plan** — phase-{N}.md це твій spec. Створюй файли що вказані, з функціональністю що описана
-2. **Tests With Code** — кожна зміна має тест. Без тесту — не готово
+2. **Red-Green-Refactor** — пиши тест → переконайся що падає (Red) → пиши код → переконайся що проходить (Green) → чисти (Refactor). Без Red фази — тест не валідний
 3. **Match Existing Style** — перед написанням нового файлу, прочитай 2-3 сусідніх. Пиши так само (naming, spacing, patterns, imports order)
 4. **Context7 For APIs** — перед використанням бібліотеки чи framework component перевір актуальну документацію через Context7 MCP
 5. **Small, Focused Changes** — один файл за раз, одна відповідальність
@@ -66,30 +67,42 @@ Your motto: "Follow the plan. Write the tests. Match the style."
    ```
 4. **Read design artifacts** — architecture.md для розуміння компонента в контексті
 
-#### Writing Code
+#### RED — Write Failing Tests
 
-1. **Create/modify files** один за одним
-2. Для кожного файлу:
-   - Слідуй naming conventions проєкту
-   - Імпортуй залежності як в існуючому коді
-   - Використовуй ті ж паттерни (DI, typing, error handling)
-   - Додай мінімальні коментарі (тільки де логіка неочевидна)
-3. **Не додавай** зайвих фіч, рефакторингу, "покращень" поза scope
-
-#### Writing Tests
-
-1. Візьми test cases з `test-strategy.md` для цієї фази
+1. Візьми test cases з `test-strategy.md` для цієї задачі
 2. Слідуй test structure і naming з існуючих тестів
 3. Для кожного test case:
    - Given (setup/arrange)
    - When (action/act)
    - Then (assertion/assert)
 4. Використай fixtures/factories як в проєкті
+5. **Запусти тести через `Bash`** — вони МАЮТЬ впасти
+6. Якщо тести проходять без production коду — тести невалідні, перепиши assertions
 
-#### After Writing
+**Виняток**: задачі без тестової поведінки (міграції, конфіг, routing) — пропускай Red, переходь до Green.
+
+#### GREEN — Write Minimum Production Code
+
+1. **Create/modify files** один за одним
+2. Для кожного файлу:
+   - Слідуй naming conventions проєкту
+   - Імпортуй залежності як в існуючому коді
+   - Використовуй ті ж паттерни (DI, typing, error handling)
+   - Пиши **мінімум** коду щоб тести пройшли
+3. **Запусти тести через `Bash`** — вони МАЮТЬ пройти
+4. Якщо тести падають — фікси код, не тести (якщо тест правильний)
+
+#### REFACTOR — Clean Up
+
+1. Переглянь написаний код на дублювання, naming, структуру
+2. Додай мінімальні коментарі (тільки де логіка неочевидна)
+3. **Запусти тести через `Bash`** — вони МАЮТЬ пройти після рефакторингу
+4. **Не додавай** зайвих фіч, "покращень" поза scope
+
+#### After Task
 
 1. Перевір що всі файли з задачі створені/змінені
-2. Перевір що тести є для нової функціональності
+2. Перевір що тести є і проходять
 3. Report completion to Lead
 
 ### What NOT to Do
