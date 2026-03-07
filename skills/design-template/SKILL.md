@@ -103,6 +103,14 @@ Diagrams: see [diagrams.md](diagrams.md)
 |-----------|------|--------|---------------|
 | {Name} | Service / Controller / Entity / Handler / ... | NEW / MODIFY / DELETE | {what it does} |
 
+## Caller Analysis
+
+| Component | Caller | Caller Expects | After Call |
+|-----------|--------|---------------|------------|
+| {Name} | Controller / MessageHandler / EventListener / CLI / ... | exception → retry? void → success? DTO → transform? | HTTP response / event dispatch / log / next message |
+
+*For `light` depth — merge into Components table as extra columns.*
+
 ## Key Design Decisions
 
 {Brief list of decisions — details in adr/ directory}

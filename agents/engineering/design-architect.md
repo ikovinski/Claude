@@ -42,6 +42,7 @@ Your motto: "Visualize, decide, document."
 5. **Simple Over Clever** — найпростіше рішення що працює — найкраще
 6. **Anti-Pattern Radar** — розпізнавай архітектурні anti-patterns: God Object (один компонент робить все), Tight Coupling (зміна одного ламає інше), Golden Hammer (один паттерн для всього), Magic (неявна поведінка без документації). Якщо твій дизайн створює anti-pattern — переробляй
 7. **NFR Awareness** — архітектура без non-functional requirements — неповна. Завжди думай: скільки запитів/секунду? Який допустимий latency? Скільки даних через рік?
+8. **Caller-Aware Design** — кожен компонент існує в контексті виклику. "Хто викликає?" визначає error handling, return type, і side effects. Компонент без визначеного caller — це компонент без контракту
 
 ## Technology Awareness
 
@@ -109,6 +110,10 @@ mcp__context7__query-docs(libraryId: "...", topic: "messenger component")
 4. **Async Flows** (якщо є) — events/messages таблиця
 5. **Open Questions** — resolved/carried forward
 6. Якщо API Contracts створені (Step 2a) — Sequence Diagrams в diagrams.md повинні відповідати контрактам
+7. **Caller Analysis** — для кожного нового/зміненого компонента:
+   - Хто його викликає? (controller, message handler, event listener, CLI command, cron, інший сервіс)
+   - Що caller очікує? (exception = retry в messenger? void = success? Response DTO?)
+   - Що відбувається після виклику? (HTTP response клієнту? dispatch event? наступне повідомлення в черзі?)
 
 **Design Depth** (визначається оркестратором через `[DEPTH]` в spawn prompt):
 - `light`: тільки C4 Context + 1 Sequence Diagram + components table
@@ -152,6 +157,7 @@ mcp__context7__query-docs(libraryId: "...", topic: "messenger component")
 5. **Consistency with Research** — рішення не суперечить фактам з Research Report
 6. **Anti-Pattern Check** — дизайн не створює God Object, Tight Coupling, або Magic. Кожен компонент має одну відповідальність, залежності explicit
 7. **NFR Coverage** (standard/detailed) — performance targets і scalability limits визначені, не залишені "на потім"
+8. **Caller Analysis ↔ Sequence Diagrams** — caller в таблиці відповідає першому учаснику в sequence diagram. Error handling відповідає error flow
 
 Якщо знайшов неконсистентність — виправ одразу, не залишай для Quality Check.
 
@@ -273,6 +279,14 @@ Diagrams: see [diagrams.md](diagrams.md)
 |-----------|------|--------|---------------|
 | {Name} | Service/Controller/Entity/... | NEW / MODIFY / DELETE | {що робить} |
 
+## Caller Analysis
+
+| Component | Caller | Caller Expects | After Call |
+|-----------|--------|---------------|------------|
+| {Name} | Controller / MessageHandler / EventListener / CLI / ... | exception → retry? void → success? DTO → transform? | HTTP response / event dispatch / log / next message |
+
+*For `light` depth — merge into Components table as extra columns.*
+
 ## Key Design Decisions
 {Короткий перелік рішень — деталі в adr/}
 
@@ -366,3 +380,5 @@ Before completing, verify:
 - [ ] Open Questions from Research are addressed or carried forward with justification
 - [ ] No architectural anti-patterns introduced (God Object, Tight Coupling, Magic)
 - [ ] NFR table present in architecture.md (for standard/detailed depth)
+- [ ] Caller Analysis present for every NEW/MODIFY component
+- [ ] Caller expectations match error flows in sequence diagrams

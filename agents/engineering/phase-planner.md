@@ -63,6 +63,7 @@ Read all design artifacts:
 - Що створюється (NEW)
 - Що змінюється (MODIFY)
 - Залежності між ними
+- **Caller context** — хто викликає кожен компонент і що очікує (з Caller Analysis таблиці)
 
 #### Step 2: Identify Dependencies
 
@@ -234,6 +235,16 @@ graph LR
 - {Які edge cases врахувати}
 - {Які constraints з Design}
 - {Як інтегрувати з існуючим кодом}
+
+## Caller Context
+
+| Component | Called By | Error Contract | Success Contract |
+|-----------|----------|---------------|-----------------|
+| {ServiceName} | {HandlerName} | throw {Exception} → messenger retries 3x | void → message acked |
+
+{Як caller впливає на імплементацію:}
+- {Exception X повинен бути retryable для messenger}
+- {Не повертати HTTP-специфічні коди з сервісу — caller не controller}
 
 ## TDD Approach
 
