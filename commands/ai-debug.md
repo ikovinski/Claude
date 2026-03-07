@@ -206,9 +206,9 @@ Read from each agent file's `triggers` field in frontmatter.
 ══════════════════════════════════════
 
 📦 Routing
-   ├─ Agent:         code-reviewer
-   │                 agents/code-reviewer.md
-   ├─ Skills:        code-quality/*
+   ├─ Agent:         quality-reviewer
+   │                 agents/engineering/quality-reviewer.md
+   ├─ Skills:        (project-patterns)
    └─ Project Skill: wellness-backend-patterns ✓
 
 ⚙️  Workflow
@@ -257,7 +257,9 @@ Read from each agent file's `triggers` field in frontmatter.
 
 | Agent | Emoji |
 |-------|-------|
-| code-reviewer | 🔍 |
+| security-reviewer | 🛡️ |
+| quality-reviewer | 🔍 |
+| design-reviewer | 📐 |
 | security-reviewer | 🛡️ |
 | planner | 📋 |
 | feature-decomposer | 🧩 |

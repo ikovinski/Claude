@@ -159,15 +159,17 @@ Writer (послідовно) → Reviewers (паралельно) → Fix (як
 
 **Принцип**: Opus для лідів і планерів (складне міркування), Sonnet для виконавців (швидкість).
 
-### Code Reviewer — три скоупи
+### Три окремих Reviewer агенти
 
-Один файл агента (`code-reviewer.md`), три інстанси з різним фокусом:
+Кожен reviewer — окремий агент зі своєю Identity, Biases та workflow:
 
-| Скоуп | Фокус |
-|-------|-------|
-| **security** | OWASP Top 10, input validation, SQL injection, XSS, secrets exposure |
-| **quality** | Cyclomatic complexity (max 10), cognitive complexity (max 15), SOLID, DRY |
-| **design-compliance** | Відповідність architecture.md, data flow, API contracts, test-strategy.md |
+| Агент | Файл | Фокус |
+|-------|------|-------|
+| **Security Reviewer** | `security-reviewer.md` | OWASP Top 10, secrets, injection, access control. 4-фазний workflow: automated scan, OWASP analysis, code patterns, audit checklist |
+| **Quality Reviewer** | `quality-reviewer.md` | Cyclomatic/cognitive complexity, SOLID, domain model quality, layer compliance |
+| **Design Reviewer** | `design-reviewer.md` | Відповідність architecture.md, diagrams, API contracts, test-strategy.md |
+
+Security Reviewer додатково використовує skills: `owasp-top-10`, `security-audit-checklist`.
 
 ### Documentation агенти
 

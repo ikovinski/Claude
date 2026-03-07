@@ -40,7 +40,9 @@ ai-agents-system/
 | Implement Lead | `agents/engineering/implement-lead.md` | Orchestrate implementation, coordinate team |
 | Code Writer | `agents/engineering/code-writer.md` | Write code strictly per plan |
 | TDD Guide | `agents/engineering/tdd-guide.md` | TDD coach — test-first discipline, test quality, isolation |
-| Code Reviewer | `agents/engineering/code-reviewer.md` | Review with configurable scope (security/quality/design) |
+| Security Reviewer | `agents/engineering/security-reviewer.md` | OWASP Top 10, secrets, injection, access control (paranoid by default) |
+| Quality Reviewer | `agents/engineering/quality-reviewer.md` | Complexity, SOLID, domain model, layer compliance |
+| Design Reviewer | `agents/engineering/design-reviewer.md` | Verify implementation matches design artifacts |
 | Quality Gate | `agents/engineering/quality-gate.md` | Run build, tests, linters, Sentry check |
 | Devil's Advocate | `agents/engineering/devils-advocate.md` | Challenge architecture decisions, find weak assumptions in ADR |
 

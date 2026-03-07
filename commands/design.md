@@ -197,8 +197,8 @@ Only if `--security` is set OR Research Report mentions PII, authentication, pay
 
 **Teammate**: security-reviewer
 
-1. Read agent file: `agents/engineering/code-reviewer.md`
-2. Spawn teammate "security-reviewer" with code-reviewer agent file, plus:
+1. Read agent file: `agents/engineering/security-reviewer.md`
+2. Spawn teammate "security-reviewer" with security-reviewer agent file, plus:
 
 ```
 [CONTEXT]
@@ -345,7 +345,7 @@ Reply with your decision.
 - Design Architect uses **opus** model for complex architectural reasoning
 - Devil's Advocate uses **opus** — needs deep reasoning to challenge effectively
 - Test Strategist uses **sonnet** — task is more structured, doesn't need deep reasoning
-- Security Reviewer uses **sonnet** with security scope from code-reviewer agent
+- Security Reviewer uses **sonnet** with dedicated `security-reviewer.md` agent (OWASP, secrets, access control)
 - **Parallelism strategy:**
   - Phase 1: Architect + Test Strategist (Stage A) run in parallel
   - Phase 2: Devil's Advocate + Test Strategist (Stage B) + Security Reviewer run in parallel
@@ -486,7 +486,7 @@ User: "approve"
 
 ## Related
 
-- Agent files: `agents/engineering/design-architect.md`, `agents/engineering/test-strategist.md`, `agents/engineering/devils-advocate.md`, `agents/engineering/code-reviewer.md`
+- Agent files: `agents/engineering/design-architect.md`, `agents/engineering/test-strategist.md`, `agents/engineering/devils-advocate.md`, `agents/engineering/security-reviewer.md`
 - Template skills: `skills/design-template/`, `skills/adr-template/`, `skills/api-contracts-template/` (if exist)
 - Previous phase: `/research {feature-name}` (Phase 1)
 - Next phase: `/plan {feature-name}` (Phase 3)

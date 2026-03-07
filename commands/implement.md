@@ -71,12 +71,12 @@ Read agent files and spawn all teammates:
 | Teammate | Agent File | When |
 |----------|-----------|------|
 | writer | `agents/engineering/code-writer.md` | Always |
-| reviewer-security | `agents/engineering/code-reviewer.md` | Unless --skip-review or not in --reviewers |
-| reviewer-quality | `agents/engineering/code-reviewer.md` | Unless --skip-review or not in --reviewers |
-| reviewer-design | `agents/engineering/code-reviewer.md` | Unless --skip-review or not in --reviewers |
+| reviewer-security | `agents/engineering/security-reviewer.md` | Unless --skip-review or not in --reviewers |
+| reviewer-quality | `agents/engineering/quality-reviewer.md` | Unless --skip-review or not in --reviewers |
+| reviewer-design | `agents/engineering/design-reviewer.md` | Unless --skip-review or not in --reviewers |
 | gate | `agents/engineering/quality-gate.md` | Always |
 
-Each reviewer gets the same agent file but different scope config in spawn prompt.
+Each reviewer is a dedicated agent with its own identity, biases, and review workflow.
 
 ## Phase Execution
 
@@ -146,19 +146,12 @@ This prevents wasting reviewer turns on fundamentally broken code.
 
 Skip if `--skip-review` is set.
 
-Spawn reviewers for each configured scope. Send to each via `SendMessage`:
+Spawn reviewers. Each reviewer is a dedicated agent — send context via `SendMessage`:
 
-**To reviewer-security (scope: security):**
+**To reviewer-security (`security-reviewer.md`):**
 ```
-[REVIEW SCOPE: security]
+[SECURITY REVIEW]
 Feature: {feature-name}, Phase: {N}
-
-[FOCUS]
-- OWASP Top 10 vulnerabilities
-- Input validation
-- SQL injection, XSS prevention
-- Authentication/authorization
-- Secrets exposure
 
 [DESIGN SECURITY CONTEXT]
 - Read .workflows/{feature-name}/design/security-review.md (if exists) for Phase 2 security concerns
@@ -170,17 +163,12 @@ Feature: {feature-name}, Phase: {N}
 Write to: .workflows/{feature-name}/implement/phase-{N}-security-review.md
 ```
 
-**To reviewer-quality (scope: quality):**
-```
-[REVIEW SCOPE: quality]
-Feature: {feature-name}, Phase: {N}
+The agent has its own 4-phase workflow (automated scan, OWASP analysis, code pattern review, audit checklist) and references `owasp-top-10` and `security-audit-checklist` skills.
 
-[FOCUS]
-- Cyclomatic complexity (max 10)
-- Cognitive complexity (max 15)
-- Domain model quality
-- Architecture layers compliance
-- SOLID, DRY
+**To reviewer-quality (`quality-reviewer.md`):**
+```
+[QUALITY REVIEW]
+Feature: {feature-name}, Phase: {N}
 
 [FILES TO REVIEW]
 {list all new/modified files}
@@ -189,19 +177,16 @@ Feature: {feature-name}, Phase: {N}
 Write to: .workflows/{feature-name}/implement/phase-{N}-quality-review.md
 ```
 
-**To reviewer-design (scope: design-compliance):**
-```
-[REVIEW SCOPE: design-compliance]
-Feature: {feature-name}, Phase: {N}
+The agent runs complexity analysis, SOLID checks, domain model quality, layer compliance, and error handling review.
 
-[FOCUS]
-- Components match architecture.md
-- Data flow matches diagrams
-- API contracts match design
-- Tests match test-strategy.md
+**To reviewer-design (`design-reviewer.md`):**
+```
+[DESIGN COMPLIANCE REVIEW]
+Feature: {feature-name}, Phase: {N}
 
 [DESIGN ARTIFACTS]
 - .workflows/{feature-name}/design/architecture.md
+- .workflows/{feature-name}/design/diagrams.md
 - .workflows/{feature-name}/design/api-contracts.md
 - .workflows/{feature-name}/design/test-strategy.md
 
@@ -211,6 +196,8 @@ Feature: {feature-name}, Phase: {N}
 [OUTPUT]
 Write to: .workflows/{feature-name}/implement/phase-{N}-design-review.md
 ```
+
+The agent compares implementation against design artifacts: component existence, data flow, API contracts, test strategy, and ADR compliance.
 
 Wait for ALL reviewers to complete.
 
@@ -357,7 +344,9 @@ Use `--reviewers` to select specific ones:
 ## Important Notes
 
 - Code Writer uses **sonnet** with `acceptEdits` — can create and modify files
-- Reviewers use **sonnet** with read-only tools — cannot modify code
+- Security Reviewer uses **sonnet** with read + Bash — runs automated scans, reads code
+- Quality Reviewer uses **sonnet** with read-only tools — cannot modify code
+- Design Reviewer uses **sonnet** with read-only tools — cannot modify code
 - Quality Gate uses **sonnet** with `Bash` — runs build/test/lint commands
 - Writer tasks are **sequential** (avoid file conflicts)
 - Reviewer scopes are **parallel** (independent analysis)
@@ -369,7 +358,8 @@ Use `--reviewers` to select specific ones:
 
 ## Related
 
-- Agent files: `agents/engineering/implement-lead.md`, `agents/engineering/code-writer.md`, `agents/engineering/code-reviewer.md`, `agents/engineering/quality-gate.md`
+- Agent files: `agents/engineering/implement-lead.md`, `agents/engineering/code-writer.md`, `agents/engineering/security-reviewer.md`, `agents/engineering/quality-reviewer.md`, `agents/engineering/design-reviewer.md`, `agents/engineering/quality-gate.md`
+- Security skills: `skills/owasp-top-10/SKILL.md`, `skills/security-audit-checklist/SKILL.md`
 - Previous phase: `/plan {feature-name}` (Phase 3)
 - Next phase: `/docs-suite` (Phase 5) or `/pr {feature-name}` (Phase 6)
 - Full flow: `scenarios/delivery/feature-development.md`

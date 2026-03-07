@@ -183,7 +183,7 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 | Design Architect | `agents/engineering/design-architect.md` | opus | always |
 | Devil's Advocate | `agents/engineering/devils-advocate.md` | opus | after Architect (skip with --skip-challenge) |
 | Test Strategist | `agents/engineering/test-strategist.md` | sonnet | Stage A parallel with Architect, Stage B parallel with Devil's Advocate |
-| Security Reviewer | `agents/engineering/code-reviewer.md` (scope: security) | sonnet | optional (--security or PII/auth/payment detected) |
+| Security Reviewer | `agents/engineering/security-reviewer.md` | sonnet | optional (--security or PII/auth/payment detected) |
 
 ### Phase 3: Plan
 | Role | Agent File | Model |
@@ -195,7 +195,9 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 |------|-----------|-------|
 | Implement Lead | `agents/engineering/implement-lead.md` | opus |
 | Code Writer | `agents/engineering/code-writer.md` | sonnet |
-| Code Reviewer (x3) | `agents/engineering/code-reviewer.md` | sonnet |
+| Security Reviewer | `agents/engineering/security-reviewer.md` | sonnet |
+| Quality Reviewer | `agents/engineering/quality-reviewer.md` | sonnet |
+| Design Reviewer | `agents/engineering/design-reviewer.md` | sonnet |
 | Quality Gate | `agents/engineering/quality-gate.md` | sonnet |
 
 ### Phase 5: Documentation

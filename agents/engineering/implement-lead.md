@@ -117,20 +117,12 @@ Feature: {feature-name}
 
 Після проходження smoke check, запускай reviewers паралельно:
 
-Кожен reviewer отримує `code-reviewer.md` agent file + scope config:
+Кожен reviewer — окремий агент зі своїм файлом:
 
-**Security Reviewer:**
+**Security Reviewer** (`agents/engineering/security-reviewer.md`):
 ```
-[REVIEW SCOPE: security]
+[SECURITY REVIEW]
 Feature: {feature-name}, Phase: {N}
-
-[FOCUS]
-- OWASP Top 10 vulnerabilities
-- Input validation on all endpoints
-- SQL injection, XSS prevention
-- Authentication/authorization checks
-- Secrets/credentials exposure
-- Unsafe deserialization
 
 [DESIGN SECURITY CONTEXT]
 - Read .workflows/{feature}/design/security-review.md (if exists) for Phase 2 security concerns
@@ -141,19 +133,12 @@ Feature: {feature-name}, Phase: {N}
 [OUTPUT]
 Write to: .workflows/{feature}/implement/phase-{N}-security-review.md
 ```
+Agent has its own 4-phase workflow (automated scan, OWASP analysis, code patterns, audit checklist) and references security skills.
 
-**Quality Reviewer:**
+**Quality Reviewer** (`agents/engineering/quality-reviewer.md`):
 ```
-[REVIEW SCOPE: quality]
+[QUALITY REVIEW]
 Feature: {feature-name}, Phase: {N}
-
-[FOCUS]
-- Cyclomatic complexity (max 10 per method)
-- Cognitive complexity (max 15 per method)
-- Domain model quality (anemic vs rich)
-- Architecture layers compliance
-- SOLID principles
-- Code duplication
 
 [FILES TO REVIEW]
 {list of new/modified files}
@@ -161,21 +146,16 @@ Feature: {feature-name}, Phase: {N}
 [OUTPUT]
 Write to: .workflows/{feature}/implement/phase-{N}-quality-review.md
 ```
+Agent runs complexity analysis, SOLID checks, domain model quality, layer compliance, error handling.
 
-**Design Compliance Reviewer:**
+**Design Reviewer** (`agents/engineering/design-reviewer.md`):
 ```
-[REVIEW SCOPE: design-compliance]
+[DESIGN COMPLIANCE REVIEW]
 Feature: {feature-name}, Phase: {N}
-
-[FOCUS]
-- Components match architecture.md
-- Data flow matches sequence diagrams
-- API contracts match design/api-contracts.md
-- Test coverage matches test-strategy.md
-- Naming consistency with design
 
 [DESIGN ARTIFACTS]
 - .workflows/{feature}/design/architecture.md
+- .workflows/{feature}/design/diagrams.md
 - .workflows/{feature}/design/api-contracts.md
 - .workflows/{feature}/design/test-strategy.md
 
@@ -185,6 +165,7 @@ Feature: {feature-name}, Phase: {N}
 [OUTPUT]
 Write to: .workflows/{feature}/implement/phase-{N}-design-review.md
 ```
+Agent compares implementation against design artifacts: components, data flow, API contracts, test strategy, ADR.
 
 #### Step 5: Collect Review Results
 
