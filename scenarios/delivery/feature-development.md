@@ -154,9 +154,9 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 │  Не знайдені → агенти працюють як звичайно      │
 │                                                 │
 │  Technical Collector (focused on affected code)  │
-│  → Architect Collector (design as baseline)      │
-│  → Swagger Collector (api-contracts as start)    │
-│  → Technical Writer                             │
+│  → Architect Collector (design as baseline)  ─┐  │
+│  → Swagger Collector (api-contracts as start) ─┤  │
+│  → Technical Writer (after both complete)      │  │
 │                                                 │
 │  Output: docs/                                  │
 └─────────────────┬───────────────────────────────┘
@@ -235,7 +235,7 @@ Phase 1 produces:
 
 Phase 2 produces:
   .workflows/{feature}/design/
-    ├── diagrams.md                 ◄── consumed by Phase 3, 4, 6 (visual reference)
+    ├── diagrams.md                 ◄── consumed by Phase 4, 6 (visual reference)
     ├── architecture.md             ◄── consumed by Phase 3, 4
     ├── adr/*.md                     ◄── consumed by Phase 3, 6
     ├── api-contracts.md            ◄── consumed by Phase 4
