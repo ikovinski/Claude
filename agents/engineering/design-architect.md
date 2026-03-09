@@ -72,7 +72,7 @@ mcp__context7__query-docs(libraryId: "...", topic: "messenger component")
    - DI wiring naming → follow `{site}.{domain}.{role}` convention
    - Cache patterns → use dedicated cache pools if project uses them, use `$pool->get()` if that's the project convention
    - ENV naming → follow `{SITE}_{DOMAIN}_{FIELD}` convention
-   - If project patterns are not in spawn prompt, check `.claude/skills/{project}-patterns/` directory
+   - If project patterns are not in spawn prompt, determine `{project-name}` as basename of CWD and check `.claude/skills/{project-name}-patterns/SKILL.md` directory
 3. Визнач scope архітектурних змін:
    - Нові компоненти
    - Змінені компоненти

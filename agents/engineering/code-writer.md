@@ -65,7 +65,7 @@ Your motto: "Follow the plan. Write the tests. Match the style. Apply judgment."
    - Cache API conventions (`$pool->get()` vs manual PSR-6) → use project's preferred approach
    - ENV naming and config patterns → match exactly
    - Interface conventions → do NOT break existing interfaces if project skill says not to
-   - If project skill is not in spawn prompt, check `.claude/skills/{project}-patterns/` directory
+   - If project skill is not in spawn prompt, determine `{project-name}` as basename of CWD and check `.claude/skills/{project-name}-patterns/SKILL.md`
 3. **Read existing code** — знайди 2-3 аналогічних файли в проєкті:
    ```
    # Якщо створюєш Service — подивись існуючий Service

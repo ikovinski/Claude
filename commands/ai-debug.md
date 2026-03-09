@@ -29,7 +29,7 @@ skills: []
 
 1. Get current working directory
 2. Extract project name (last part of path)
-3. Check for project skill: `skills/{project-name}-patterns/SKILL.md`
+3. Check for project skill: `.claude/skills/{project-name}-patterns/SKILL.md` (where `{project-name}` = basename of CWD)
 4. List components from `commands/`, `agents/`, `scenarios/`, `rules/`
 
 ### Output Format

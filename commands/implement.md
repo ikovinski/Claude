@@ -54,7 +54,7 @@ When this command runs, YOU (Claude) are the **Implementation Lead orchestrator*
 
 1. Check `.workflows/{feature-name}/plan/phase-{N}.md` exists
 2. If missing — tell user to run `/plan` first
-3. **Load project skill (MANDATORY)** — check for `.claude/skills/{project}-patterns/SKILL.md` in the target project.
+3. **Load project skill (MANDATORY)** — determine `{project-name}` as basename of CWD (e.g. `/repo/wellness-backend` → `wellness-backend`). Check for `.claude/skills/{project-name}-patterns/SKILL.md` in the target project root.
    - **If NOT found** — warn the user: "⚠️ Project skill not found. Implementation without project patterns risks missing conventions (cache pools, logging, DI naming, exception patterns). Run `/skill-from-git` to generate, or confirm to proceed without it."
    - **If found**:
    - Read `SKILL.md` and all files in `references/` directory (architecture.md, conventions.md, workflows.md)

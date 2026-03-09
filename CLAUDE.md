@@ -67,16 +67,23 @@ ai-agents-system/
 
 ## Project Skill (CRITICAL)
 
-Every command MUST load the project skill before executing its workflow:
+Every command MUST load the project skill before executing its workflow.
 
-1. Check for `.claude/skills/{project}-patterns/SKILL.md` in the target project
-2. Read `SKILL.md` and all `references/*.md` files
-3. Pass project patterns to spawned agents as `[PROJECT PATTERNS]` section in their spawn prompt
-4. Project patterns are **mandatory constraints** — agents MUST follow them over generic best practices
+### How to find project skill
 
-**Why:** Project skills contain concrete conventions (decorator chain order, exception patterns, cache API usage, DI naming, ENV naming) that generic agent instructions cannot capture. Without these, agents produce functionally correct but stylistically inconsistent code.
+1. Determine `{project-name}` = **basename of the current working directory** (last segment of the path)
+   - Example: CWD `/Users/ivan/repo/wellness-backend` → `{project-name}` = `wellness-backend`
+2. Check for skill file at: `{CWD}/.claude/skills/{project-name}-patterns/SKILL.md`
+3. If found — read `SKILL.md` and all `references/*.md` files from the same directory
+4. If NOT found — continue without project skill (commands may warn the user)
 
-**What project skills contain:**
+### How to use project skill
+
+1. Pass project patterns to spawned agents as `[PROJECT PATTERNS]` section in their spawn prompt
+2. Project patterns are **mandatory constraints** — agents MUST follow them over generic best practices
+
+### What project skills contain
+
 - Naming conventions (services, controllers, exceptions, tests, YAML service IDs, ENV vars)
 - Decorator chain order (e.g., `Retry → Caching → HTTP`)
 - Exception patterns (factory methods, error codes, subclassing conventions)
@@ -84,7 +91,9 @@ Every command MUST load the project skill before executing its workflow:
 - Config patterns (`env(int:...)`, parameter naming)
 - Test patterns (base class, fixtures, naming)
 
-See `/skill-from-git` to generate a project skill from git history.
+### Generate project skill
+
+Run `/skill-from-git` in the target project to generate `.claude/skills/{project-name}-patterns/` from git history.
 
 ## Domain Rules
 

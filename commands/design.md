@@ -59,7 +59,7 @@ When this command runs, YOU (Claude) are the **Design Lead orchestrator**. You:
 
 1. Check `.workflows/{feature-name}/research/research-report.md` exists
 2. If missing — tell user to run `/research` first
-3. **Load project skill** — check for `.claude/skills/{project}-patterns/SKILL.md` in the target project. If found:
+3. **Load project skill** — determine `{project-name}` as basename of CWD (e.g. `/repo/wellness-backend` → `wellness-backend`). Check for `.claude/skills/{project-name}-patterns/SKILL.md` in the target project root. If found:
    - Read `SKILL.md` and all files in `references/` directory (architecture.md, conventions.md, workflows.md)
    - These patterns are **mandatory constraints** for design decisions: decorator chain order, service wiring naming, exception patterns, cache pool conventions, ENV naming, interface conventions
    - When spawning architect — include the full project skill content in the spawn prompt as `[PROJECT PATTERNS]` section

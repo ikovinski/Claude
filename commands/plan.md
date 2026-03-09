@@ -47,7 +47,7 @@ When this command runs, YOU (Claude) become the **Phase Planner**. This is a sin
 
 ### Step 0: Validate Prerequisites, Load Project Skill & Complexity Check
 
-1. **Load project skill** — check for `.claude/skills/{project}-patterns/SKILL.md` in the target project. If found, read it and `references/` files. Use these patterns when planning phases — e.g., knowing decorator chain order helps define the correct implementation sequence.
+1. **Load project skill** — determine `{project-name}` as basename of CWD (e.g. `/repo/wellness-backend` → `wellness-backend`). Check for `.claude/skills/{project-name}-patterns/SKILL.md` in the target project root. If found, read it and `references/` files. Use these patterns when planning phases — e.g., knowing decorator chain order helps define the correct implementation sequence.
 2. Read `.workflows/{feature-name}/state.json` — check `complexity` field
 2. **If complexity = "small"**: Plan is unnecessary for single-phase tasks. Report:
    ```

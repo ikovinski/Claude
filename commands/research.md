@@ -55,7 +55,7 @@ mkdir -p .workflows/{feature-name}/research
 ```
 
 4. Detect project technology (check root files: `composer.json`, `package.json`, `go.mod`, etc.)
-5. **Load project skill** — check for `.claude/skills/{project}-patterns/SKILL.md` in the target project. If found:
+5. **Load project skill** — determine `{project-name}` as basename of CWD (e.g. `/repo/wellness-backend` → `wellness-backend`). Check for `.claude/skills/{project-name}-patterns/SKILL.md` in the target project root. If found:
    - Read `SKILL.md` and all files in `references/` directory
    - This skill contains project-specific patterns (naming, decorator chains, config conventions, exception patterns, cache patterns, DI wiring)
    - Use these patterns throughout research to identify existing conventions that must be followed

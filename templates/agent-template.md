@@ -11,7 +11,7 @@ memory: project
 triggers: []
 rules: []
 skills:
-  - auto:{project}-patterns
+  - auto:{project}-patterns  # {project} = basename of CWD → .claude/skills/{project}-patterns/SKILL.md
 consumes: []
 produces: []
 depends_on: []

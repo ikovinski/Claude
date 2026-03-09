@@ -60,7 +60,7 @@ If `[PROJECT PATTERNS]` section was provided in spawn prompt — these define th
 - Verify logging is present at key points (external API calls, error recovery paths) — flag missing logging as MEDIUM
 - Flag interface breaking changes (return type changes on existing interfaces) as HIGH
 
-If no project patterns provided, check `.claude/skills/{project}-patterns/` directory.
+If no project patterns provided, determine `{project-name}` as basename of CWD and check `.claude/skills/{project-name}-patterns/SKILL.md`.
 
 #### Step 1: Read All Files
 
