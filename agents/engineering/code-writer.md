@@ -53,19 +53,25 @@ Your motto: "Follow the plan. Write the tests. Match the style."
 #### Before Writing Code
 
 1. **Read the task** — зрозумій що потрібно створити/змінити
-2. **Read existing code** — знайди 2-3 аналогічних файли в проєкті:
+2. **Read project skill** — if `[PROJECT PATTERNS]` section was provided in spawn prompt, these are **mandatory conventions**:
+   - Decorator chain order, DI wiring naming, exception patterns → follow exactly
+   - Cache API conventions (`$pool->get()` vs manual PSR-6) → use project's preferred approach
+   - ENV naming and config patterns → match exactly
+   - Interface conventions → do NOT break existing interfaces if project skill says not to
+   - If project skill is not in spawn prompt, check `.claude/skills/{project}-patterns/` directory
+3. **Read existing code** — знайди 2-3 аналогічних файли в проєкті:
    ```
    # Якщо створюєш Service — подивись існуючий Service
    Glob: src/Service/*Service.php (перші 2-3)
    # Якщо створюєш Controller — подивись існуючий Controller
    Glob: src/Controller/**/*Controller.php (перші 2-3)
    ```
-3. **Check framework docs** (якщо потрібно):
+4. **Check framework docs** (якщо потрібно):
    ```
    mcp__context7__resolve-library-id(libraryName: "symfony")
    mcp__context7__query-docs(libraryId: "...", topic: "messenger component")
    ```
-4. **Read design artifacts** — architecture.md для розуміння компонента в контексті
+5. **Read design artifacts** — architecture.md для розуміння компонента в контексті
 
 #### RED — Write Failing Tests
 
@@ -110,7 +116,8 @@ Your motto: "Follow the plan. Write the tests. Match the style."
 - Do NOT change files outside task scope
 - Do NOT "improve" existing code while you're here
 - Do NOT skip tests ("I'll add them later")
-- Do NOT invent new patterns — use what the project already uses
+- Do NOT invent new patterns — use what the project already uses (check project skill patterns)
+- Do NOT break existing interfaces — if an interface needs to change, add a new method instead (e.g., `getAccessTokenWithTtl()` alongside `getAccessToken()`)
 - Do NOT add comments to every method — only where logic is non-obvious
 - Do NOT guess API behavior — check Context7 or existing code
 - Do NOT commit — Lead handles that

@@ -50,12 +50,24 @@ When this command runs, YOU (Claude) are the **Implementation Lead orchestrator*
 
 ## Setup
 
-### Step 0: Validate Prerequisites & Complexity Check
+### Step 0: Validate Prerequisites, Load Project Skill & Complexity Check
 
 1. Check `.workflows/{feature-name}/plan/phase-{N}.md` exists
 2. If missing — tell user to run `/plan` first
-3. Read phase plan to understand scope
-4. Read `.workflows/{feature-name}/state.json` — check `complexity` field
+3. **Load project skill** — check for `.claude/skills/{project}-patterns/SKILL.md` in the target project. If found:
+   - Read `SKILL.md` and all files in `references/` directory (architecture.md, conventions.md, workflows.md)
+   - When spawning writer — include relevant project patterns in spawn context as `[PROJECT PATTERNS]` section:
+     - Decorator chain order and DI wiring naming conventions
+     - Exception patterns (factory methods, error codes, subclassing vs `isType()` methods)
+     - Cache patterns (dedicated pools, `$pool->get()` API vs manual PSR-6, key hashing)
+     - ENV naming (`{SITE}_{DOMAIN}_{FIELD}`) and config conventions (`env(int:...)`)
+     - Test patterns (base class, factories, naming)
+   - When spawning reviewers — include project patterns so they can verify compliance:
+     - Quality reviewer: verify code follows project conventions (not just generic SOLID)
+     - Security reviewer: verify logging patterns, sensitive data handling per project standards
+     - Design reviewer: verify implementation matches both design artifacts AND project patterns
+4. Read phase plan to understand scope
+5. Read `.workflows/{feature-name}/state.json` — check `complexity` field
 
 **Complexity auto-defaults for reviewers** (applied when no explicit `--reviewers` or `--skip-review` flag):
 

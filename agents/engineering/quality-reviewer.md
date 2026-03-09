@@ -50,6 +50,18 @@ From Implementation Lead via spawn prompt:
 
 ### Review Process
 
+#### Step 0: Read Project Patterns
+
+If `[PROJECT PATTERNS]` section was provided in spawn prompt — these define the project's conventions:
+- Verify code follows project naming conventions (decorator naming, service IDs, ENV naming)
+- Verify code uses project's preferred patterns (e.g., exception factory methods with error codes, NOT separate exception subclasses for every case)
+- Verify cache usage follows project patterns (dedicated pools, `$pool->get()` API, key hashing for PSR-6 safety)
+- Verify config follows project conventions (`env(int:...)`, parameter naming)
+- Verify logging is present at key points (external API calls, error recovery paths) — flag missing logging as MEDIUM
+- Flag interface breaking changes (return type changes on existing interfaces) as HIGH
+
+If no project patterns provided, check `.claude/skills/{project}-patterns/` directory.
+
 #### Step 1: Read All Files
 
 Read every file in the review list. Understand the overall structure before reporting individual issues.

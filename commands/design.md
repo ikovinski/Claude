@@ -55,12 +55,17 @@ When this command runs, YOU (Claude) are the **Design Lead orchestrator**. You:
 
 ## Setup
 
-### Step 0: Validate Prerequisites & Complexity Check
+### Step 0: Validate Prerequisites, Load Project Skill & Complexity Check
 
 1. Check `.workflows/{feature-name}/research/research-report.md` exists
 2. If missing — tell user to run `/research` first
-3. Read Research Report to understand scope
-4. Read `.workflows/{feature-name}/state.json` — check `complexity` field
+3. **Load project skill** — check for `.claude/skills/{project}-patterns/SKILL.md` in the target project. If found:
+   - Read `SKILL.md` and all files in `references/` directory (architecture.md, conventions.md, workflows.md)
+   - These patterns are **mandatory constraints** for design decisions: decorator chain order, service wiring naming, exception patterns, cache pool conventions, ENV naming, interface conventions
+   - When spawning architect — include the full project skill content in the spawn prompt as `[PROJECT PATTERNS]` section
+   - Architect MUST NOT propose designs that contradict project patterns (e.g., breaking an interface if the project convention is to keep interfaces stable, or inverting decorator chain order)
+4. Read Research Report to understand scope
+5. Read `.workflows/{feature-name}/state.json` — check `complexity` field
 
 **Complexity auto-defaults** (applied when no explicit flags override):
 

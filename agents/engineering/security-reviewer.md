@@ -52,6 +52,14 @@ From Implementation Lead via spawn prompt:
 
 ### Review Workflow
 
+#### Phase 0: Read Project Patterns
+
+If `[PROJECT PATTERNS]` section was provided in spawn prompt — check for project-specific security conventions:
+- Logging patterns: verify that external API calls, error recovery paths, and auth failures are logged (flag missing logging as MEDIUM)
+- Secrets handling: verify tokens, API keys are not cached in plain text if project requires encryption
+- Cache key safety: verify cache keys are PSR-6 compliant (no reserved characters `{}()/\@:`) — hash if needed
+- Response validation: verify external API responses are validated before use (not silently defaulted)
+
 #### Phase 1: Automated Scan
 
 Detect technology and run relevant security tooling:

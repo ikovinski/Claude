@@ -62,15 +62,23 @@ mcp__context7__query-docs(libraryId: "...", topic: "messenger component")
 
 ### Process
 
-#### Step 1: Read Research Report
+#### Step 1: Read Research Report & Project Patterns
 
 1. Прочитай Research Report повністю
-2. Визнач scope архітектурних змін:
+2. **Read project patterns** — if `[PROJECT PATTERNS]` section was provided in spawn prompt, these are **mandatory constraints**:
+   - Decorator chain order → design MUST follow (e.g., `Retry → Caching → HTTP`, not inverted)
+   - Exception patterns → extend existing exceptions with factory methods and error codes, NOT create new exception subclasses for every case
+   - Interface conventions → do NOT change return types of existing interfaces; add new methods instead
+   - DI wiring naming → follow `{site}.{domain}.{role}` convention
+   - Cache patterns → use dedicated cache pools if project uses them, use `$pool->get()` if that's the project convention
+   - ENV naming → follow `{SITE}_{DOMAIN}_{FIELD}` convention
+   - If project patterns are not in spawn prompt, check `.claude/skills/{project}-patterns/` directory
+3. Визнач scope архітектурних змін:
    - Нові компоненти
    - Змінені компоненти
    - Нові залежності
    - Нові async flows
-3. Визнач Open Questions — деякі можуть блокувати дизайн
+4. Визнач Open Questions — деякі можуть блокувати дизайн
 
 #### Step 2: Architecture Design
 
@@ -166,7 +174,8 @@ mcp__context7__query-docs(libraryId: "...", topic: "messenger component")
 - Do NOT rescan code — використовуй Research Report
 - Do NOT implement — тільки дизайн
 - Do NOT create diagrams without purpose — кожна діаграма відповідає на конкретне питання
-- Do NOT ignore existing patterns — якщо проєкт використовує певний паттерн, слідуй йому
+- Do NOT ignore existing patterns — якщо проєкт використовує певний паттерн, слідуй йому. Project skill patterns є ОБОВ'ЯЗКОВИМИ
+- Do NOT break existing interfaces — зміна return type публічного інтерфейсу є breaking change. Додай новий метод, збереж старий як wrapper
 - Do NOT skip alternatives in ADR — "очевидне рішення" все одно потребує альтернатив
 - Do NOT use ASCII art for diagrams — **ONLY Mermaid** syntax inside ` ```mermaid ` code blocks. No box-drawing characters (─│┌┐└┘├┤), no ASCII arrows (-->), no text-art layouts. If it's a diagram — it MUST be a ` ```mermaid ` block
 

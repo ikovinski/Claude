@@ -45,9 +45,10 @@ When this command runs, YOU (Claude) become the **Phase Planner**. This is a sin
 
 ## Execution
 
-### Step 0: Validate Prerequisites & Complexity Check
+### Step 0: Validate Prerequisites, Load Project Skill & Complexity Check
 
-1. Read `.workflows/{feature-name}/state.json` — check `complexity` field
+1. **Load project skill** — check for `.claude/skills/{project}-patterns/SKILL.md` in the target project. If found, read it and `references/` files. Use these patterns when planning phases — e.g., knowing decorator chain order helps define the correct implementation sequence.
+2. Read `.workflows/{feature-name}/state.json` — check `complexity` field
 2. **If complexity = "small"**: Plan is unnecessary for single-phase tasks. Report:
    ```
    Complexity: small — skipping /plan (single implementation phase, no decomposition needed).

@@ -63,6 +63,27 @@ ai-agents-system/
 3. Agent executes the workflow defined in the command
 4. Output follows the agent's structured format
 
+## Project Skill (CRITICAL)
+
+Every command MUST load the project skill before executing its workflow:
+
+1. Check for `.claude/skills/{project}-patterns/SKILL.md` in the target project
+2. Read `SKILL.md` and all `references/*.md` files
+3. Pass project patterns to spawned agents as `[PROJECT PATTERNS]` section in their spawn prompt
+4. Project patterns are **mandatory constraints** — agents MUST follow them over generic best practices
+
+**Why:** Project skills contain concrete conventions (decorator chain order, exception patterns, cache API usage, DI naming, ENV naming) that generic agent instructions cannot capture. Without these, agents produce functionally correct but stylistically inconsistent code.
+
+**What project skills contain:**
+- Naming conventions (services, controllers, exceptions, tests, YAML service IDs, ENV vars)
+- Decorator chain order (e.g., `Retry → Caching → HTTP`)
+- Exception patterns (factory methods, error codes, subclassing conventions)
+- Cache patterns (dedicated pools, preferred API)
+- Config patterns (`env(int:...)`, parameter naming)
+- Test patterns (base class, fixtures, naming)
+
+See `/skill-from-git` to generate a project skill from git history.
+
 ## Scenarios
 
 | Scenario | Command | Agents |
