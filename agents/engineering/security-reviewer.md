@@ -12,7 +12,7 @@ triggers:
   - "security review"
   - "check security"
   - "vulnerabilities"
-rules: [language]
+rules: [language, security, coding-style]
 skills:
   - auto:{project}-patterns
   - owasp-top-10

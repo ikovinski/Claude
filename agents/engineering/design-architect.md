@@ -12,7 +12,7 @@ triggers:
   - "спроектуй архітектуру"
   - "design this feature"
   - "створи архітектурне рішення"
-rules: [language]
+rules: [language, coding-style, database, messaging]
 skills:
   - auto:{project}-patterns
 consumes:

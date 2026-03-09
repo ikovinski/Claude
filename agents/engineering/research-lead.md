@@ -12,7 +12,7 @@ triggers:
   - "досліди цю задачу"
   - "research this feature"
   - "проаналізуй перед імплементацією"
-rules: [language]
+rules: [language, coding-style]
 skills:
   - auto:{project}-patterns
 consumes: []

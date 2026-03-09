@@ -95,7 +95,16 @@ Before decomposing into sub-tasks, YOU (Lead) do a quick recon:
 
 1. **Find entry points** — `Glob` and `Grep` by task keywords (controller, service, entity names)
 2. **Read 3-5 key files** — controller, main service, entity (skim for structure, dependencies, boundaries)
-3. **Git History** — check recent activity in scope:
+3. **Fetch external documentation** — if the task description contains URLs to external docs (API docs, library docs, RFC), fetch them via `WebFetch` and extract:
+   - API request/response formats (fields, types, status codes)
+   - Authentication flows (token TTL, refresh mechanism, rate limits)
+   - Error codes and retry policies
+   - This is a PRIMARY requirements source — don't assume, verify from docs
+4. **Investigate infrastructure behavior** — for external integrations, check:
+   - HTTP client configuration (`http_errors`, timeouts, retry settings)
+   - How exceptions are thrown (Guzzle: `ClientException` for 4xx vs response object)
+   - Existing error handling patterns in the project for similar integrations
+5. **Git History** — check recent activity in scope:
    ```bash
    git log --oneline -10 -- {scope-paths}
    git log --oneline --since="2 weeks" -- {scope-paths}
@@ -105,8 +114,8 @@ Before decomposing into sub-tasks, YOU (Lead) do a quick recon:
    - **Recent changes** — someone already working on this module?
    - **For bug-fix**: when were last changes → could they have caused the bug?
    Pass findings to scanners as `Recent changes` context field.
-4. **Map real scope** — which modules/directories are actually involved
-5. **Assess complexity** — based on number of components and their connections
+6. **Map real scope** — which modules/directories are actually involved
+7. **Assess complexity** — based on number of components and their connections
 
 This step replaces guessing with informed decomposition. You now know what files exist, how they connect, and what changed recently.
 

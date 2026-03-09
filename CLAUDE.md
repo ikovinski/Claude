@@ -8,6 +8,8 @@ Slash commands for Claude Code CLI. Each command invokes an agent with defined b
 ai-agents-system/
 ├── commands/         # Slash commands (main interface)
 ├── agents/           # Agent personas referenced by commands
+├── rules/            # Domain-specific rules (coding-style, security, testing, database, messaging)
+├── contexts/         # Development mode contexts (dev.md — red flags, priorities)
 ├── scenarios/        # Multi-agent workflows referenced by commands
 ├── skills/           # Reusable skills (templates, project patterns)
 └── templates/        # Templates for creating new agents, scenarios, skills
@@ -83,6 +85,29 @@ Every command MUST load the project skill before executing its workflow:
 - Test patterns (base class, fixtures, naming)
 
 See `/skill-from-git` to generate a project skill from git history.
+
+## Domain Rules
+
+Rules are loaded by agents via `rules:` metadata field. Each agent declares which rules it needs.
+
+| Rule | File | Used by |
+|------|------|---------|
+| Language | `rules/language.md` | All agents — Ukrainian communication |
+| Git | `rules/git.md` | code-writer, implement-lead — clean commits |
+| Coding Style | `rules/coding-style.md` | code-writer, quality-reviewer, design-architect, research-lead, design-reviewer, test-strategist, tdd-guide, security-reviewer — PHP 8.3/Symfony patterns |
+| Security | `rules/security.md` | code-writer, security-reviewer — PII/PHI, auth, logging |
+| Testing | `rules/testing.md` | code-writer, quality-reviewer, test-strategist, tdd-guide — coverage targets, test patterns |
+| Database | `rules/database.md` | design-architect — Doctrine, N+1, migrations |
+| Messaging | `rules/messaging.md` | design-architect — RabbitMQ/Kafka, idempotency |
+
+## Contexts
+
+| Context | File | Purpose |
+|---------|------|---------|
+| Development | `contexts/dev.md` | Red flags to pause for, priorities, quick checklist |
+| Planning | `contexts/planning.md` | Decomposition, strategy, vertical slicing |
+| Research | `contexts/research.md` | Exploration, understanding, facts only |
+| Review | `contexts/review.md` | Quality, security, find issues |
 
 ## Scenarios
 

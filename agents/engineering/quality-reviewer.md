@@ -9,7 +9,7 @@ permissionMode: default
 maxTurns: 20
 memory: project
 triggers: []
-rules: [language]
+rules: [language, coding-style, testing]
 skills:
   - auto:{project}-patterns
 consumes: []

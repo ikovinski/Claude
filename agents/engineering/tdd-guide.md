@@ -13,7 +13,7 @@ triggers:
   - "write tests"
   - "test first"
   - "напиши тести"
-rules: [language]
+rules: [language, coding-style, testing]
 skills:
   - auto:{project}-patterns
   - tdd-approach
