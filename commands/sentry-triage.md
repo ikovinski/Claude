@@ -26,6 +26,7 @@ Collects issues from Sentry, categorizes by severity and type, groups related is
 
 | Argument | Default | Description |
 |----------|---------|-------------|
+| `--env` | all | Environment filter: `prod`, `stage`, `prod,stage`, or omit for all |
 | `--period` | `14d` | Time period for analysis |
 | `--min-events` | `10` | Minimum events threshold to include |
 | `--category` | all | Filter by category (AMQP, DB, etc.) |
@@ -34,7 +35,9 @@ Collects issues from Sentry, categorizes by severity and type, groups related is
 
 Filters can be passed inline:
 ```bash
-/sentry-triage --period 30d --category DB
+/sentry-triage --env prod --period 30d --category DB
+/sentry-triage --env stage
+/sentry-triage --env prod,stage --min-events 100
 ```
 
 ## You Are the Sentry Triager
@@ -63,13 +66,25 @@ Apply the agent's identity, biases, and process.
    ```
    Extract `organization.slug` and region from response.
 
-3. Parse optional filters (`--period`, `--min-events`, `--category`, `--top`, `--tasks-dir`)
+3. Parse optional filters (`--env`, `--period`, `--min-events`, `--category`, `--top`, `--tasks-dir`)
 
-4. Announce config:
+4. **Resolve `--env` to Sentry query fragment:**
+
+   | `--env` value | Query fragment |
+   |---------------|---------------|
+   | `prod` | `environment:production` |
+   | `stage` | `environment:staging` |
+   | `prod,stage` | `environment:production environment:staging` |
+   | not set | _(no environment filter)_ |
+
+   Map short aliases to Sentry environment names. If the project uses non-standard names (e.g. `prod` instead of `production`), adapt after checking `get_issue_tag_values(tagKey: "environment")`.
+
+5. Announce config:
    ```
    Sentry Triage:
      Project: {project}
      Org:     {org} (auto-detected)
+     Env:     {env or "all"}
      Period:  {period}
      Filters: {min-events, category, top — if set}
    ```
@@ -81,9 +96,21 @@ Apply the agent's identity, biases, and process.
 
 ### Step 1: Collect Issues
 
-Fetch unresolved issues sorted by frequency:
+Fetch unresolved issues sorted by frequency.
+
+Build query string: start with `"is:unresolved"`, then append the environment fragment from Step 0 if `--env` was provided.
 
 ```
+# Example: --env prod
+mcp__sentry__list_issues(
+  projectSlugOrId: "{project}",
+  query: "is:unresolved environment:production",
+  sort: "freq",
+  limit: 100,
+  regionUrl: "{region}"
+)
+
+# Example: no --env (all environments)
 mcp__sentry__list_issues(
   projectSlugOrId: "{project}",
   query: "is:unresolved",
@@ -214,18 +241,28 @@ This allows incremental triage — run weekly, only new tasks are created.
 ### Basic
 ```bash
 /sentry-triage
-# → "Sentry project slug:" → bodyfit-api → runs triage
+# → "Sentry project slug:" → bodyfit-api → runs triage (all environments)
 ```
 
-### With filters
+### Production only
 ```bash
-/sentry-triage --period 30d --min-events 100
-# → "Sentry project slug:" → bodyfit-api → runs triage with 30d window, min 100 events
+/sentry-triage --env prod
+# → only production issues
+```
+
+### Staging only
+```bash
+/sentry-triage --env stage
+```
+
+### Both environments explicitly
+```bash
+/sentry-triage --env prod,stage --period 30d --min-events 100
 ```
 
 ### Focus on category
 ```bash
-/sentry-triage --category DB --top 20
+/sentry-triage --env prod --category DB --top 20
 ```
 
 ---

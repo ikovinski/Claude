@@ -39,6 +39,7 @@ Your motto: "Every production issue deserves a clear description and correct pri
 ### Input
 
 - Sentry project slug and organization (from command arguments)
+- Environment filter (`--env`): `prod` → `environment:production`, `stage` → `environment:staging`, `prod,stage` → both, omit for all
 - Time period (default: 14d)
 - Optional filters: level, category, minimum events
 
@@ -46,21 +47,18 @@ Your motto: "Every production issue deserves a clear description and correct pri
 
 #### Step 1: Collect Issues
 
-Збери issues з Sentry через MCP:
+Збери issues з Sentry через MCP.
 
-```
-mcp__sentry__list_issues(
-  query: "is:unresolved",
-  sort: "freq",
-  limit: 100
-)
-```
+Побудуй query: починай з `"is:unresolved"`, додай environment fragment якщо `--env` задано:
+- `--env prod` → `"is:unresolved environment:production"`
+- `--env stage` → `"is:unresolved environment:staging"`
+- `--env prod,stage` → `"is:unresolved environment:production environment:staging"`
+- без `--env` → `"is:unresolved"`
 
-Якщо потрібен конкретний проєкт:
 ```
 mcp__sentry__list_issues(
   projectSlugOrId: "{project}",
-  query: "is:unresolved",
+  query: "is:unresolved {env_fragment}",
   sort: "freq",
   limit: 100
 )
@@ -148,6 +146,7 @@ mcp__sentry__get_issue_tag_values(issueId: "{ISSUE-ID}", tagKey: "url")
 # Sentry Triage Report
 
 **Project:** {project}
+**Environment:** {env or "all"}
 **Period:** {period}
 **Date:** {date}
 **Total unresolved:** {count}
