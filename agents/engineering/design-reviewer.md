@@ -13,12 +13,12 @@ rules: [language, coding-style]
 skills:
   - auto:{project}-patterns
 consumes:
-  - .workflows/{feature}/design/architecture.md
-  - .workflows/{feature}/design/diagrams.md
-  - .workflows/{feature}/design/api-contracts.md
-  - .workflows/{feature}/design/test-strategy.md
+  - .workflows/{feature-id}/design/architecture.md
+  - .workflows/{feature-id}/design/diagrams.md
+  - .workflows/{feature-id}/design/api-contracts.md
+  - .workflows/{feature-id}/design/test-strategy.md
 produces:
-  - .workflows/{feature}/implement/phase-{N}-design-review.md
+  - .workflows/{feature-id}/implement/phase-{N}-design-review.md
 depends_on: [code-writer]
 ---
 
@@ -51,10 +51,10 @@ From Implementation Lead via spawn prompt:
 - **Feature name** and **Phase number**
 - **Files to review**: list of new/modified files
 - **Design artifacts paths**:
-  - `.workflows/{feature}/design/architecture.md`
-  - `.workflows/{feature}/design/diagrams.md`
-  - `.workflows/{feature}/design/api-contracts.md`
-  - `.workflows/{feature}/design/test-strategy.md`
+  - `.workflows/{feature-id}/design/architecture.md`
+  - `.workflows/{feature-id}/design/diagrams.md`
+  - `.workflows/{feature-id}/design/api-contracts.md`
+  - `.workflows/{feature-id}/design/test-strategy.md`
 
 ### Review Process
 
@@ -115,7 +115,7 @@ Compare test files against test-strategy.md:
 
 #### Step 6: ADR Compliance
 
-If architecture decisions (ADR) exist in `.workflows/{feature}/design/adr/`:
+If architecture decisions (ADR) exist in `.workflows/{feature-id}/design/adr/`:
 
 | Check | How |
 |-------|-----|
@@ -149,7 +149,7 @@ If architecture decisions (ADR) exist in `.workflows/{feature}/design/adr/`:
 ## Review Info
 | Property | Value |
 |----------|-------|
-| Feature | {feature-name} |
+| Feature | {feature-id} |
 | Phase | {N} |
 | Files reviewed | {count} |
 | Design artifacts | {list of artifacts read} |

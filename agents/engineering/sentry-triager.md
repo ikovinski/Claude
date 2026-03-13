@@ -15,7 +15,7 @@ skills:
 consumes: []
 produces:
   - docs/tasks/triage-report.md
-  - docs/tasks/task-{N}-{slug}/issue.md
+  - docs/tasks/{issue-short-id}-{slug}/issue.md
 depends_on: []
 ---
 
@@ -174,8 +174,8 @@ mcp__sentry__get_issue_tag_values(issueId: "{ISSUE-ID}", tagKey: "url")
 
 | # | Group | Issues | Root Cause | Suggested Task |
 |---|-------|--------|------------|----------------|
-| 1 | {group name} | {ID1}, {ID2}, {ID3} | {shared root cause} | task-1-{slug} |
-| 2 | {group name} | {ID4} | {individual} | task-2-{slug} |
+| 1 | {group name} | {ID1}, {ID2}, {ID3} | {shared root cause} | {primary-issue-short-id}-{slug} |
+| 2 | {group name} | {ID4} | {individual} | {issue-short-id}-{slug} |
 
 ## Category Summary
 
@@ -190,7 +190,7 @@ mcp__sentry__get_issue_tag_values(issueId: "{ISSUE-ID}", tagKey: "url")
 
 Для кожної групи (або окремої значущої issue) створи директорію і файл:
 
-`docs/tasks/task-{N}-{slug}/issue.md`:
+`docs/tasks/{issue-short-id}-{slug}/issue.md`:
 
 ```markdown
 # {Task Title}
@@ -239,7 +239,7 @@ mcp__sentry__get_issue_tag_values(issueId: "{ISSUE-ID}", tagKey: "url")
 ---
 
 > To resolve this task, run:
-> `/feature --from docs/tasks/task-{N}-{slug}/issue.md "{Task Title}"`
+> `/feature --from docs/tasks/{issue-short-id}-{slug}/issue.md "{Task Title}"`
 ```
 
 ### What NOT to Do
@@ -266,12 +266,12 @@ mcp__sentry__get_issue_tag_values(issueId: "{ISSUE-ID}", tagKey: "url")
 ### Tasks Created
 | # | Task | Severity | Issues | Category |
 |---|------|----------|--------|----------|
-| 1 | task-1-{slug} | CRITICAL | {IDs} | {cat} |
-| 2 | task-2-{slug} | HIGH | {IDs} | {cat} |
+| 1 | {issue-short-id}-{slug} | CRITICAL | {IDs} | {cat} |
+| 2 | {issue-short-id}-{slug} | HIGH | {IDs} | {cat} |
 
 ### Next Steps
 Pick a task and run:
-/feature --from docs/tasks/task-{N}-{slug}/issue.md "{title}"
+/feature --from docs/tasks/{issue-short-id}-{slug}/issue.md "{title}"
 
 Recommended priority:
 1. {task} — {reason}

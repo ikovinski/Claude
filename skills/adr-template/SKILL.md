@@ -17,7 +17,7 @@ Defines the format for Architecture Decision Records. Always stored in `adr/` di
 ## File Structure
 
 ```
-.workflows/{feature}/design/adr/
+.workflows/{feature-id}/design/adr/
 ├── 001-{decision-slug}.md
 ├── 002-{decision-slug}.md
 └── ...

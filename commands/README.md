@@ -25,10 +25,10 @@ Slash-команди для Claude Code CLI. Швидкий виклик workflo
 | Command | Agent | Output | Description |
 |---------|-------|--------|-------------|
 | `/feature` | Meta-command | `.workflows/` | Навігатор повного flow: research → design → plan → implement → docs → pr |
-| `/research` | Research Lead + Codebase Researcher | `.workflows/{feature}/research/` | AS-IS аналіз кодової бази |
-| `/design` | Design Architect + Test Strategist + Devil's Advocate | `.workflows/{feature}/design/` | Архітектура, ADR, тест-стратегія |
-| `/plan` | Phase Planner | `.workflows/{feature}/plan/` | Декомпозиція дизайну на фази імплементації |
-| `/implement` | Implement Lead + Writer + Reviewers + Gate | `.workflows/{feature}/implement/` | Виконання однієї фази імплементації |
+| `/research` | Research Lead + Codebase Researcher | `.workflows/{feature-id}/research/` | AS-IS аналіз кодової бази |
+| `/design` | Design Architect + Test Strategist + Devil's Advocate | `.workflows/{feature-id}/design/` | Архітектура, ADR, тест-стратегія |
+| `/plan` | Phase Planner | `.workflows/{feature-id}/plan/` | Декомпозиція дизайну на фази імплементації |
+| `/implement` | Implement Lead + Writer + Reviewers + Gate | `.workflows/{feature-id}/implement/` | Виконання однієї фази імплементації |
 | `/docs-suite` | Team (4 agents) | `docs/` | Повна документація (technical, architecture, OpenAPI, articles) |
 | `/pr` | Direct command | GitHub PR | Створення PR з артефактами та тест-планом |
 | `/sentry-triage` | Sentry Triager | `docs/tasks/` | Збір і категоризація issues з Sentry |
@@ -51,7 +51,7 @@ Slash-команди для Claude Code CLI. Швидкий виклик workflo
 
 **Output:**
 ```
-.workflows/{feature}/
+.workflows/{feature-id}/
 ├── state.json
 ├── research/
 ├── design/

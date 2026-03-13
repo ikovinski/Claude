@@ -18,17 +18,17 @@ Orchestrates Design Architect + Test Strategist + Devil's Advocate as an **agent
 ## Usage
 
 ```bash
-/design {feature-name}                    # Full design, standard depth
-/design {feature-name} --depth light      # Lightweight: C4 Context + 1 Sequence + key decisions only
-/design {feature-name} --depth detailed   # Full + rollback strategy + migration plan
-/design {feature-name} --skip-adr         # Skip ADR (for simple changes)
-/design {feature-name} --skip-api         # Skip API contracts (no new endpoints)
-/design {feature-name} --skip-tests       # Skip test strategy
-/design {feature-name} --skip-challenge   # Skip Devil's Advocate (small/obvious changes)
-/design {feature-name} --security         # Add Security Reviewer for PII/auth/payment flows
+/design {feature-id}                    # Full design, standard depth
+/design {feature-id} --depth light      # Lightweight: C4 Context + 1 Sequence + key decisions only
+/design {feature-id} --depth detailed   # Full + rollback strategy + migration plan
+/design {feature-id} --skip-adr         # Skip ADR (for simple changes)
+/design {feature-id} --skip-api         # Skip API contracts (no new endpoints)
+/design {feature-id} --skip-tests       # Skip test strategy
+/design {feature-id} --skip-challenge   # Skip Devil's Advocate (small/obvious changes)
+/design {feature-id} --security         # Add Security Reviewer for PII/auth/payment flows
 ```
 
-`{feature-name}` must match the name used in `/research` — artifacts are read from `.workflows/{feature-name}/research/`.
+`{feature-id}` must match the name used in `/research` — artifacts are read from `.workflows/{feature-id}/research/`.
 
 ## Prerequisites
 
@@ -39,7 +39,7 @@ Orchestrates Design Architect + Test Strategist + Devil's Advocate as an **agent
 
 2. Phase 1 (Research) completed:
 ```
-.workflows/{feature-name}/research/research-report.md  — must exist
+.workflows/{feature-id}/research/research-report.md  — must exist
 ```
 
 ## You Are the Design Lead
@@ -57,7 +57,7 @@ When this command runs, YOU (Claude) are the **Design Lead orchestrator**. You:
 
 ### Step 0: Validate Prerequisites, Load Project Skill & Complexity Check
 
-1. Check `.workflows/{feature-name}/research/research-report.md` exists
+1. Check `.workflows/{feature-id}/research/research-report.md` exists
 2. If missing — tell user to run `/research` first
 3. **Load project skill** — determine `{project-name}` as basename of CWD (e.g. `/repo/wellness-backend` → `wellness-backend`). Check for `.claude/skills/{project-name}-patterns/SKILL.md` in the target project root. If found:
    - Read `SKILL.md` and all files in `references/` directory (architecture.md, conventions.md, workflows.md)
@@ -65,7 +65,7 @@ When this command runs, YOU (Claude) are the **Design Lead orchestrator**. You:
    - When spawning architect — include the full project skill content in the spawn prompt as `[PROJECT PATTERNS]` section
    - Architect MUST NOT propose designs that contradict project patterns (e.g., breaking an interface if the project convention is to keep interfaces stable, or inverting decorator chain order)
 4. Read Research Report to understand scope
-5. Read `.workflows/{feature-name}/state.json` — check `complexity` field
+5. Read `.workflows/{feature-id}/state.json` — check `complexity` field
 
 **Complexity auto-defaults** (applied when no explicit flags override):
 
@@ -85,8 +85,8 @@ Complexity: {value} — auto-applying: {list of defaults}
 
 ```
 TeamCreate:
-  team_name: "design-{feature-name}"
-  description: "Design phase for {feature-name}"
+  team_name: "design-{feature-id}"
+  description: "Design phase for {feature-id}"
 ```
 
 ## Phase Execution
@@ -105,20 +105,20 @@ Two teammates run in parallel:
 ```
 [CONTEXT]
 Project path: {target_project_path}
-Feature: {feature-name}
+Feature: {feature-id}
 
 [INPUT — Research Report]
-Read from: .workflows/{feature-name}/research/research-report.md
-Additional scans available in: .workflows/{feature-name}/research/
+Read from: .workflows/{feature-id}/research/research-report.md
+Additional scans available in: .workflows/{feature-id}/research/
 
 [TASK]
 Execute the full design process as described in your Task section:
 1. Read Research Report
 2. Determine approach: Contract-first (if new endpoints) or Architecture-first
-3. Create Diagrams → .workflows/{feature-name}/design/diagrams.md
-4. Create Architecture Design → .workflows/{feature-name}/design/architecture.md
-5. Create ADR(s) → .workflows/{feature-name}/design/adr/*.md (one file per decision)
-6. Create API Contracts (if new endpoints) → .workflows/{feature-name}/design/api-contracts.md
+3. Create Diagrams → .workflows/{feature-id}/design/diagrams.md
+4. Create Architecture Design → .workflows/{feature-id}/design/architecture.md
+5. Create ADR(s) → .workflows/{feature-id}/design/adr/*.md (one file per decision)
+6. Create API Contracts (if new endpoints) → .workflows/{feature-id}/design/api-contracts.md
 7. Run Self-Review (Step 5) — fix inconsistencies before completing
 
 [DEPTH]
@@ -129,7 +129,7 @@ Skip ADR: {yes/no based on --skip-adr}
 Skip API Contracts: {yes/no based on --skip-api}
 ```
 
-3. Create task: "Design architecture for {feature-name}"
+3. Create task: "Design architecture for {feature-id}"
 
 #### 1b: Test Strategist Stage A (parallel with architect)
 
@@ -143,19 +143,19 @@ Skip if `--skip-tests` is set.
 ```
 [CONTEXT]
 Project path: {target_project_path}
-Feature: {feature-name}
+Feature: {feature-id}
 
 [TASK — STAGE A ONLY]
 Execute Stage A (Steps 1-2) from your Task section:
 1. Analyze existing test patterns in the project
-2. Pre-analyze Research Report (.workflows/{feature-name}/research/research-report.md)
+2. Pre-analyze Research Report (.workflows/{feature-id}/research/research-report.md)
 
-Write intermediate results to: .workflows/{feature-name}/design/test-patterns.md
+Write intermediate results to: .workflows/{feature-id}/design/test-patterns.md
 Do NOT proceed to Stage B yet — architecture.md is not ready.
 Wait for further instructions.
 ```
 
-3. Create task: "Analyze test patterns for {feature-name}"
+3. Create task: "Analyze test patterns for {feature-id}"
 
 **Wait**: Both teammates finish Phase 1.
 
@@ -184,19 +184,19 @@ Skip if `--skip-challenge` is set.
 ```
 [CONTEXT]
 Project path: {target_project_path}
-Feature: {feature-name}
+Feature: {feature-id}
 
 [INPUT ARTIFACTS — read from disk]
-- .workflows/{feature-name}/design/architecture.md
-- .workflows/{feature-name}/design/adr/*.md
-- .workflows/{feature-name}/research/research-report.md
+- .workflows/{feature-id}/design/architecture.md
+- .workflows/{feature-id}/design/adr/*.md
+- .workflows/{feature-id}/research/research-report.md
 
 [TASK]
 Execute the full challenge process as described in your Task section.
-Write output to: .workflows/{feature-name}/design/challenge-report.md
+Write output to: .workflows/{feature-id}/design/challenge-report.md
 ```
 
-3. Create task: "Challenge design for {feature-name}"
+3. Create task: "Challenge design for {feature-id}"
 
 #### 2b: Test Strategist Stage B
 
@@ -205,10 +205,10 @@ Resume "tester" teammate via `SendMessage`:
 ```
 [STAGE B — architecture.md is ready]
 Continue with Steps 3-5 from your Task section:
-1. Read .workflows/{feature-name}/design/architecture.md
-2. Read .workflows/{feature-name}/design/adr/*.md
+1. Read .workflows/{feature-id}/design/architecture.md
+2. Read .workflows/{feature-id}/design/adr/*.md
 3. Define test strategy and write test cases
-Write final output to: .workflows/{feature-name}/design/test-strategy.md
+Write final output to: .workflows/{feature-id}/design/test-strategy.md
 (you may delete test-patterns.md or merge its content)
 ```
 
@@ -224,15 +224,15 @@ Only if `--security` is set OR Research Report mentions PII, authentication, pay
 ```
 [CONTEXT]
 Project path: {target_project_path}
-Feature: {feature-name}
+Feature: {feature-id}
 
 [SCOPE]
 security
 
 [INPUT ARTIFACTS — read from disk]
-- .workflows/{feature-name}/design/architecture.md
-- .workflows/{feature-name}/design/diagrams.md
-- .workflows/{feature-name}/design/api-contracts.md (if exists)
+- .workflows/{feature-id}/design/architecture.md
+- .workflows/{feature-id}/design/diagrams.md
+- .workflows/{feature-id}/design/api-contracts.md (if exists)
 
 [TASK]
 Review the DESIGN (not code) for security concerns:
@@ -242,10 +242,10 @@ Review the DESIGN (not code) for security concerns:
 4. Secrets management — are API keys, tokens handled securely?
 5. OWASP Top 10 applicability to this design
 
-Write output to: .workflows/{feature-name}/design/security-review.md
+Write output to: .workflows/{feature-id}/design/security-review.md
 ```
 
-3. Create task: "Security review design for {feature-name}"
+3. Create task: "Security review design for {feature-id}"
 
 **Wait**: All Phase 2 teammates finish.
 
@@ -307,18 +307,18 @@ Design Lead (you) performs final consistency check:
 3. Report to user:
 
 ```markdown
-## Design Complete: {feature-name}
+## Design Complete: {feature-id}
 
 ### Files Generated
 | File | Content |
 |------|---------|
-| .workflows/{feature-name}/design/diagrams.md | C4, DataFlow, Sequence diagrams (Mermaid) |
-| .workflows/{feature-name}/design/architecture.md | Component changes, async flows, open questions |
-| .workflows/{feature-name}/design/adr/*.md | Decision(s), alternatives, risks |
-| .workflows/{feature-name}/design/api-contracts.md | New/changed API endpoints |
-| .workflows/{feature-name}/design/test-strategy.md | Test cases and strategy |
-| .workflows/{feature-name}/design/challenge-report.md | Devil's Advocate challenges + verdict |
-| .workflows/{feature-name}/design/security-review.md | Security concerns (if --security) |
+| .workflows/{feature-id}/design/diagrams.md | C4, DataFlow, Sequence diagrams (Mermaid) |
+| .workflows/{feature-id}/design/architecture.md | Component changes, async flows, open questions |
+| .workflows/{feature-id}/design/adr/*.md | Decision(s), alternatives, risks |
+| .workflows/{feature-id}/design/api-contracts.md | New/changed API endpoints |
+| .workflows/{feature-id}/design/test-strategy.md | Test cases and strategy |
+| .workflows/{feature-id}/design/challenge-report.md | Devil's Advocate challenges + verdict |
+| .workflows/{feature-id}/design/security-review.md | Security concerns (if --security) |
 
 ### Design Summary
 - Design depth: {light/standard/detailed}
@@ -340,14 +340,14 @@ Design Lead (you) performs final consistency check:
 ### HUMAN REVIEW REQUIRED
 
 Please review the design artifacts:
-1. Diagrams: `.workflows/{feature-name}/design/diagrams.md`
-2. Architecture: `.workflows/{feature-name}/design/architecture.md`
-3. ADR: `.workflows/{feature-name}/design/adr/`
-4. Challenge Report: `.workflows/{feature-name}/design/challenge-report.md`
-5. Test Strategy: `.workflows/{feature-name}/design/test-strategy.md`
+1. Diagrams: `.workflows/{feature-id}/design/diagrams.md`
+2. Architecture: `.workflows/{feature-id}/design/architecture.md`
+3. ADR: `.workflows/{feature-id}/design/adr/`
+4. Challenge Report: `.workflows/{feature-id}/design/challenge-report.md`
+5. Test Strategy: `.workflows/{feature-id}/design/test-strategy.md`
 
 **Your decision:**
-- **approve** — design is good, proceed to `/plan {feature-name}`
+- **approve** — design is good, proceed to `/plan {feature-id}`
 - **change {description}** — I want to adjust specific parts (Lead will coordinate changes)
 - **reject {reason}** — start over with different direction
 
@@ -355,9 +355,9 @@ Reply with your decision.
 ```
 
 5. Handle response:
-   - **approve** → print "Approved. Run `/plan {feature-name}` when ready."
+   - **approve** → print "Approved. Run `/plan {feature-id}` when ready."
    - **change** → send change request to relevant teammate, iterate, re-present
-   - **reject** → print "Design rejected. Artifacts preserved in `.workflows/{feature-name}/design/` for reference."
+   - **reject** → print "Design rejected. Artifacts preserved in `.workflows/{feature-id}/design/` for reference."
 
 ---
 
@@ -509,6 +509,6 @@ User: "approve"
 
 - Agent files: `agents/engineering/design-architect.md`, `agents/engineering/test-strategist.md`, `agents/engineering/devils-advocate.md`, `agents/engineering/security-reviewer.md`
 - Template skills: `skills/design-template/`, `skills/adr-template/`, `skills/api-contracts-template/` (if exist)
-- Previous phase: `/research {feature-name}` (Phase 1)
-- Next phase: `/plan {feature-name}` (Phase 3)
+- Previous phase: `/research {feature-id}` (Phase 1)
+- Next phase: `/plan {feature-id}` (Phase 3)
 - Full flow: `scenarios/delivery/feature-development.md`

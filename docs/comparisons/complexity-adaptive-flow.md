@@ -83,7 +83,7 @@ Suggested flow:
 - ~~Plan~~ → skip (single phase, no decomposition needed)
 - Implement directly with lightweight review
 
-Run: /implement {feature-name} --phase 1 --reviewers quality
+Run: /implement {feature-id} --phase 1 --reviewers quality
 
 Override: reply "full flow" to proceed with Design → Plan → Implement as usual.
 ```
@@ -162,7 +162,7 @@ Override: reply "full flow" to proceed with Design → Plan → Implement as usu
 /research
   Phase 3: Complexity Assessment
     → визначає Small/Medium/Large
-    → пише в .workflows/{feature}/state.json:
+    → пише в .workflows/{feature-id}/state.json:
         { "complexity": "small", "complexity_reason": "..." }
 
 /feature --resume

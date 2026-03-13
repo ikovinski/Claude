@@ -56,10 +56,10 @@ TeamCreate:
 
 ## Feature Context Resolution (--feature)
 
-When `--feature {name}` is provided, Team Lead resolves available artifacts **before** spawning teammates:
+When `--feature {feature-id}` is provided, Team Lead resolves available artifacts **before** spawning teammates:
 
 ```
-feature_path = ".workflows/{feature-name}"
+feature_path = ".workflows/{feature-id}"
 
 Resolve each artifact independently:
   research_report  = Glob("{feature_path}/research/research-report.md")  → file or null
@@ -90,8 +90,8 @@ The resolved artifacts are injected as `[FEATURE CONTEXT]` sections into teammat
 Project path: {target_project_path}
 
 [FEATURE CONTEXT — only if --feature and artifacts exist]
-Research report: .workflows/{feature}/research/research-report.md
-Implementation reports: .workflows/{feature}/implement/phase-*-report.md
+Research report: .workflows/{feature-id}/research/research-report.md
+Implementation reports: .workflows/{feature-id}/implement/phase-*-report.md
 → Focus collection on components mentioned in these artifacts.
 → Still scan the full project, but prioritize affected areas.
 
@@ -124,9 +124,9 @@ Project path: {target_project_path}
 Read from: docs/.artifacts/technical-collection-report.md
 
 [FEATURE CONTEXT — only if --feature and artifacts exist]
-Design architecture: .workflows/{feature}/design/architecture.md
-Design diagrams: .workflows/{feature}/design/diagrams.md
-ADR files: .workflows/{feature}/design/adr/*.md
+Design architecture: .workflows/{feature-id}/design/architecture.md
+Design diagrams: .workflows/{feature-id}/design/diagrams.md
+ADR files: .workflows/{feature-id}/design/adr/*.md
 → Use these as baseline. Verify against actual code, update/extend as needed.
 → Reuse diagrams that are still accurate. Update diagrams that diverged during implementation.
 
@@ -149,7 +149,7 @@ Project path: {target_project_path}
 Read from: docs/.artifacts/technical-collection-report.md
 
 [FEATURE CONTEXT — only if --feature and artifacts exist]
-API contracts: .workflows/{feature}/design/api-contracts.md
+API contracts: .workflows/{feature-id}/design/api-contracts.md
 → Use as starting point for endpoint extraction. Contracts define intended API shape.
 → Verify contracts against actual implemented code — implementation may differ from design.
 
@@ -195,7 +195,7 @@ Execute all tasks as described in your Task section:
 If stoplight: also execute Task 4 (Stoplight Packaging):
 4. Write docs/getting-started.md
 5. Generate docs/toc.json
-6. Place enriched OpenAPI at reference/openapi.yaml
+6. Place enriched OpenAPI at docs/reference/openapi.yaml
 Use SMD syntax in all articles.
 ```
 
@@ -259,7 +259,7 @@ After all reviews complete:
 4. **If `--format stoplight`**: verify Stoplight artifacts:
    - `docs/getting-started.md` exists
    - `docs/toc.json` exists and references all files
-   - `reference/openapi.yaml` exists
+   - `docs/reference/openapi.yaml` exists
    - Feature articles contain SMD callouts (`<!-- theme:`)
 5. Shut down all teammates (send shutdown request via `SendMessage`)
 6. Call `TeamDelete` to clean up team resources
@@ -280,7 +280,7 @@ After all reviews complete:
 | docs/INDEX.md | Final | Technical Writer |
 | docs/getting-started.md | Final (Stoplight) | Technical Writer |
 | docs/toc.json | Final (Stoplight) | Technical Writer |
-| reference/openapi.yaml | Final (Stoplight) | Technical Writer |
+| docs/reference/openapi.yaml | Final (Stoplight) | Technical Writer |
 
 ### Statistics
 | Metric | Value |
@@ -304,7 +304,7 @@ docs/INDEX.md
 | Flag | Phases | Teammates | Notes |
 |------|--------|-----------|-------|
 | (default) | 1 → 2 → 3 → 4 → 5 | All 4 | Plain markdown output |
-| `--feature {name}` | 1 → 2 → 3 → 4 → 5 | All 4 | Injects `.workflows/{name}/` artifacts as context per teammate |
+| `--feature {feature-id}` | 1 → 2 → 3 → 4 → 5 | All 4 | Injects `.workflows/{feature-id}/` artifacts as context per teammate |
 | `--format stoplight` | 1 → 2 → 3 → 4 → 5 | All 4 | SMD articles, toc.json, Getting Started, Stoplight layout |
 | `--scope architecture` | 1 → 2A | scanner, architect | |
 | `--scope api` | 1 → 2B → 3 (swagger enrichment only) | scanner, api-spec, writer | |
@@ -321,7 +321,7 @@ docs/INDEX.md
 - If a teammate fails, report the error and ask the user whether to retry or skip
 - The target project may be a **different directory** than ai-agents-system — always ask or detect
 - Always call `TeamDelete` at the end, even if some phases were skipped
-- **`--feature` is a hint, not a hard dependency** — if `.workflows/{name}/` doesn't exist or has no artifacts, all teammates work as usual (scan code from scratch). Each artifact is checked independently; missing ones are silently skipped
+- **`--feature` is a hint, not a hard dependency** — if `.workflows/{feature-id}/` doesn't exist or has no artifacts, all teammates work as usual (scan code from scratch). Each artifact is checked independently; missing ones are silently skipped
 
 ---
 

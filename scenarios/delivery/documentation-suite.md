@@ -167,7 +167,7 @@ This is a **scenario phase**, not an agent responsibility. Each agent reviews ot
 3. **Stoplight packaging** (if Decision 2 = A):
    - Verify Technical Writer produced `docs/getting-started.md`
    - Verify `docs/toc.json` exists and references all generated files
-   - Verify enriched OpenAPI in `reference/openapi.yaml` (Stoplight layout)
+   - Verify enriched OpenAPI in `docs/reference/openapi.yaml` (Stoplight layout)
    - Validate SMD syntax in feature articles (callouts use `<!-- theme: -->`, not bold text)
 4. Produce final statistics report
 
@@ -177,7 +177,7 @@ This is a **scenario phase**, not an agent responsibility. Each agent reviews ot
 
 ## Feature Context (--feature)
 
-When invoked via `/docs-suite --feature {name}`, Team Lead resolves `.workflows/{name}/` artifacts before spawning teammates. Each artifact is optional — if missing, the teammate gets a standard prompt without that context.
+When invoked via `/docs-suite --feature {feature-id}`, Team Lead resolves `.workflows/{feature-id}/` artifacts before spawning teammates. Each artifact is optional — if missing, the teammate gets a standard prompt without that context.
 
 | Teammate | Feature Artifact | How It's Used |
 |----------|-----------------|---------------|
@@ -186,7 +186,7 @@ When invoked via `/docs-suite --feature {name}`, Team Lead resolves `.workflows/
 | api-spec | `design/api-contracts.md` | Starting point for endpoint extraction |
 | writer | (no direct feature artifacts) | Benefits indirectly from enriched Phase 1-2 outputs |
 
-**Graceful degradation**: if `.workflows/{name}/` doesn't exist or is empty, all teammates work exactly as without `--feature` — scan code from scratch.
+**Graceful degradation**: if `.workflows/{feature-id}/` doesn't exist or is empty, all teammates work exactly as without `--feature` — scan code from scratch.
 
 ---
 
@@ -309,7 +309,7 @@ Phase 5 (FINALIZE):
 - [ ] All feature articles use SMD syntax (callouts, titled blocks)
 - [ ] `docs/getting-started.md` exists and takes < 5 min
 - [ ] `docs/toc.json` covers all generated files
-- [ ] `reference/openapi.yaml` follows Stoplight naming conventions
+- [ ] `docs/reference/openapi.yaml` follows Stoplight naming conventions
 - [ ] OpenAPI has standardized Error schema with `code`, `message`, `details`
 - [ ] Key endpoints have HTTP Request Maker blocks in articles
 

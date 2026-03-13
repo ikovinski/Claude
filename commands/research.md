@@ -51,7 +51,7 @@ When this command runs, YOU (Claude) are the **Research Lead orchestrator**. You
 3. Create workspace directory:
 
 ```bash
-mkdir -p .workflows/{feature-name}/research
+mkdir -p .workflows/{feature-id}/research
 ```
 
 4. Detect project technology (check root files: `composer.json`, `package.json`, `go.mod`, etc.)
@@ -65,8 +65,8 @@ mkdir -p .workflows/{feature-name}/research
 
 ```
 TeamCreate:
-  team_name: "research-{feature-name}"
-  description: "Research phase for {feature-name}"
+  team_name: "research-{feature-id}"
+  description: "Research phase for {feature-id}"
 ```
 
 ## Phase Execution
@@ -131,13 +131,13 @@ Based on Quick Reconnaissance, determine research strategy:
 
 **If Small** — skip to Phase 6 (Solo Scan):
 - Scan files yourself following the codebase-researcher output format
-- Write report directly to `.workflows/{feature-name}/research/research-report.md`
+- Write report directly to `.workflows/{feature-id}/research/research-report.md`
 - Skip team creation, scanner launch, and synthesis phases
 - Proceed to Phase 8 (Gate & Cleanup) without team cleanup
 
 **If Medium/Large** — continue to Phase 4.
 
-**Write complexity to state.json** — if `.workflows/{feature-name}/state.json` exists, update it:
+**Write complexity to state.json** — if `.workflows/{feature-id}/state.json` exists, update it:
 
 ```json
 {
@@ -205,7 +205,7 @@ Recent changes: "abc123 Refactor PaymentService to use events (3 days ago)", "de
 [TASK]
 Scan the specified scope following your Process for "architecture" scan type.
 If you discover a critical dependency outside your scope, send a SCOPE_EXTENSION_REQUEST to Lead.
-Write output to: .workflows/{feature-name}/research/architecture-scan.md
+Write output to: .workflows/{feature-id}/research/architecture-scan.md
 ```
 
 #### Example: Data Scanner
@@ -224,7 +224,7 @@ Recent changes: "ghi789 Add 'refundedAt' column to payments (5 days ago)"
 [TASK]
 Scan the specified scope following your Process for "data" scan type.
 If you discover a critical dependency outside your scope, send a SCOPE_EXTENSION_REQUEST to Lead.
-Write output to: .workflows/{feature-name}/research/data-scan.md
+Write output to: .workflows/{feature-id}/research/data-scan.md
 ```
 
 #### Example: Integration Scanner (Large only)
@@ -243,7 +243,7 @@ Recent changes: no recent changes
 [TASK]
 Scan the specified scope following your Process for "integration" scan type.
 If you discover a critical dependency outside your scope, send a SCOPE_EXTENSION_REQUEST to Lead.
-Write output to: .workflows/{feature-name}/research/integration-scan.md
+Write output to: .workflows/{feature-id}/research/integration-scan.md
 ```
 
 **IMPORTANT**: Give each scanner a **narrow scope** — specific directories and files, not `src/`. Quick Reconnaissance should have already identified the relevant paths.
@@ -271,7 +271,7 @@ For Small complexity tasks, Lead performs the scan directly:
 1. Read all files in scope (≤ 5 files)
 2. Document components, dependencies, data flow
 3. Follow the output format from `agents/engineering/codebase-researcher.md` for consistency
-4. Write combined Research Report (scan results + synthesis) to `.workflows/{feature-name}/research/research-report.md`
+4. Write combined Research Report (scan results + synthesis) to `.workflows/{feature-id}/research/research-report.md`
 
 No team creation needed. No scanner agents spawned.
 
@@ -279,11 +279,11 @@ No team creation needed. No scanner agents spawned.
 
 After all scanners complete (wait for TeammateIdle notifications):
 
-1. Read all scan output files from `.workflows/{feature-name}/research/`
+1. Read all scan output files from `.workflows/{feature-id}/research/`
 2. Check completeness — all sub-tasks have results
 3. Identify conflicts between scan results
 4. Synthesize the **Research Report** following the output format from `agents/engineering/research-lead.md`
-5. Write to `.workflows/{feature-name}/research/research-report.md`
+5. Write to `.workflows/{feature-id}/research/research-report.md`
 
 ### Phase 8: Gate & Cleanup
 
@@ -308,15 +308,15 @@ After all scanners complete (wait for TeammateIdle notifications):
 3. Report summary to user:
 
 ```markdown
-## Research Complete: {feature-name}
+## Research Complete: {feature-id}
 
 ### Files Generated
 | File | Content |
 |------|---------|
-| .workflows/{feature-name}/research/research-report.md | Final Research Report |
-| .workflows/{feature-name}/research/architecture-scan.md | Architecture scan |
-| .workflows/{feature-name}/research/data-scan.md | Data scan |
-| .workflows/{feature-name}/research/integration-scan.md | Integration scan |
+| .workflows/{feature-id}/research/research-report.md | Final Research Report |
+| .workflows/{feature-id}/research/architecture-scan.md | Architecture scan |
+| .workflows/{feature-id}/research/data-scan.md | Data scan |
+| .workflows/{feature-id}/research/integration-scan.md | Integration scan |
 
 ### Summary
 - Type: {bug/feature}
@@ -326,7 +326,7 @@ After all scanners complete (wait for TeammateIdle notifications):
 
 ### Next Step
 Review the Research Report, then run:
-/design {feature-name}
+/design {feature-id}
 ```
 
 ---
@@ -528,5 +528,5 @@ Next Step: /design payment-refund
 ## Related
 
 - Agent files: `agents/engineering/research-lead.md`, `agents/engineering/codebase-researcher.md`
-- Next phase: `/design {feature-name}` (Phase 2)
+- Next phase: `/design {feature-id}` (Phase 2)
 - Full flow: `scenarios/delivery/feature-development.md`

@@ -19,7 +19,7 @@ skills:
   - security-audit-checklist
 consumes: []
 produces:
-  - .workflows/{feature}/implement/phase-{N}-security-review.md
+  - .workflows/{feature-id}/implement/phase-{N}-security-review.md
 depends_on: [code-writer]
 ---
 
@@ -185,7 +185,7 @@ If you find a CRITICAL vulnerability that could be exploited in production RIGHT
 ## Review Info
 | Property | Value |
 |----------|-------|
-| Feature | {feature-name} |
+| Feature | {feature-id} |
 | Phase | {N} |
 | Files reviewed | {count} |
 | Automated scan | {CLEAN / {N} issues found} |
