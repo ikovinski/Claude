@@ -1,6 +1,11 @@
 ---
 name: ai-debug
 description: Show AI agents system status, analyze prompts, explain workflows
+triggers:
+  - "system status"
+  - "debug agents"
+  - "статус системи"
+skills: []
 ---
 
 # /ai-debug - AI Agents System Status & Analyzer
@@ -24,7 +29,7 @@ description: Show AI agents system status, analyze prompts, explain workflows
 
 1. Get current working directory
 2. Extract project name (last part of path)
-3. Check for project skill: `skills/{project-name}-patterns/SKILL.md`
+3. Check for project skill: `.claude/skills/{project-name}-patterns/SKILL.md` (where `{project-name}` = basename of CWD)
 4. List components from `commands/`, `agents/`, `scenarios/`, `rules/`
 
 ### Output Format
@@ -201,9 +206,9 @@ Read from each agent file's `triggers` field in frontmatter.
 ══════════════════════════════════════
 
 📦 Routing
-   ├─ Agent:         code-reviewer
-   │                 agents/code-reviewer.md
-   ├─ Skills:        code-quality/*
+   ├─ Agent:         quality-reviewer
+   │                 agents/engineering/quality-reviewer.md
+   ├─ Skills:        (project-patterns)
    └─ Project Skill: wellness-backend-patterns ✓
 
 ⚙️  Workflow
@@ -252,7 +257,9 @@ Read from each agent file's `triggers` field in frontmatter.
 
 | Agent | Emoji |
 |-------|-------|
-| code-reviewer | 🔍 |
+| security-reviewer | 🛡️ |
+| quality-reviewer | 🔍 |
+| design-reviewer | 📐 |
 | security-reviewer | 🛡️ |
 | planner | 📋 |
 | feature-decomposer | 🧩 |
