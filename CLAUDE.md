@@ -26,6 +26,7 @@ ai-agents-system/
 | `/implement` | Implement Lead + Writer + Reviewers + Gate | Execute one implementation phase |
 | `/docs-suite` | Team Lead + 4 agents | Full documentation suite |
 | `/pr` | Direct command | Create PR with design references |
+| `/system-profile` | System Profiler | Integration Profile — business-technical registry of integrations |
 | `/sentry-triage` | Sentry Triager | Collect & categorize Sentry issues into tasks |
 | `/skill-from-git` | -- | Extract project skill from git history |
 | `/ai-debug` | -- | System status and prompt analysis |
@@ -57,6 +58,7 @@ ai-agents-system/
 | Architect Collector | `agents/documentation/architect-collector.md` | Architecture analysis, diagrams (Mermaid, C4) |
 | Swagger Collector | `agents/documentation/swagger-collector.md` | Generate OpenAPI spec from code |
 | Technical Writer | `agents/documentation/technical-writer.md` | Feature articles, Swagger enrichment |
+| System Profiler | `agents/documentation/system-profiler.md` | Integration Profile — use cases, actors, data flows, OQ, Issues |
 
 ## How It Works
 
