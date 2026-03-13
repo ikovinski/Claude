@@ -9,6 +9,7 @@ triggers:
 skills:
   - auto:{project}-patterns
   - tdd-approach
+context: contexts/planning.md
 ---
 
 # /plan - Implementation Planning
@@ -34,6 +35,10 @@ Phase 2 (Design) completed and **approved by engineers**:
 .workflows/{feature-id}/design/adr/*.md            — must exist (unless --skip-adr was used)
 .workflows/{feature-id}/design/test-strategy.md   — must exist (unless --skip-tests was used)
 ```
+
+## Context
+
+Load `contexts/planning.md` and apply its priorities: clarity, vertical slices, dependencies, risks. Use the planning process (scope → decompose → dependencies → sequence) and red flags (slice > 5 days, horizontal splitting) as guardrails.
 
 ## You Are the Phase Planner
 

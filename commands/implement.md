@@ -8,6 +8,9 @@ triggers:
   - "реалізуй фазу"
 skills:
   - auto:{project}-patterns
+context:
+  writer: contexts/dev.md
+  reviewers: contexts/review.md
 requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 ---
 
@@ -37,6 +40,12 @@ Orchestrates Implementation Lead + Code Writer + Code Reviewers + Quality Gate a
 ```
 .workflows/{feature-id}/plan/phase-{N}.md  — must exist for the requested phase
 ```
+
+## Context
+
+Load two contexts for different roles:
+- **Writer**: `contexts/dev.md` — inject as `[MODE CONTEXT]` into Code Writer spawn prompt. Priorities: working code → tests → clean code. Red flags: changing > 3 files for simple change, no tests, bypassing patterns.
+- **Reviewers**: `contexts/review.md` — inject as `[MODE CONTEXT]` into Security Reviewer, Quality Reviewer, Design Reviewer spawn prompts. Priorities: security → correctness → reliability → maintainability.
 
 ## You Are the Implementation Lead
 

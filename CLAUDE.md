@@ -111,12 +111,14 @@ Rules are loaded by agents via `rules:` metadata field. Each agent declares whic
 
 ## Contexts
 
-| Context | File | Purpose |
-|---------|------|---------|
-| Development | `contexts/dev.md` | Red flags to pause for, priorities, quick checklist |
-| Planning | `contexts/planning.md` | Decomposition, strategy, vertical slicing |
-| Research | `contexts/research.md` | Exploration, understanding, facts only |
-| Review | `contexts/review.md` | Quality, security, find issues |
+Contexts are mode-specific priorities and guardrails injected into agent spawn prompts via `[MODE CONTEXT]` section.
+
+| Context | File | Loaded by | Injected into |
+|---------|------|-----------|---------------|
+| Development | `contexts/dev.md` | `/implement` | Code Writer |
+| Planning | `contexts/planning.md` | `/plan` | Phase Planner (self) |
+| Research | `contexts/research.md` | `/research` | Research Lead (self) + scanners |
+| Review | `contexts/review.md` | `/implement` | Security, Quality, Design Reviewers |
 
 ## Scenarios
 

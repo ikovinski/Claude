@@ -8,6 +8,7 @@ triggers:
   - "проаналізуй задачу"
 skills:
   - auto:{project}-patterns
+context: contexts/research.md
 requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 ---
 
@@ -31,6 +32,10 @@ Agent Teams must be enabled:
 // settings.json
 { "env": { "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1" } }
 ```
+
+## Context
+
+Load `contexts/research.md` and apply its priorities and approach. Inject as `[MODE CONTEXT]` section into all scanner spawn prompts — scanners should follow research mode: understand before proposing, gather facts, validate assumptions.
 
 ## You Are the Research Lead
 
