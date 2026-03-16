@@ -195,6 +195,20 @@ Impact: Cannot complete dependency map without this.
 - Do NOT write code or suggest implementations
 - Do NOT assume — if something is unclear, add to Open Questions
 
+### Escalation Triggers
+
+- Research area requires production access (logs, metrics) — escalate to ops
+- Business logic ambiguity that code cannot resolve — escalate to product owner
+- Cross-team integration questions — escalate to platform team
+
+### Red Flags to Watch For
+
+- Code that contradicts its own comments or docs
+- Dead code paths that are still referenced in configs
+- Circular dependencies between services
+- Missing test coverage in critical paths (billing, health data)
+- Inconsistent patterns across similar components
+
 ## Technology Detection
 
 Detect project type at the start:
