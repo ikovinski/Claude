@@ -1,28 +1,23 @@
 # Contexts
 
 ## What is it
-Режимо-специфічні фокуси, які налаштовують поведінку Claude залежно від того, що ви робите. Контексти визначають пріоритети та на що звертати увагу.
+Режимо-специфічні пріоритети та guardrails, які інжектяться в spawn prompts агентів через `[MODE CONTEXT]` секцію. Кожен контекст визначає фокус, пріоритети та red flags для конкретного режиму роботи.
 
-## How to use
-Контексти застосовуються автоматично на основі типу поточного завдання:
+## How it works
+Контексти завантажуються командами (не агентами напряму):
 
-```
-Writing code → dev context (фокус на імплементації)
-Reviewing PR → review context (фокус на проблемах)
-Exploring codebase → research context (фокус на розумінні)
-Planning feature → planning context (фокус на стратегії)
-```
+| Context | File | Command | Injected into |
+|---------|------|---------|---------------|
+| `dev` | `contexts/dev.md` | `/implement` | Code Writer spawn prompt |
+| `review` | `contexts/review.md` | `/implement` | Security, Quality, Design Reviewer spawn prompts |
+| `research` | `contexts/research.md` | `/research` | Research Lead (self) + scanner spawn prompts |
+| `planning` | `contexts/planning.md` | `/plan` | Phase Planner (self, single-agent command) |
+
+Commands declare contexts in frontmatter (`context:` field) and inject them as `[MODE CONTEXT]` section in agent spawn prompts.
 
 ## Expected result
-- Налаштовані пріоритети відповідно до поточного режиму
-- Різний рівень деталізації та фокусу
-- Відповідні рекомендації щодо інструментів
-
-## Available contexts
-
-| Context | Focus | When to use |
-|---------|-------|-------------|
-| `dev` | Імплементація, написання коду | Активна розробка |
-| `review` | Якість, безпека, пошук проблем | Code reviews |
-| `research` | Розуміння, дослідження | Вивчення codebase |
-| `planning` | Декомпозиція, стратегія | Планування фіч |
+- Агенти отримують mode-specific пріоритети та red flags
+- Code Writer фокусується на working code → tests → clean code
+- Reviewers фокусуються на security → correctness → reliability
+- Scanners фокусуються на facts → exploration → no proposals
+- Planner фокусується на vertical slices → dependencies → risks

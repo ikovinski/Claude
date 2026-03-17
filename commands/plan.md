@@ -9,6 +9,7 @@ triggers:
 skills:
   - auto:{project}-patterns
   - tdd-approach
+context: contexts/planning.md
 ---
 
 # /plan - Implementation Planning
@@ -18,22 +19,26 @@ Runs Phase Planner agent to decompose Design artifacts into implementation phase
 ## Usage
 
 ```bash
-/plan {feature-name}                          # Standard decomposition
-/plan {feature-name} --max-phases 5           # Limit number of phases
-/plan {feature-name} --granularity fine        # More smaller phases
-/plan {feature-name} --granularity coarse      # Fewer larger phases (default)
+/plan {feature-id}                          # Standard decomposition
+/plan {feature-id} --max-phases 5           # Limit number of phases
+/plan {feature-id} --granularity fine        # More smaller phases
+/plan {feature-id} --granularity coarse      # Fewer larger phases (default)
 ```
 
-`{feature-name}` must match previous phases — reads from `.workflows/{feature-name}/`.
+`{feature-id}` must match previous phases — reads from `.workflows/{feature-id}/`.
 
 ## Prerequisites
 
 Phase 2 (Design) completed and **approved by engineers**:
 ```
-.workflows/{feature-name}/design/architecture.md   — must exist
-.workflows/{feature-name}/design/adr/*.md            — must exist (unless --skip-adr was used)
-.workflows/{feature-name}/design/test-strategy.md   — must exist (unless --skip-tests was used)
+.workflows/{feature-id}/design/architecture.md   — must exist
+.workflows/{feature-id}/design/adr/*.md            — must exist (unless --skip-adr was used)
+.workflows/{feature-id}/design/test-strategy.md   — must exist (unless --skip-tests was used)
 ```
+
+## Context
+
+Load `contexts/planning.md` and apply its priorities: clarity, vertical slices, dependencies, risks. Use the planning process (scope → decompose → dependencies → sequence) and red flags (slice > 5 days, horizontal splitting) as guardrails.
 
 ## You Are the Phase Planner
 
@@ -48,38 +53,38 @@ When this command runs, YOU (Claude) become the **Phase Planner**. This is a sin
 ### Step 0: Validate Prerequisites, Load Project Skill & Complexity Check
 
 1. **Load project skill** — determine `{project-name}` as basename of CWD (e.g. `/repo/wellness-backend` → `wellness-backend`). Check for `.claude/skills/{project-name}-patterns/SKILL.md` in the target project root. If found, read it and `references/` files. Use these patterns when planning phases — e.g., knowing decorator chain order helps define the correct implementation sequence.
-2. Read `.workflows/{feature-name}/state.json` — check `complexity` field
+2. Read `.workflows/{feature-id}/state.json` — check `complexity` field
 2. **If complexity = "small"**: Plan is unnecessary for single-phase tasks. Report:
    ```
    Complexity: small — skipping /plan (single implementation phase, no decomposition needed).
-   Proceed directly with: /implement {feature-name} --phase 1 --reviewers quality
+   Proceed directly with: /implement {feature-id} --phase 1 --reviewers quality
    ```
    Create a minimal plan file for artifact chain consistency:
    ```bash
-   mkdir -p .workflows/{feature-name}/plan
+   mkdir -p .workflows/{feature-id}/plan
    ```
-   Write `.workflows/{feature-name}/plan/overview.md` with a single phase derived from the research report. Write `.workflows/{feature-name}/plan/phase-1.md` with file list from research. Mark plan as "done" in state.json. **Stop here — do not proceed to full planning.**
-3. Check `.workflows/{feature-name}/design/architecture.md` exists
+   Write `.workflows/{feature-id}/plan/overview.md` with a single phase derived from the research report. Write `.workflows/{feature-id}/plan/phase-1.md` with file list from research. Mark plan as "done" in state.json. **Stop here — do not proceed to full planning.**
+3. Check `.workflows/{feature-id}/design/architecture.md` exists
 4. If missing — tell user to run `/design` first
 5. Verify design was reviewed (ask user: "Has the design been reviewed and approved?")
-6. Check if `.workflows/{feature-name}/plan/replan-needed.md` exists:
+6. Check if `.workflows/{feature-id}/plan/replan-needed.md` exists:
    - **If exists** — this is a **replan**. Read the file to understand what went wrong. Inform user: "Replan requested by /implement: {summary of issues}". Delete existing `plan/phase-*.md` and `plan/overview.md`. Proceed with full re-planning from scratch, using replan-needed.md as additional context
    - **If not exists** — normal planning flow
 
 ### Step 1: Prepare Workspace
 
 ```bash
-mkdir -p .workflows/{feature-name}/plan
+mkdir -p .workflows/{feature-id}/plan
 ```
 
 ### Step 2: Read All Inputs
 
 Read all design and research artifacts:
-- `.workflows/{feature-name}/research/research-report.md`
-- `.workflows/{feature-name}/design/architecture.md`
-- `.workflows/{feature-name}/design/adr/*.md` (if exists)
-- `.workflows/{feature-name}/design/test-strategy.md` (if exists)
-- `.workflows/{feature-name}/plan/replan-needed.md` (if exists — replan context from /implement)
+- `.workflows/{feature-id}/research/research-report.md`
+- `.workflows/{feature-id}/design/architecture.md`
+- `.workflows/{feature-id}/design/adr/*.md` (if exists)
+- `.workflows/{feature-id}/design/test-strategy.md` (if exists)
+- `.workflows/{feature-id}/plan/replan-needed.md` (if exists — replan context from /implement)
 
 ### Step 3: Plan
 
@@ -114,15 +119,15 @@ Verify before completing:
 ### Step 5: Report
 
 ```markdown
-## Plan Complete: {feature-name}
+## Plan Complete: {feature-id}
 
 ### Phases
 
 | # | Phase | Size | Risk | Wave | Command |
 |---|-------|------|------|------|---------|
-| 1 | {title} | S | low | 1 | `/implement {feature-name} --phase 1` |
-| 2 | {title} | M | med | 2 | `/implement {feature-name} --phase 2` |
-| N | {title} | M | low | 2 | `/implement {feature-name} --phase N` |
+| 1 | {title} | S | low | 1 | `/implement {feature-id} --phase 1` |
+| 2 | {title} | M | med | 2 | `/implement {feature-id} --phase 2` |
+| N | {title} | M | low | 2 | `/implement {feature-id} --phase N` |
 
 ### Execution Strategy
 - **Waves:** {N} (phases within same wave can run in parallel)
@@ -132,13 +137,13 @@ Verify before completing:
 ### Files Generated
 | File | Content |
 |------|---------|
-| .workflows/{feature-name}/plan/overview.md | Phases overview + dependency graph |
-| .workflows/{feature-name}/plan/phase-1.md | Phase 1 details |
-| .workflows/{feature-name}/plan/phase-N.md | Phase N details |
+| .workflows/{feature-id}/plan/overview.md | Phases overview + dependency graph |
+| .workflows/{feature-id}/plan/phase-1.md | Phase 1 details |
+| .workflows/{feature-id}/plan/phase-N.md | Phase N details |
 
 ### Next Step
 Start implementation phase by phase:
-/implement {feature-name} --phase 1
+/implement {feature-id} --phase 1
 ```
 
 ---
@@ -156,6 +161,6 @@ Start implementation phase by phase:
 ## Related
 
 - Agent file: `agents/engineering/phase-planner.md`
-- Previous phase: `/design {feature-name}` (Phase 2)
-- Next phase: `/implement {feature-name} --phase {N}` (Phase 4)
+- Previous phase: `/design {feature-id}` (Phase 2)
+- Next phase: `/implement {feature-id} --phase {N}` (Phase 4)
 - Full flow: `scenarios/delivery/feature-development.md`

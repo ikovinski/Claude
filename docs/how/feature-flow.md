@@ -81,7 +81,7 @@
 
 **Що відбувається**: Research Lead декомпозує задачу на скоупи (архітектура, дані, інтеграції), Codebase Researcher(s) сканують код паралельно.
 
-**Результат**: `.workflows/{feature}/research/`
+**Результат**: `.workflows/{feature-id}/research/`
 - `research-report.md` — головний звіт з компонентами, data flow, open questions
 - `architecture-scan.md`, `data-scan.md`, `integration-scan.md` — деталі сканів
 
@@ -96,12 +96,12 @@
 **Мета**: Спроектувати рішення з діаграмами, ADR, тест-стратегією.
 
 ```bash
-/design {feature-name}
+/design {feature-id}
 ```
 
 **Що відбувається**: Design Architect створює архітектуру з Mermaid діаграмами (C4, DataFlow, Sequence), ADR з альтернативами. Test Strategist визначає тест-стратегію з Given/When/Then кейсами.
 
-**Результат**: `.workflows/{feature}/design/`
+**Результат**: `.workflows/{feature-id}/design/`
 - `architecture.md` — діаграми + архітектурні рішення
 - `adr/*.md` — Architecture Decision Records (one per decision)
 - `test-strategy.md` — тестові кейси + покриття
@@ -111,7 +111,7 @@
 
 **Це обов'язковий крок.** Перегляньте артефакти дизайну перед продовженням:
 
-1. Відкрийте `.workflows/{feature}/design/`
+1. Відкрийте `.workflows/{feature-id}/design/`
 2. Перевірте діаграми — чи вони відповідають вашому розумінню?
 3. Перевірте ADR — чи альтернативи розглянуті?
 4. Перевірте тест-стратегію — чи покриті критичні шляхи?
@@ -125,13 +125,13 @@
 **Мета**: Розбити дизайн на фази імплементації. Кожна фаза — вертикальний зріз, який можна деплоїти незалежно.
 
 ```bash
-/plan {feature-name}
-/plan {feature-name} --max-phases 5
+/plan {feature-id}
+/plan {feature-id} --max-phases 5
 ```
 
 **Що відбувається**: Phase Planner аналізує дизайн і створює ordered phases з залежностями.
 
-**Результат**: `.workflows/{feature}/plan/`
+**Результат**: `.workflows/{feature-id}/plan/`
 - `overview.md` — список фаз, граф залежностей
 - `phase-1.md`, `phase-2.md`, ... — деталі кожної фази
 
@@ -144,8 +144,8 @@
 **Мета**: Написати код, пройти code review, Quality Gate.
 
 ```bash
-/implement {feature-name} --phase 1
-/implement {feature-name} --phase 2
+/implement {feature-id} --phase 1
+/implement {feature-id} --phase 2
 # ... повторити для кожної фази з плану
 ```
 
@@ -158,7 +158,7 @@
 3. **Фікс-ітерації** — Writer виправляє знахідки reviewer'ів (макс. 3 ітерації)
 4. **Quality Gate** — автоматичні перевірки: build, tests, linters, coverage
 
-**Результат**: Код + `.workflows/{feature}/implement/`
+**Результат**: Код + `.workflows/{feature-id}/implement/`
 - `phase-{N}-report.md` — звіт фази
 - `security-review.md`, `quality-review.md`, `design-review.md`
 - `quality-gate-report.md`
@@ -194,10 +194,10 @@
 **Мета**: Створити PR з посиланнями на дизайн-артефакти.
 
 ```bash
-/pr {feature-name}
-/pr {feature-name} --draft
-/pr {feature-name} --base develop
-/pr {feature-name} --reviewers @user1,@user2
+/pr {feature-id}
+/pr {feature-id} --draft
+/pr {feature-id} --base develop
+/pr {feature-id} --reviewers @user1,@user2
 ```
 
 **Що відбувається**: Збирає інформацію з workflow артефактів (ADR, test-strategy, phase reports) і створює структурований PR через `gh` CLI.
@@ -233,7 +233,7 @@
 
 ## Де шукати артефакти
 
-Все зберігається в `.workflows/{feature-name}/` цільового проекту:
+Все зберігається в `.workflows/{feature-id}/` цільового проекту:
 
 ```
 .workflows/payment-refund/
