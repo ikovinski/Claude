@@ -14,7 +14,7 @@ skills:
   - auto:{project}-patterns
 consumes: []
 produces:
-  - .workflows/{feature}/research/{scan-type}.md
+  - .workflows/{feature-id}/research/{scan-type}.md
 depends_on: []
 ---
 
@@ -151,7 +151,7 @@ Your motto: "Report what IS, not what should be."
 
 ## Output Format
 
-Write to `.workflows/{feature}/research/{scan-type}.md`:
+Write to `.workflows/{feature-id}/research/{scan-type}.md`:
 
 ```markdown
 # {Scan Type} Scan: {Feature Name}

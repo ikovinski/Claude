@@ -16,12 +16,12 @@ rules: [language, coding-style, database, messaging]
 skills:
   - auto:{project}-patterns
 consumes:
-  - .workflows/{feature}/research/research-report.md
+  - .workflows/{feature-id}/research/research-report.md
 produces:
-  - .workflows/{feature}/design/architecture.md
-  - .workflows/{feature}/design/diagrams.md
-  - .workflows/{feature}/design/adr/*.md
-  - .workflows/{feature}/design/api-contracts.md
+  - .workflows/{feature-id}/design/architecture.md
+  - .workflows/{feature-id}/design/diagrams.md
+  - .workflows/{feature-id}/design/adr/*.md
+  - .workflows/{feature-id}/design/api-contracts.md
 depends_on: [research-lead]
 ---
 
@@ -57,8 +57,8 @@ mcp__context7__query-docs(libraryId: "...", topic: "messenger component")
 
 ### Input
 
-- `.workflows/{feature}/research/research-report.md` — фінальний Research Report
-- `.workflows/{feature}/research/*-scan.md` — raw scans (за потребою)
+- `.workflows/{feature-id}/research/research-report.md` — фінальний Research Report
+- `.workflows/{feature-id}/research/*-scan.md` — raw scans (за потребою)
 
 ### Process
 
@@ -237,7 +237,7 @@ flowchart LR
 
 > **Note:** Якщо в проєкті є template skills (design-template, adr-template, api-contracts-template), використовуй їх замість форматів нижче. Формати нижче — fallback.
 
-### `.workflows/{feature}/design/diagrams.md`
+### `.workflows/{feature-id}/design/diagrams.md`
 
 ```markdown
 # Diagrams: {Feature Name}
@@ -273,7 +273,7 @@ sequenceDiagram
 ‎```
 ```
 
-### `.workflows/{feature}/design/architecture.md`
+### `.workflows/{feature-id}/design/architecture.md`
 
 ```markdown
 # Architecture Design: {Feature Name}
@@ -323,7 +323,7 @@ Diagrams: see [diagrams.md](diagrams.md)
 | {question} | resolved / open | {answer or "needs discussion"} |
 ```
 
-### `.workflows/{feature}/design/adr/001-{slug}.md`
+### `.workflows/{feature-id}/design/adr/001-{slug}.md`
 
 Один файл на одне рішення. Slug — kebab-case назва рішення.
 

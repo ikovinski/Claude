@@ -26,6 +26,7 @@ ai-agents-system/
 | `/implement` | Implement Lead + Writer + Reviewers + Gate | Execute one implementation phase |
 | `/docs-suite` | Team Lead + 4 agents | Full documentation suite |
 | `/pr` | Direct command | Create PR with design references |
+| `/system-profile` | System Profiler | Integration Profile — business-technical registry of integrations |
 | `/sentry-triage` | Sentry Triager | Collect & categorize Sentry issues into tasks |
 | `/skill-from-git` | -- | Extract project skill from git history |
 | `/ai-debug` | -- | System status and prompt analysis |
@@ -57,6 +58,7 @@ ai-agents-system/
 | Architect Collector | `agents/documentation/architect-collector.md` | Architecture analysis, diagrams (Mermaid, C4) |
 | Swagger Collector | `agents/documentation/swagger-collector.md` | Generate OpenAPI spec from code |
 | Technical Writer | `agents/documentation/technical-writer.md` | Feature articles, Swagger enrichment |
+| System Profiler | `agents/documentation/system-profiler.md` | Integration Profile — use cases, actors, data flows, OQ, Issues |
 
 ## How It Works
 
@@ -111,12 +113,14 @@ Rules are loaded by agents via `rules:` metadata field. Each agent declares whic
 
 ## Contexts
 
-| Context | File | Purpose |
-|---------|------|---------|
-| Development | `contexts/dev.md` | Red flags to pause for, priorities, quick checklist |
-| Planning | `contexts/planning.md` | Decomposition, strategy, vertical slicing |
-| Research | `contexts/research.md` | Exploration, understanding, facts only |
-| Review | `contexts/review.md` | Quality, security, find issues |
+Contexts are mode-specific priorities and guardrails injected into agent spawn prompts via `[MODE CONTEXT]` section.
+
+| Context | File | Loaded by | Injected into |
+|---------|------|-----------|---------------|
+| Development | `contexts/dev.md` | `/implement` | Code Writer |
+| Planning | `contexts/planning.md` | `/plan` | Phase Planner (self) |
+| Research | `contexts/research.md` | `/research` | Research Lead (self) + scanners |
+| Review | `contexts/review.md` | `/implement` | Security, Quality, Design Reviewers |
 
 ## Scenarios
 

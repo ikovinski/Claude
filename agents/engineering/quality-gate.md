@@ -14,7 +14,7 @@ skills:
   - auto:{project}-patterns
 consumes: []
 produces:
-  - .workflows/{feature}/implement/phase-{N}-quality-gate-report.md
+  - .workflows/{feature-id}/implement/phase-{N}-quality-gate-report.md
 depends_on: [security-reviewer, quality-reviewer, design-reviewer]
 ---
 
@@ -162,7 +162,7 @@ mcp__sentry__get_issue_details(issue_id: "{original-issue-id}")
 ## Info
 | Property | Value |
 |----------|-------|
-| Feature | {feature-name} |
+| Feature | {feature-id} |
 | Phase | {N} |
 | Technology | {PHP/Symfony / Node/JS / Go} |
 | Timestamp | {datetime} |

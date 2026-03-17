@@ -19,10 +19,10 @@ Meta-command that guides through the full feature development flow. Tracks state
 
 ```bash
 /feature "Add refund functionality to payments"              # Start new feature
-/feature {feature-name} --status                              # Check current state
-/feature {feature-name} --resume                              # Continue from last phase
-/feature {feature-name} --type bug --sentry PROJ-123          # Bug fix flow
-/feature --from docs/tasks/task-1-amqp-transport/issue.md "Fix AMQP transport errors"  # From sentry-triage
+/feature {feature-id} --status                              # Check current state
+/feature {feature-id} --resume                              # Continue from last phase
+/feature {feature-id} --type bug --sentry PROJ-123          # Bug fix flow
+/feature --from docs/tasks/BODYFIT-9H9-amqp-transport/issue.md "Fix AMQP transport errors"  # From sentry-triage
 ```
 
 ## How It Works
@@ -41,7 +41,7 @@ When started with `--from {path-to-issue.md}`:
 1. Read the issue.md file
 2. Extract Sentry issue IDs from the Issues table
 3. Auto-set `--type bug` and `--sentry {PRIMARY-ISSUE-ID}`
-4. Copy issue.md content into `.workflows/{feature}/research/sentry-context.md` as pre-research input
+4. Copy issue.md content into `.workflows/{feature-id}/research/sentry-context.md` as pre-research input
 5. Continue with normal flow (Research phase will use this context)
 
 ## Execution
@@ -226,7 +226,7 @@ This task is too small for a full design/plan cycle. Suggested fast track:
 - Implement with lightweight review
 
 **Next step:**
-/implement {feature-name} --phase 1 --reviewers quality
+/implement {feature-id} --phase 1 --reviewers quality
 
 Override: reply "full flow" to proceed with Design → Plan → Implement as usual.
 ```
@@ -247,7 +247,7 @@ Suggested optimizations:
 - Full review in Implement phase
 
 **Next step:**
-/design {feature-name} --depth light --skip-challenge
+/design {feature-id} --depth light --skip-challenge
 
 Override: reply "full design" for standard depth with Devil's Advocate challenge.
 ```
@@ -274,7 +274,7 @@ For common flows:
 /feature "Internal refactoring" --skip-docs
 
 # From sentry-triage output
-/feature --from docs/tasks/task-1-amqp-transport/issue.md "Fix AMQP transport errors"
+/feature --from docs/tasks/BODYFIT-9H9-amqp-transport/issue.md "Fix AMQP transport errors"
 # → Auto-detects: --type bug --sentry {primary issue ID from file}
 ```
 

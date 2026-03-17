@@ -17,19 +17,19 @@ Creates a Pull Request with a structured description built from workflow artifac
 ## Usage
 
 ```bash
-/pr {feature-name}                              # Create PR to main/master
-/pr {feature-name} --base develop               # Target branch
-/pr {feature-name} --draft                       # Draft PR
-/pr {feature-name} --reviewers @user1,@user2     # Assign reviewers
+/pr {feature-id}                              # Create PR to main/master
+/pr {feature-id} --base develop               # Target branch
+/pr {feature-id} --draft                       # Draft PR
+/pr {feature-id} --reviewers @user1,@user2     # Assign reviewers
 ```
 
 ## Prerequisites
 
 Implementation phase completed:
 ```
-.workflows/{feature-name}/design/adr/*.md             — design context
-.workflows/{feature-name}/design/test-strategy.md     — test plan source
-.workflows/{feature-name}/implement/                  — review reports
+.workflows/{feature-id}/design/adr/*.md             — design context
+.workflows/{feature-id}/design/test-strategy.md     — test plan source
+.workflows/{feature-id}/implement/                  — review reports
 ```
 
 ## This Is a Direct Command
@@ -60,11 +60,11 @@ git branch -vv
 
 Read available artifacts to build PR description:
 
-1. `.workflows/{feature-name}/design/adr/*.md` → Summary and context
-2. `.workflows/{feature-name}/design/test-strategy.md` → Test plan
-3. `.workflows/{feature-name}/design/architecture.md` → Architecture changes summary
-4. `.workflows/{feature-name}/plan/overview.md` → Phases breakdown
-5. `.workflows/{feature-name}/implement/phase-*-report.md` → Quality checks results
+1. `.workflows/{feature-id}/design/adr/*.md` → Summary and context
+2. `.workflows/{feature-id}/design/test-strategy.md` → Test plan
+3. `.workflows/{feature-id}/design/architecture.md` → Architecture changes summary
+4. `.workflows/{feature-id}/plan/overview.md` → Phases breakdown
+5. `.workflows/{feature-id}/implement/phase-*-report.md` → Quality checks results
 
 ### Step 3: Build PR Description
 
@@ -102,11 +102,11 @@ Read available artifacts to build PR description:
 - [x] Linters: passed
 
 ## Design References
-- Research: `.workflows/{feature-name}/research/research-report.md`
-- Architecture: `.workflows/{feature-name}/design/architecture.md`
-- ADR: `.workflows/{feature-name}/design/adr/*.md`
-- Test Strategy: `.workflows/{feature-name}/design/test-strategy.md`
-- Plan: `.workflows/{feature-name}/plan/overview.md`
+- Research: `.workflows/{feature-id}/research/research-report.md`
+- Architecture: `.workflows/{feature-id}/design/architecture.md`
+- ADR: `.workflows/{feature-id}/design/adr/*.md`
+- Test Strategy: `.workflows/{feature-id}/design/test-strategy.md`
+- Plan: `.workflows/{feature-id}/plan/overview.md`
 ```
 
 ### Step 4: Create PR
@@ -145,7 +145,7 @@ If CI fails:
 ### Step 6: Report
 
 ```markdown
-## PR Created: {feature-name}
+## PR Created: {feature-id}
 
 **URL:** {pr-url}
 **Branch:** {branch} → {base}
@@ -176,5 +176,5 @@ If CI fails:
 
 ## Related
 
-- Previous phase: `/implement {feature-name}` or `/docs-suite`
+- Previous phase: `/implement {feature-id}` or `/docs-suite`
 - Full flow: `scenarios/delivery/feature-development.md`

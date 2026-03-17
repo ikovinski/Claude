@@ -28,26 +28,25 @@ Stoplight projects contain three types of content:
 
 ## Project Structure
 
+Base path: `docs/` — all documentation artifacts live here.
+
 ```
-project/
+docs/
 ├── toc.json                    # Custom sidebar navigation
-├── docs/
-│   ├── getting-started.md      # Getting started guide (most important page)
-│   ├── authentication.md       # Auth guide
-│   ├── errors.md               # Error handling guide
-│   ├── pagination.md           # Pagination guide
-│   └── guides/
-│       ├── quickstart.md
-│       └── advanced-usage.md
+├── INDEX.md                    # Documentation entry point
+├── getting-started.md          # Getting started guide (most important page)
+├── features/                   # Feature articles
+│   ├── {feature-1}.md
+│   └── {feature-2}.md
 ├── reference/
-│   ├── openapi.yaml            # Main API spec
-│   └── models/
-│       └── shared-schemas.yaml
+│   └── openapi.yaml            # Enriched OpenAPI spec
 └── assets/
     └── images/
 ```
 
 ## toc.json — Sidebar Navigation
+
+Located at `docs/toc.json`. URIs are relative to `docs/`.
 
 ```json
 {
@@ -59,12 +58,7 @@ project/
     {
       "type": "item",
       "title": "Introduction",
-      "uri": "docs/getting-started.md"
-    },
-    {
-      "type": "item",
-      "title": "Authentication",
-      "uri": "docs/authentication.md"
+      "uri": "getting-started.md"
     },
     {
       "type": "divider",
@@ -77,17 +71,12 @@ project/
     },
     {
       "type": "group",
-      "title": "Guides",
+      "title": "Features",
       "items": [
         {
           "type": "item",
-          "title": "Quickstart",
-          "uri": "docs/guides/quickstart.md"
-        },
-        {
-          "type": "item",
-          "title": "Advanced Usage",
-          "uri": "docs/guides/advanced-usage.md"
+          "title": "{Feature Name}",
+          "uri": "features/{feature-slug}.md"
         }
       ]
     }
@@ -573,9 +562,9 @@ When asked to write Stoplight-compatible documentation:
    - Use `$ref` for reusable components
    - Add `tags` for sidebar organization
 4. **For project structure:**
-   - Create toc.json for custom navigation
-   - Organize files: docs/ for articles, reference/ for specs
-   - Getting Started guide is always the first page
+   - Create `docs/toc.json` for custom navigation
+   - Articles in `docs/features/`, OpenAPI spec in `docs/reference/`
+   - Getting Started guide (`docs/getting-started.md`) is always the first page
 5. **Review checklist:**
    - [ ] All paths use kebab-case plural nouns
    - [ ] All params use camelCase

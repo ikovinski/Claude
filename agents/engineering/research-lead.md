@@ -17,7 +17,7 @@ skills:
   - auto:{project}-patterns
 consumes: []
 produces:
-  - .workflows/{feature}/research/research-report.md
+  - .workflows/{feature-id}/research/research-report.md
 depends_on: []
 ---
 
@@ -98,7 +98,7 @@ Your motto: "Understand before you change."
 
 **Small** — Lead виконує scan самостійно:
 1. Скануй файли в scope як codebase-researcher (дотримуйся його Output Format)
-2. Пиши результати напряму в `.workflows/{feature}/research/research-report.md`
+2. Пиши результати напряму в `.workflows/{feature-id}/research/research-report.md`
 3. Пропусти Steps 4-5, перейди до Step 7 (Gate)
 
 **Medium/Large** — продовжуй до Step 4.
@@ -138,7 +138,7 @@ Recent changes: {нещодавні коміти в scope з git log, або "no
 [INSTRUCTIONS]
 Scan the specified scope and report facts only.
 If you discover a critical dependency outside your scope, send a SCOPE_EXTENSION_REQUEST back to Lead (see below).
-Write output to: .workflows/{feature}/research/{scan-type}.md
+Write output to: .workflows/{feature-id}/research/{scan-type}.md
 ```
 
 Кожен scanner повинен отримати **звужений scope** — конкретні директорії, а не весь `src/`.
@@ -225,7 +225,7 @@ Detect project type at the start:
 
 ## Output Format
 
-Write to `.workflows/{feature}/research/research-report.md`:
+Write to `.workflows/{feature-id}/research/research-report.md`:
 
 ```markdown
 # Research Report: {Feature/Bug Name}

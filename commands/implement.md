@@ -8,6 +8,9 @@ triggers:
   - "реалізуй фазу"
 skills:
   - auto:{project}-patterns
+context:
+  writer: contexts/dev.md
+  reviewers: contexts/review.md
 requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 ---
 
@@ -18,13 +21,13 @@ Orchestrates Implementation Lead + Code Writer + Code Reviewers + Quality Gate a
 ## Usage
 
 ```bash
-/implement {feature-name} --phase 1                              # Implement phase 1
-/implement {feature-name} --phase 2 --reviewers security,quality  # Specific reviewers only
-/implement {feature-name} --phase 1 --skip-review                 # Skip code review (hotfix)
-/implement {feature-name} --phase 1 --auto-fix                    # Auto-apply reviewer fixes
+/implement {feature-id} --phase 1                              # Implement phase 1
+/implement {feature-id} --phase 2 --reviewers security,quality  # Specific reviewers only
+/implement {feature-id} --phase 1 --skip-review                 # Skip code review (hotfix)
+/implement {feature-id} --phase 1 --auto-fix                    # Auto-apply reviewer fixes
 ```
 
-`{feature-name}` must match previous phases — reads from `.workflows/{feature-name}/`.
+`{feature-id}` must match previous phases — reads from `.workflows/{feature-id}/`.
 
 ## Prerequisites
 
@@ -35,8 +38,14 @@ Orchestrates Implementation Lead + Code Writer + Code Reviewers + Quality Gate a
 
 2. Phase 3 (Plan) completed:
 ```
-.workflows/{feature-name}/plan/phase-{N}.md  — must exist for the requested phase
+.workflows/{feature-id}/plan/phase-{N}.md  — must exist for the requested phase
 ```
+
+## Context
+
+Load two contexts for different roles:
+- **Writer**: `contexts/dev.md` — inject as `[MODE CONTEXT]` into Code Writer spawn prompt. Priorities: working code → tests → clean code. Red flags: changing > 3 files for simple change, no tests, bypassing patterns.
+- **Reviewers**: `contexts/review.md` — inject as `[MODE CONTEXT]` into Security Reviewer, Quality Reviewer, Design Reviewer spawn prompts. Priorities: security → correctness → reliability → maintainability.
 
 ## You Are the Implementation Lead
 
@@ -52,7 +61,7 @@ When this command runs, YOU (Claude) are the **Implementation Lead orchestrator*
 
 ### Step 0: Validate Prerequisites, Load Project Skill & Complexity Check
 
-1. Check `.workflows/{feature-name}/plan/phase-{N}.md` exists
+1. Check `.workflows/{feature-id}/plan/phase-{N}.md` exists
 2. If missing — tell user to run `/plan` first
 3. **Load project skill (MANDATORY)** — determine `{project-name}` as basename of CWD (e.g. `/repo/wellness-backend` → `wellness-backend`). Check for `.claude/skills/{project-name}-patterns/SKILL.md` in the target project root.
    - **If NOT found** — warn the user: "⚠️ Project skill not found. Implementation without project patterns risks missing conventions (cache pools, logging, DI naming, exception patterns). Run `/skill-from-git` to generate, or confirm to proceed without it."
@@ -69,7 +78,7 @@ When this command runs, YOU (Claude) are the **Implementation Lead orchestrator*
      - Security reviewer: verify logging patterns, sensitive data handling per project standards
      - Design reviewer: verify implementation matches both design artifacts AND project patterns
 4. Read phase plan to understand scope
-5. Read `.workflows/{feature-name}/state.json` — check `complexity` field
+5. Read `.workflows/{feature-id}/state.json` — check `complexity` field
 
 **Complexity auto-defaults for reviewers** (applied when no explicit `--reviewers` or `--skip-review` flag):
 
@@ -89,8 +98,8 @@ Complexity: {value} — auto-selecting reviewers: {list}
 
 ```
 TeamCreate:
-  team_name: "implement-{feature-name}-phase-{N}"
-  description: "Implementation of {feature-name} phase {N}"
+  team_name: "implement-{feature-id}-phase-{N}"
+  description: "Implementation of {feature-id} phase {N}"
 ```
 
 ### Step 2: Spawn Teammates
@@ -129,14 +138,14 @@ For each task, send to writer via `SendMessage`:
 ```
 [IMPLEMENTATION TASK {n}/{total}]
 Phase: {N}
-Feature: {feature-name}
+Feature: {feature-id}
 
 [FILES TO CREATE/MODIFY]
 - {path} — {description}
 
 [CONTEXT]
-- Architecture: .workflows/{feature-name}/design/architecture.md
-- Phase plan: .workflows/{feature-name}/plan/phase-{N}.md
+- Architecture: .workflows/{feature-id}/design/architecture.md
+- Phase plan: .workflows/{feature-id}/plan/phase-{N}.md
 
 [IMPLEMENTATION NOTES]
 {from phase-{N}.md Implementation Notes section}
@@ -180,16 +189,16 @@ Spawn reviewers. Each reviewer is a dedicated agent — send context via `SendMe
 **To reviewer-security (`security-reviewer.md`):**
 ```
 [SECURITY REVIEW]
-Feature: {feature-name}, Phase: {N}
+Feature: {feature-id}, Phase: {N}
 
 [DESIGN SECURITY CONTEXT]
-- Read .workflows/{feature-name}/design/security-review.md (if exists) for Phase 2 security concerns
+- Read .workflows/{feature-id}/design/security-review.md (if exists) for Phase 2 security concerns
 
 [FILES TO REVIEW]
 {list all new/modified files from Phase 1}
 
 [OUTPUT]
-Write to: .workflows/{feature-name}/implement/phase-{N}-security-review.md
+Write to: .workflows/{feature-id}/implement/phase-{N}-security-review.md
 ```
 
 The agent has its own 4-phase workflow (automated scan, OWASP analysis, code pattern review, audit checklist) and references `owasp-top-10` and `security-audit-checklist` skills.
@@ -197,13 +206,13 @@ The agent has its own 4-phase workflow (automated scan, OWASP analysis, code pat
 **To reviewer-quality (`quality-reviewer.md`):**
 ```
 [QUALITY REVIEW]
-Feature: {feature-name}, Phase: {N}
+Feature: {feature-id}, Phase: {N}
 
 [FILES TO REVIEW]
 {list all new/modified files}
 
 [OUTPUT]
-Write to: .workflows/{feature-name}/implement/phase-{N}-quality-review.md
+Write to: .workflows/{feature-id}/implement/phase-{N}-quality-review.md
 ```
 
 The agent runs complexity analysis, SOLID checks, domain model quality, layer compliance, and error handling review.
@@ -211,19 +220,19 @@ The agent runs complexity analysis, SOLID checks, domain model quality, layer co
 **To reviewer-design (`design-reviewer.md`):**
 ```
 [DESIGN COMPLIANCE REVIEW]
-Feature: {feature-name}, Phase: {N}
+Feature: {feature-id}, Phase: {N}
 
 [DESIGN ARTIFACTS]
-- .workflows/{feature-name}/design/architecture.md
-- .workflows/{feature-name}/design/diagrams.md
-- .workflows/{feature-name}/design/api-contracts.md
-- .workflows/{feature-name}/design/test-strategy.md
+- .workflows/{feature-id}/design/architecture.md
+- .workflows/{feature-id}/design/diagrams.md
+- .workflows/{feature-id}/design/api-contracts.md
+- .workflows/{feature-id}/design/test-strategy.md
 
 [FILES TO REVIEW]
 {list all new/modified files}
 
 [OUTPUT]
-Write to: .workflows/{feature-name}/implement/phase-{N}-design-review.md
+Write to: .workflows/{feature-id}/implement/phase-{N}-design-review.md
 ```
 
 The agent compares implementation against design artifacts: component existence, data flow, API contracts, test strategy, and ADR compliance.
@@ -259,13 +268,13 @@ After reviews pass (or are skipped), run Quality Gate:
 Send to gate teammate:
 ```
 [QUALITY GATE]
-Feature: {feature-name}
+Feature: {feature-id}
 Phase: {N}
 Technology: {detected}
 Files changed: {list}
 
 Run all checks and write report to:
-.workflows/{feature-name}/implement/phase-{N}-quality-gate-report.md
+.workflows/{feature-id}/implement/phase-{N}-quality-gate-report.md
 ```
 
 If gate FAILS:
@@ -278,10 +287,10 @@ If gate FAILS:
 If during any phase the writer or lead discovers that the plan is **fundamentally unworkable** (not a simple fix, but a structural problem):
 
 1. **Stop implementation** — do not continue with broken assumptions
-2. **Create replan file**: `.workflows/{feature-name}/plan/replan-needed.md`
+2. **Create replan file**: `.workflows/{feature-id}/plan/replan-needed.md`
 
 ```markdown
-# Replan Needed: {feature-name}
+# Replan Needed: {feature-id}
 
 ## Blocked Phase
 Phase {N}: {title}
@@ -300,7 +309,7 @@ Phase {N}: {title}
 {What the planner should consider when re-planning}
 ```
 
-3. **Report to user**: "Implementation blocked — plan needs revision. Created replan-needed.md. Run `/plan {feature-name}` to re-plan."
+3. **Report to user**: "Implementation blocked — plan needs revision. Created replan-needed.md. Run `/plan {feature-id}` to re-plan."
 4. **Cleanup**: send shutdown to teammates, call TeamDelete
 
 This is for **structural blockers only** — not for code bugs or review findings. Examples:
@@ -313,7 +322,7 @@ This is for **structural blockers only** — not for code bugs or review finding
 
 ### Phase 6: Cleanup & Report
 
-1. Generate phase report: `.workflows/{feature-name}/implement/phase-{N}-report.md`
+1. Generate phase report: `.workflows/{feature-id}/implement/phase-{N}-report.md`
    (Follow output format from `agents/engineering/implement-lead.md`)
 
 2. Send shutdown to all teammates
@@ -321,7 +330,7 @@ This is for **structural blockers only** — not for code bugs or review finding
 4. Report to user:
 
 ```markdown
-## Implementation Complete: {feature-name} Phase {N}
+## Implementation Complete: {feature-id} Phase {N}
 
 ### Status: COMPLETE / FAILED
 
@@ -349,7 +358,7 @@ This is for **structural blockers only** — not for code bugs or review finding
 
 ### Next Step
 Continue with next phase:
-/implement {feature-name} --phase {N+1}
+/implement {feature-id} --phase {N+1}
 
 Or if all phases complete:
 /docs-suite
@@ -389,6 +398,6 @@ Use `--reviewers` to select specific ones:
 
 - Agent files: `agents/engineering/implement-lead.md`, `agents/engineering/code-writer.md`, `agents/engineering/security-reviewer.md`, `agents/engineering/quality-reviewer.md`, `agents/engineering/design-reviewer.md`, `agents/engineering/quality-gate.md`
 - Security skills: `skills/owasp-top-10/SKILL.md`, `skills/security-audit-checklist/SKILL.md`
-- Previous phase: `/plan {feature-name}` (Phase 3)
-- Next phase: `/docs-suite` (Phase 5) or `/pr {feature-name}` (Phase 6)
+- Previous phase: `/plan {feature-id}` (Phase 3)
+- Next phase: `/docs-suite` (Phase 5) or `/pr {feature-id}` (Phase 6)
 - Full flow: `scenarios/delivery/feature-development.md`
