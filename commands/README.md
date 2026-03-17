@@ -32,6 +32,7 @@ Slash-команди для Claude Code CLI. Швидкий виклик workflo
 | `/docs-suite` | Team (4 agents) | `docs/` | Повна документація (technical, architecture, OpenAPI, articles) |
 | `/pr` | Direct command | GitHub PR | Створення PR з артефактами та тест-планом |
 | `/sentry-triage` | Sentry Triager | `docs/tasks/` | Збір і категоризація issues з Sentry |
+| `/system-profile` | System Profiler | `docs/` | Integration Profile — реєстр інтеграцій |
 | `/skill-from-git` | — | `.claude/skills/` | Генерація project skill з git history |
 | `/ai-debug` | — | Chat | Статус системи, аналіз промптів |
 
