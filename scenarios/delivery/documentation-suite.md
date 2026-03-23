@@ -169,7 +169,11 @@ This is a **scenario phase**, not an agent responsibility. Each agent reviews ot
    - Verify `docs/toc.json` exists and references all generated files
    - Verify enriched OpenAPI in `docs/reference/openapi.yaml` (Stoplight layout)
    - Validate SMD syntax in feature articles (callouts use `<!-- theme: -->`, not bold text)
-4. Produce final statistics report
+4. **Create/update `docs/.artifacts/.meta.json`** — metadata for incremental updates:
+   - Current HEAD SHA, timestamp, mode (full/update)
+   - SHA256 hashes of all generated artifacts
+   - Feature mapping: source directories → feature articles
+5. Produce final statistics report
 
 **Output**: Final documentation suite ready for use
 
@@ -249,6 +253,65 @@ Phase 5 (FINALIZE):
 - **Between teammates**: Не використовується — вся координація через Team Lead
 - **Shared task list**: Основний механізм координації (pending → in_progress → completed)
 - **Artifacts on disk**: `docs/.artifacts/` — спільна файлова система для передачі артефактів
+
+---
+
+## Update Mode (`--update`)
+
+When documentation already exists from a previous full run, `--update` performs an incremental update instead of regenerating everything.
+
+### Prerequisites
+- `docs/.artifacts/.meta.json` must exist from a previous run
+- Previous `last_sha` must be in git history
+
+### Update Flow
+
+```
+Phase 0: DETECT (Team Lead only)
+  Read .meta.json → get last_sha
+  git diff {last_sha}..HEAD → changed source files
+  Map changes → affected features via feature_mapping
+  Check for manual edits (sha256 mismatch)
+  Output scope summary
+  If no changes → EXIT
+
+Phase 1*: COLLECT (scoped)
+  Scanner scans only changed directories
+  Updates existing report, preserves unchanged sections
+
+Phase 2*: ANALYZE (scoped, parallel)
+  Architect/API-spec update only affected sections
+  Skip agents whose artifacts are unaffected
+
+Phase 3*: WRITE (scoped)
+  Writer updates only affected feature articles
+  Unaffected articles are not touched
+
+Phase 4: USER CONFIRMATION (replaces cross-review)
+  Show git diff docs/ to user
+  User: approve / reject / edit
+
+Phase 5: FINALIZE
+  Update .meta.json with new SHA and hashes
+```
+
+### Key Differences from Full Mode
+
+| Aspect | Full Mode | Update Mode |
+|--------|-----------|-------------|
+| Phase 0 | Skipped | Change detection + scope analysis |
+| Scanner scope | Full project | Changed directories only |
+| Agent spawn | All 4 always | Only affected agents |
+| Writer scope | All feature articles | Only affected articles |
+| Phase 4 | Cross-review (5 pairs) | User confirmation (git diff) |
+| Manual edits | Overwritten | Preserved in unaffected files, warned in affected |
+
+### Edge Cases
+- Missing `.meta.json` → fallback to full mode
+- `last_sha` not in git → fallback to full mode
+- Format flag changed → fallback to full mode
+- Manual edits in affected files → warn user, offer skip
+- >60% features affected → suggest `--full` instead
 
 ---
 
