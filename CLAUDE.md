@@ -24,7 +24,7 @@ ai-agents-system/
 | `/design` | Design Architect + Test Strategist + Devil's Advocate | Architecture decisions, ADR, test strategy, design challenge |
 | `/plan` | Phase Planner | Decompose design into implementation phases |
 | `/implement` | Implement Lead + Writer + Reviewers + Gate | Execute one implementation phase |
-| `/docs-suite` | Team Lead + 4 agents | Full documentation suite |
+| `/docs-suite` | Team Lead + 4 agents | Full documentation suite (`--update` incremental, `--full` force overwrite) |
 | `/pr` | Direct command | Create PR with design references |
 | `/system-profile` | System Profiler | Integration Profile — business-technical registry of integrations |
 | `/sentry-triage` | Sentry Triager | Collect & categorize Sentry issues into tasks |
