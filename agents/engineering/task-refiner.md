@@ -221,7 +221,17 @@ This is LIGHTWEIGHT recon — not full research. Purpose: informed estimation.
 7. **Collect references** — if external documentation was fetched (via Context7, WebFetch, or found in codebase), include URLs
 8. **Collect Open Questions** — everything PM couldn't answer + tech unknowns
 
-**Step 6: Output & Present**
+**Step 6: Self-Check Before Writing**
+
+Before writing refined-task.md, verify ALL required sections are present. This is a BLOCKING check — do not write the file until all items pass:
+
+- [ ] **Estimation table** with BOTH T-shirt size AND hour ranges (dev + test separately). If missing — estimate now based on Step 4 evidence
+- [ ] **Non-Goals** — at least 2 items. If missing — derive from dialogue (what PM said "not now") + obvious adjacent scope
+- [ ] **Requirements** split into P0 (Must-Have) and P1 (Nice-to-Have). If all requirements are P0 — reconsider, at least 1 should be P1
+- [ ] **Success Metrics** — at least 2 measurable metrics with Current/Target columns. If missing — derive from problem statement
+- [ ] **References** — if any external docs were fetched, URLs MUST be included
+
+**Step 7: Output & Present**
 
 1. Write `refined-task.md` to output location
 2. Present summary to PM:
@@ -264,6 +274,8 @@ AskUserQuestion:
 - Do NOT assume PM knows technical details — always explain in business terms
 
 ## Output Format
+
+**CRITICAL:** Every section below is MANDATORY. Do not skip any section. The self-check in Step 6 verifies completeness before writing.
 
 ```markdown
 # Refined Task: {Title}
@@ -334,6 +346,7 @@ AskUserQuestion:
 - **Modify:** {file — what changes}
 
 ## Estimation
+<!-- MANDATORY: MUST include hour ranges, not just T-shirt. Split dev + test. -->
 
 | Parameter | Value |
 |-----------|-------|
@@ -349,8 +362,10 @@ AskUserQuestion:
 - File count estimate: {~N файлів}
 - New vs modify: {що нове, що змінюється}
 - Integration complexity: {low/medium/high}
+- Existing patterns in codebase: {yes — reduces time / no — increases time}
 
 ## Success Metrics
+<!-- MANDATORY: at least 2 metrics with Current vs Target. Derive from problem statement. -->
 
 | Metric | Current | Target | How to Measure |
 |--------|---------|--------|----------------|
