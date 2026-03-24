@@ -1,7 +1,7 @@
 ---
 name: refine
 description: Task refinement — приймає нечітку задачу від PM, збирає контекст з кодової бази та артефактів, задає уточнюючі питання, генерує structured task document з estimation та acceptance criteria.
-allowed_tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "mcp__sentry__list_issues", "mcp__sentry__get_issue_details", "mcp__context7__resolve-library-id", "mcp__context7__query-docs"]
+allowed_tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "AskUserQuestion", "mcp__sentry__list_issues", "mcp__sentry__get_issue_details", "mcp__context7__resolve-library-id", "mcp__context7__query-docs"]
 triggers:
   - "refine"
   - "уточни задачу"
@@ -87,91 +87,62 @@ PM's text is the starting point. Proceed to Step 1.
 
 ## Execution
 
-Follow the 6-step process defined in `agents/engineering/task-refiner.md`:
+Follow the 3-phase process defined in `agents/engineering/task-refiner.md`.
 
-### Step 1: Automatic Context Gathering
+PM бачить прогрес через фазові індикатори:
+```
+[1/3] 📋 Збираю контекст проекту...
+[2/3] 💬 Уточнюючі питання
+[3/3] ✅ Генерую refined task
+```
+
+### Phase [1/3] 📋 Збираю контекст проекту
 
 **Silent phase** — gather context without PM interaction:
 
-1. Read project documentation:
-   - `README.md`
-   - `docs/INDEX.md` or `docs/` directory listing
-   - `docs/system-profile.md` (if exists — integration registry)
+1. Read project documentation (`README.md`, `docs/`, `docs/system-profile.md`)
+2. Scan codebase structure (Glob/Grep by task keywords)
+3. Check prior artifacts (`.workflows/*/research/`, `.workflows/*/refinement/`)
+4. Sentry correlation (optional, if task mentions error/bug)
 
-2. Codebase structure:
-   ```
-   Glob: src/**/* or app/**/* (top-level structure)
-   Grep: keywords from PM's task description
-   ```
+After gathering, output brief summary of findings to PM.
 
-3. Prior artifacts:
-   - Check all `.workflows/*/research/research-report.md` for relevant prior analysis
-   - Check all `.workflows/*/refinement/refined-task.md` for similar refined tasks
+### Phase [2/3] 💬 Уточнюючі питання
 
-4. Sentry correlation (optional, if task mentions error/bug):
-   ```
-   mcp__sentry__list_issues(
-     query: "{relevant keywords}",
-     projectSlugOrId: "{project}",
-     sortBy: "freq"
-   )
-   ```
-   Only correlate — note issue IDs. Deep analysis is Research phase's job.
+Ask questions **one at a time** via `AskUserQuestion` tool.
 
-### Step 2: Initial Understanding
+**Обов'язковий формат:** кожне питання МУСИТЬ містити варіанти відповіді з коротким обґрунтуванням:
 
-Analyze PM's input:
-- What's **clear** (understood with confidence)
-- What's **ambiguous** (could mean multiple things)
-- What's **missing** (not mentioned but needed for good task description)
+```
+[2/3] 💬 Питання 1 з ~5
 
-Present first batch of 2-3 clarifying questions. Use task-refinement skill question templates.
+{Текст питання}
 
-### Step 3: Interactive Dialogue
-
-Conduct 1-3 rounds of questions:
+Варіанти:
+  а) {Опція} — {чому це важливо}
+  б) {Опція} — {чому це важливо}
+  в) {Опція} — {чому це важливо}
+  г) Інше — розкажіть своїми словами
+```
 
 | Rule | Value |
 |------|-------|
-| Questions per round | 2-3 max |
+| Questions per round | 2-3, кожне через AskUserQuestion |
 | Total rounds | 3 max |
-| Total questions | 9 max |
+| Total questions | ~9 max |
 | Language | Ukrainian, PM-friendly, no tech jargon |
 | "Не знаю" handling | Record as Open Question, move on |
+| Options | MANDATORY — кожне питання з варіантами |
 
-Between rounds — briefly confirm understanding.
+Between rounds — confirm understanding via AskUserQuestion (summary + "Все вірно? а) Так б) Потрібно виправити").
 
-### Step 4: Technical Context Discovery
+### Phase [3/3] ✅ Генерую refined task
 
-Based on refined understanding:
-1. Grep/Glob for affected components
-2. Check DB entities/models
-3. Check API routes/controllers
-4. Count approximate scope (files, components)
-
-### Step 5: Synthesize
-
-1. Choose story format (task-refinement skill → Format Selection Guide)
-2. Write 3-6 acceptance criteria
-3. Determine T-shirt size with evidence
-4. Flag risks
-5. Collect Open Questions
-
-### Step 6: Output
-
-1. Write `refined-task.md` to `.workflows/{feature-id}/refinement/`
-2. Present summary to PM
-3. Suggest next step:
-
-```markdown
-### Наступний крок
-
-Задача готова до передачі в розробку:
-/feature "{title}"
-
-Або, якщо потрібно спочатку технічне дослідження:
-/research "{title}"
-```
+1. **Tech Context Discovery** (silent) — Grep/Glob for affected components, DB/API impact
+2. **Synthesize** — choose story format, write AC, estimate T-shirt size, flag risks
+3. **Write** `refined-task.md` to `.workflows/{feature-id}/refinement/`
+4. **Present** summary to PM
+5. **Ask** PM for final action via AskUserQuestion (передати в розробку / уточнити / зберегти)
 
 ## Output Location
 
