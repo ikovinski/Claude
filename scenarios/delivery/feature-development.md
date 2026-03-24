@@ -11,6 +11,7 @@ triggers:
   - "Feature from scratch"
   - "Зроби фічу від початку до кінця"
 participants:
+  - Task Refiner (Phase 0 — optional)
   - Research Lead + Codebase Researcher (Phase 1)
   - Design Architect + Test Strategist + Devil's Advocate (Phase 2)
   - Phase Planner (Phase 3)
@@ -37,7 +38,7 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 
 ### Entry Points
 
-Задача може потрапити у flow двома шляхами:
+Задача може потрапити у flow трьома шляхами:
 
 1. **Пряма задача** — опис від людини (issue, feature request, bug report)
    ```bash
@@ -53,6 +54,16 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
    ```
 
    `issue.md` містить Sentry контекст (stacktrace, events, tags), що автоматично використовується в Phase 1 (Research) як вхідні дані.
+
+3. **Refined Task** — уточнена задача через `/refine` (Phase 0)
+   ```bash
+   /refine "додай експорт в PDF"
+   # → діалог з PM → генерує .workflows/{feature-id}/refinement/refined-task.md
+   # → потім:
+   /feature --from .workflows/{feature-id}/refinement/refined-task.md "Export to PDF"
+   ```
+
+   `refined-task.md` містить user stories, acceptance criteria, estimation та технічний контекст. Research фаза використовує ці дані для звуження scope та пропуску intake-питань.
 
 ### Feature ID Convention
 
@@ -71,18 +82,18 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 ## Process Flow
 
 ```
-Задача (issue / feature request / bug report)
+Задача (issue / feature request / bug report / нечіткий опис від PM)
     │
-    │   ┌─ OR ──────────────────────────────────────┐
-    │   │                                           │
-    │   │  /sentry-triage                           │
-    │   │    → docs/tasks/triage-report.md               │
-    │   │    → docs/tasks/{issue-short-id}-{slug}/issue.md│
-    │   │                                           │
-    │   │  Pick task → /feature --from issue.md     │
-    │   └───────────────────────────┬───────────────┘
-    │                               │
-    ▼                               ▼
+    │   ┌─ OR ──────────────────────────────────────┐   ┌─ OR ──────────────────────────────────────┐
+    │   │                                           │   │                                           │
+    │   │  /sentry-triage                           │   │  /refine (Phase 0 — optional)             │
+    │   │    → docs/tasks/triage-report.md          │   │    → діалог з PM                          │
+    │   │    → docs/tasks/{issue-short-id}/issue.md │   │    → .workflows/{id}/refinement/           │
+    │   │                                           │   │       refined-task.md                      │
+    │   │  Pick task → /feature --from issue.md     │   │    → /feature --from refined-task.md       │
+    │   └───────────────────────────┬───────────────┘   └───────────────────────────┬───────────────┘
+    │                               │                                               │
+    ▼                               ▼                                               ▼
 ┌─────────────────────────────────────────────────┐
 │  Phase 1: RESEARCH                /research     │
 │                                                 │
@@ -299,6 +310,11 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 ## Artifact Chain
 
 ```
+Phase 0 produces (optional — /refine):
+  .workflows/{feature-id}/refinement/
+    ├── refined-task.md              ◄── consumed by Phase 1 (Research — pre-context, skip intake)
+    └── source.md                    ◄── original input (if --from used)
+
 Phase 1 produces:
   .workflows/{feature-id}/research/
     ├── research-report.md          ◄── consumed by Phase 2, 3

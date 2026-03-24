@@ -42,10 +42,11 @@
 Повний цикл розробки від задачі до PR. Адаптивний за складністю.
 
 **Запуск:** `/feature "опис задачі"`
-**Ручний режим:** послідовно `/research` → `/design` → `/plan` → `/implement` → `/docs-suite` → `/pr`
+**Ручний режим:** послідовно `/refine` (optional) → `/research` → `/design` → `/plan` → `/implement` → `/docs-suite` → `/pr`
 
 | Фаза | Команда | Агенти | Артефакти |
 |------|---------|--------|-----------|
+| Refinement (optional) | `/refine` | Task Refiner | `.workflows/{id}/refinement/` |
 | Research | `/research` | Research Lead, Codebase Researcher | `.workflows/{id}/research/` |
 | Design | `/design` | Design Architect, Test Strategist, Devil's Advocate | `.workflows/{id}/design/` |
 | Plan | `/plan` | Phase Planner | `.workflows/{id}/plan/` |
@@ -128,6 +129,7 @@
 | Design Reviewer | `agents/engineering/design-reviewer.md` | Feature Development → Implement (large) |
 | Quality Gate | `agents/engineering/quality-gate.md` | Feature Development → Implement |
 | Sentry Triager | `agents/engineering/sentry-triager.md` | Sentry Triage |
+| Task Refiner | `agents/engineering/task-refiner.md` | Feature Development → Refinement (optional) |
 
 ### Documentation
 
@@ -150,6 +152,7 @@
 | Команда | Опис | Агенти |
 |---------|------|--------|
 | `/feature` | Мета-навігатор повного циклу | — |
+| `/refine` | Уточнення задачі від PM через діалог (optional Phase 0) | Task Refiner |
 | `/research` | AS-IS аналіз кодової бази | Research Lead + Codebase Researcher |
 | `/design` | Архітектура, ADR, тест-стратегія | Design Architect + Test Strategist + Devil's Advocate |
 | `/plan` | Декомпозиція дизайну на фази | Phase Planner |
