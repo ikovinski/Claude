@@ -27,6 +27,7 @@ ai-agents-system/
 | `/docs-suite` | Team Lead + 4 agents | Full documentation suite |
 | `/pr` | Direct command | Create PR with design references |
 | `/sentry-triage` | Sentry Triager | Collect & categorize Sentry issues into tasks |
+| `/qa-checklist` | QA Engineer | Generate QA checklist from feature description (PDF, images, URL, text) |
 | `/skill-from-git` | -- | Extract project skill from git history |
 | `/ai-debug` | -- | System status and prompt analysis |
 
@@ -49,6 +50,7 @@ ai-agents-system/
 | Quality Gate | `agents/engineering/quality-gate.md` | Run build, tests, linters, Sentry check |
 | Devil's Advocate | `agents/engineering/devils-advocate.md` | Challenge architecture decisions, find weak assumptions in ADR |
 | Sentry Triager | `agents/engineering/sentry-triager.md` | Collect, categorize, group Sentry issues into tasks |
+| QA Engineer | `agents/engineering/qa-engineer.md` | Generate QA checklist from feature description (any format) |
 
 ### Documentation
 | Agent | File | Purpose |
@@ -108,15 +110,18 @@ Rules are loaded by agents via `rules:` metadata field. Each agent declares whic
 | Testing | `rules/testing.md` | code-writer, quality-reviewer, test-strategist, tdd-guide — coverage targets, test patterns |
 | Database | `rules/database.md` | design-architect — Doctrine, N+1, migrations |
 | Messaging | `rules/messaging.md` | design-architect — RabbitMQ/Kafka, idempotency |
+| Checklist | `rules/qa-checklist-selection.md` | qa-engineer — pre-defined checklists applied |
 
 ## Contexts
 
-| Context | File | Purpose |
-|---------|------|---------|
-| Development | `contexts/dev.md` | Red flags to pause for, priorities, quick checklist |
-| Planning | `contexts/planning.md` | Decomposition, strategy, vertical slicing |
-| Research | `contexts/research.md` | Exploration, understanding, facts only |
-| Review | `contexts/review.md` | Quality, security, find issues |
+Contexts are mode-specific priorities and guardrails injected into agent spawn prompts via `[MODE CONTEXT]` section.
+
+| Context | File | Loaded by | Injected into |
+|---------|------|-----------|---------------|
+| Development | `contexts/dev.md` | `/implement` | Code Writer |
+| Planning | `contexts/planning.md` | `/plan` | Phase Planner (self) |
+| Research | `contexts/research.md` | `/research` | Research Lead (self) + scanners |
+| Review | `contexts/review.md` | `/implement` | Security, Quality, Design Reviewers |
 
 ## Scenarios
 
