@@ -58,7 +58,7 @@
 Проектування рішення.
 
 ```bash
-/design {feature-name}
+/design {feature-id}
 ```
 
 Читає `research/research-report.md` і створює архітектуру + тест-стратегію.
@@ -72,9 +72,9 @@
 Декомпозиція дизайну на фази імплементації.
 
 ```bash
-/plan {feature-name}
-/plan {feature-name} --max-phases 5
-/plan {feature-name} --granularity fine
+/plan {feature-id}
+/plan {feature-id} --max-phases 5
+/plan {feature-id} --granularity fine
 ```
 
 | Параметр | Опис |
@@ -91,10 +91,10 @@
 Імплементація однієї фази з плану.
 
 ```bash
-/implement {feature-name} --phase 1
-/implement {feature-name} --phase 2 --reviewers security,quality
-/implement {feature-name} --phase 1 --skip-review
-/implement {feature-name} --phase 1 --auto-fix
+/implement {feature-id} --phase 1
+/implement {feature-id} --phase 2 --reviewers security,quality
+/implement {feature-id} --phase 1 --skip-review
+/implement {feature-id} --phase 1 --auto-fix
 ```
 
 | Параметр | Опис |
@@ -131,10 +131,10 @@ Writer (послідовно) → Reviewers (паралельно) → Fix (як
 Створення Pull Request через `gh` CLI.
 
 ```bash
-/pr {feature-name}
-/pr {feature-name} --draft
-/pr {feature-name} --base develop
-/pr {feature-name} --reviewers @user1,@user2
+/pr {feature-id}
+/pr {feature-id} --draft
+/pr {feature-id} --base develop
+/pr {feature-id} --reviewers @user1,@user2
 ```
 
 Пряма команда без агентів. Збирає PR description з workflow артефактів.
@@ -272,7 +272,7 @@ Slash-команди мають бути у `~/.claude/commands/` або `.claud
 
 ### "/implement каже що план не знайдений"
 
-Спочатку виконайте `/plan {feature-name}`. Файл `.workflows/{feature}/plan/phase-{N}.md` повинен існувати.
+Спочатку виконайте `/plan {feature-id}`. Файл `.workflows/{feature-id}/plan/phase-{N}.md` повинен існувати.
 
 ### "Quality Gate падає на тестах"
 

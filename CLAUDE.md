@@ -1,21 +1,86 @@
 # AI Agents System
 
-Slash commands for Claude Code CLI. Each command invokes an agent with defined biases and output format.
+Система AI-агентів для Claude Code CLI. Мета — зробити розробку точнішою, прогнозованою,
+і дозволити одному розробнику робити більше, ніж можливо самотужки.
 
-## Structure
+Кожна задача проходить через визначений флоу з чіткими фазами, артефактами та human checkpoints.
 
-```
-ai-agents-system/
-├── commands/         # Slash commands (main interface)
-├── agents/           # Agent personas referenced by commands
-├── rules/            # Domain-specific rules (coding-style, security, testing, database, messaging)
-├── contexts/         # Development mode contexts (dev.md — red flags, priorities)
-├── scenarios/        # Multi-agent workflows referenced by commands
-├── skills/           # Reusable skills (templates, project patterns)
-└── templates/        # Templates for creating new agents, scenarios, skills
-```
+## Принципи розвитку системи
 
-## Commands
+### Інтеграція перед створенням
+
+Перед розробкою нового функціоналу:
+1. Перевір чи існуючий флоу покриває потребу (розділ "Flows")
+2. Перевір чи існуючий агент може бути перевикористаний (розділ "Agents")
+3. Якщо ні — запропонуй новий флоу з обґрунтуванням
+
+### Документаційна дисципліна
+
+Кожна зміна з окремим логічним циклом виконання МУСИТЬ бути задокументована щонайменше в одній з:
+
+| Директорія | Питання | Приклад |
+|------------|---------|---------|
+| `docs/how/` | Як це використовувати? | Покрокові гайди, приклади запуску |
+| `docs/why/` | Чому зроблено саме так? | Обґрунтування рішень, trade-offs |
+| `docs/comparisons/` | Чим відрізняється від попереднього? | Порівняння з альтернативами |
+
+### Сценарії
+
+Кожен сценарій у `scenarios/` МУСИТЬ мати README.md з:
+- Опис проблеми, яку вирішує
+- Діаграма фаз (text/mermaid)
+- Перелік агентів та їх ролей
+- Приклади запуску
+- Артефакти, що створюються
+
+---
+
+## Flows
+
+### 1. Feature Development (основний)
+
+Повний цикл розробки від задачі до PR. Адаптивний за складністю.
+
+**Запуск:** `/feature "опис задачі"`
+**Ручний режим:** послідовно `/refine` (optional) → `/research` → `/design` → `/plan` → `/implement` → `/docs-suite` → `/pr`
+
+| Фаза | Команда | Агенти | Артефакти |
+|------|---------|--------|-----------|
+| Refinement (optional) | `/refine` | Task Refiner | `.workflows/{id}/refinement/` |
+| Research | `/research` | Research Lead, Codebase Researcher | `.workflows/{id}/research/` |
+| Design | `/design` | Design Architect, Test Strategist, Devil's Advocate | `.workflows/{id}/design/` |
+| Plan | `/plan` | Phase Planner | `.workflows/{id}/plan/` |
+| Implement | `/implement` | Implement Lead, Code Writer, Security Reviewer, Quality Reviewer, Design Reviewer, Quality Gate | `.workflows/{id}/implement/` |
+| Docs | `/docs-suite` | Technical Collector, Architect Collector, Swagger Collector, Technical Writer | `docs/` |
+| PR | `/pr` | — (пряма команда) | GitHub PR |
+
+**Складність** (визначається Research автоматично):
+- **small** — skip Design+Plan, 1 reviewer → ~76% економія токенів
+- **medium** — light Design, 2 reviewers
+- **large** — повний флоу
+
+**Сценарій:** `scenarios/delivery/feature-development.md`
+**Гайд:** `docs/how/feature-flow.md`
+
+### 2. Sentry Triage → Feature
+
+Автоматичний збір production issues → категоризація → розробка через Feature Development.
+
+**Запуск:** `/sentry-triage --project {name} --org {org}`
+**Продовження:** `/feature --from docs/tasks/task-N/issue.md`
+
+| Фаза | Команда | Агенти | Артефакти |
+|------|---------|--------|-----------|
+| Triage | `/sentry-triage` | Sentry Triager | `docs/tasks/triage-report.md`, `docs/tasks/task-{N}-{slug}/issue.md` |
+| Fix | `/feature --from ...` | → Feature Development flow | `.workflows/{id}/` |
+
+**Сценарій:** `scenarios/delivery/feature-development.md` (entry point: Sentry Triage)
+
+### 3. Documentation Suite
+
+Генерація повного пакету документації проекту.
+
+**Запуск:** `/docs-suite` (повна генерація) або `/docs-suite --update` (інкрементальне оновлення)
 
 | Command | Agent | Description |
 |---------|-------|-------------|
@@ -53,53 +118,76 @@ ai-agents-system/
 | QA Engineer | `agents/engineering/qa-engineer.md` | Generate QA checklist from feature description (any format) |
 
 ### Documentation
-| Agent | File | Purpose |
-|-------|------|---------|
-| Technical Collector | `agents/documentation/technical-collector.md` | Collect project facts as-is |
-| Architect Collector | `agents/documentation/architect-collector.md` | Architecture analysis, diagrams (Mermaid, C4) |
-| Swagger Collector | `agents/documentation/swagger-collector.md` | Generate OpenAPI spec from code |
-| Technical Writer | `agents/documentation/technical-writer.md` | Feature articles, Swagger enrichment |
 
-## How It Works
+| Agent | File | Використовується у |
+|-------|------|--------------------|
+| Technical Collector | `agents/documentation/technical-collector.md` | Documentation Suite, Feature Development → Docs |
+| Architect Collector | `agents/documentation/architect-collector.md` | Documentation Suite, Feature Development → Docs |
+| Swagger Collector | `agents/documentation/swagger-collector.md` | Documentation Suite, Feature Development → Docs |
+| Technical Writer | `agents/documentation/technical-writer.md` | Documentation Suite, Feature Development → Docs |
+| System Profiler | `agents/documentation/system-profiler.md` | System Profiling |
 
-1. User types `/command` in Claude Code
-2. Command file loads the referenced agent persona (biases, output format)
-3. Agent executes the workflow defined in the command
-4. Output follows the agent's structured format
+---
+
+## Commands
+
+Кожна команда — точка входу. Згруповані за флоу.
+
+### Feature Development flow
+
+| Команда | Опис | Агенти |
+|---------|------|--------|
+| `/feature` | Мета-навігатор повного циклу | — |
+| `/refine` | Уточнення задачі від PM через діалог (optional Phase 0) | Task Refiner |
+| `/research` | AS-IS аналіз кодової бази | Research Lead + Codebase Researcher |
+| `/design` | Архітектура, ADR, тест-стратегія | Design Architect + Test Strategist + Devil's Advocate |
+| `/plan` | Декомпозиція дизайну на фази | Phase Planner |
+| `/implement` | Виконання однієї фази | Implement Lead + Code Writer + Reviewers + Quality Gate |
+| `/pr` | Створення Pull Request | — (пряма команда) |
+
+### Documentation flow
+
+| Команда | Опис | Агенти |
+|---------|------|--------|
+| `/docs-suite` | Повна документація | 4 Documentation agents |
+
+### Operations flow
+
+| Команда | Опис | Агенти |
+|---------|------|--------|
+| `/sentry-triage` | Збір issues з Sentry | Sentry Triager |
+| `/system-profile` | Реєстр інтеграцій | System Profiler |
+
+### Utilities
+
+| Команда | Опис |
+|---------|------|
+| `/skill-from-git` | Генерація project skill з git history |
+| `/ai-debug` | Статус системи, аналіз промптів |
+
+---
+
+## Structure
+
+```
+ai-agents-system/
+├── commands/         # Slash commands — точки входу
+├── agents/           # Agent personas (engineering/, documentation/)
+│   ├── engineering/  # 14 агентів для розробки
+│   └── documentation/# 5 агентів для документації
+├── scenarios/        # Multi-agent workflows з README
+│   └── delivery/     # feature-development, documentation-suite
+├── rules/            # Domain rules, завантажуються агентами
+├── contexts/         # Mode contexts (dev, planning, research, review)
+├── skills/           # Reusable skills та templates
+├── templates/        # Шаблони для нових агентів/сценаріїв
+└── docs/             # Документація системи
+    ├── how/          # Як це використовувати
+    ├── why/          # Чому саме так
+    └── comparisons/  # Порівняння з альтернативами
+```
 
 ## Project Skill (CRITICAL)
-
-Every command MUST load the project skill before executing its workflow.
-
-### How to find project skill
-
-1. Determine `{project-name}` = **basename of the current working directory** (last segment of the path)
-   - Example: CWD `/Users/ivan/repo/wellness-backend` → `{project-name}` = `wellness-backend`
-2. Check for skill file at: `{CWD}/.claude/skills/{project-name}-patterns/SKILL.md`
-3. If found — read `SKILL.md` and all `references/*.md` files from the same directory
-4. If NOT found — continue without project skill (commands may warn the user)
-
-### How to use project skill
-
-1. Pass project patterns to spawned agents as `[PROJECT PATTERNS]` section in their spawn prompt
-2. Project patterns are **mandatory constraints** — agents MUST follow them over generic best practices
-
-### What project skills contain
-
-- Naming conventions (services, controllers, exceptions, tests, YAML service IDs, ENV vars)
-- Decorator chain order (e.g., `Retry → Caching → HTTP`)
-- Exception patterns (factory methods, error codes, subclassing conventions)
-- Cache patterns (dedicated pools, preferred API)
-- Config patterns (`env(int:...)`, parameter naming)
-- Test patterns (base class, fixtures, naming)
-
-### Generate project skill
-
-Run `/skill-from-git` in the target project to generate `.claude/skills/{project-name}-patterns/` from git history.
-
-## Domain Rules
-
-Rules are loaded by agents via `rules:` metadata field. Each agent declares which rules it needs.
 
 | Rule | File | Used by |
 |------|------|---------|
@@ -123,10 +211,10 @@ Contexts are mode-specific priorities and guardrails injected into agent spawn p
 | Research | `contexts/research.md` | `/research` | Research Lead (self) + scanners |
 | Review | `contexts/review.md` | `/implement` | Security, Quality, Design Reviewers |
 
-## Scenarios
+## How It Works
 
-| Scenario | Command | Agents |
-|----------|---------|--------|
-| feature-development | `/research` → `/design` → `/plan` → `/implement` → `/docs-suite` → `/pr` | Engineering + Documentation agents |
-| sentry-triage | `/sentry-triage` → `docs/tasks/` → `/feature` per task | Sentry Triager → feature-development flow |
-| documentation-suite | `/docs-suite` | Technical Collector, Architect Collector, Swagger Collector, Technical Writer |
+1. Користувач вводить `/command` у Claude Code
+2. Команда завантажує project skill (якщо є)
+3. Команда активує агента/агентів з відповідними rules та context
+4. Агенти працюють з артефактами попередньої фази (artifact chain)
+5. Результат — структурований вивід у визначену директорію

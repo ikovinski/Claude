@@ -17,14 +17,14 @@ skills:
   - auto:{project}-patterns
   - tdd-approach
 consumes:
-  - .workflows/{feature}/research/research-report.md
-  - .workflows/{feature}/design/architecture.md
-  - .workflows/{feature}/design/adr/*.md
-  - .workflows/{feature}/design/test-strategy.md
-  - .workflows/{feature}/plan/replan-needed.md (optional — from failed /implement)
+  - .workflows/{feature-id}/research/research-report.md
+  - .workflows/{feature-id}/design/architecture.md
+  - .workflows/{feature-id}/design/adr/*.md
+  - .workflows/{feature-id}/design/test-strategy.md
+  - .workflows/{feature-id}/plan/replan-needed.md (optional — from failed /implement)
 produces:
-  - .workflows/{feature}/plan/overview.md
-  - .workflows/{feature}/plan/phase-*.md
+  - .workflows/{feature-id}/plan/overview.md
+  - .workflows/{feature-id}/plan/phase-*.md
 depends_on: [design-architect, test-strategist]
 ---
 
@@ -49,11 +49,11 @@ Your motto: "Each phase delivers value. Each phase stands alone."
 ### Input
 
 Read all design artifacts:
-- `.workflows/{feature}/research/research-report.md` — scope і контекст
-- `.workflows/{feature}/design/architecture.md` — нові/змінені компоненти, діаграми
-- `.workflows/{feature}/design/adr/*.md` — рішення і ризики
-- `.workflows/{feature}/design/test-strategy.md` — тестові кейси
-- `.workflows/{feature}/plan/replan-needed.md` — **якщо існує**: feedback від `/implement` про проблеми з попереднім планом. Прочитати, врахувати при плануванні, видалити після успішного перепланування
+- `.workflows/{feature-id}/research/research-report.md` — scope і контекст
+- `.workflows/{feature-id}/design/architecture.md` — нові/змінені компоненти, діаграми
+- `.workflows/{feature-id}/design/adr/*.md` — рішення і ризики
+- `.workflows/{feature-id}/design/test-strategy.md` — тестові кейси
+- `.workflows/{feature-id}/plan/replan-needed.md` — **якщо існує**: feedback від `/implement` про проблеми з попереднім планом. Прочитати, врахувати при плануванні, видалити після успішного перепланування
 
 ### Process
 
@@ -139,16 +139,16 @@ Critical path: Phase 1 → Phase 2 → Phase 4
 
 ## Output Format
 
-### `.workflows/{feature}/plan/overview.md`
+### `.workflows/{feature-id}/plan/overview.md`
 
 ```markdown
 # Implementation Plan: {Feature Name}
 
 ## Source
-- Research: `.workflows/{feature}/research/research-report.md`
-- Architecture: `.workflows/{feature}/design/architecture.md`
-- ADR: `.workflows/{feature}/design/adr/*.md`
-- Test Strategy: `.workflows/{feature}/design/test-strategy.md`
+- Research: `.workflows/{feature-id}/research/research-report.md`
+- Architecture: `.workflows/{feature-id}/design/architecture.md`
+- ADR: `.workflows/{feature-id}/design/adr/*.md`
+- Test Strategy: `.workflows/{feature-id}/design/test-strategy.md`
 
 ## Phases
 
@@ -199,7 +199,7 @@ graph LR
 | High-risk phases | {list} |
 ```
 
-### `.workflows/{feature}/plan/phase-{N}.md`
+### `.workflows/{feature-id}/plan/phase-{N}.md`
 
 ```markdown
 # Phase {N}: {Phase Title}
@@ -300,7 +300,7 @@ test {testMethodName}:
 ## Run Command
 
 ```bash
-/implement {feature-name} --phase {N}
+/implement {feature-id} --phase {N}
 ```
 ```
 

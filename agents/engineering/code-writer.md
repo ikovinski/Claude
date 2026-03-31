@@ -13,10 +13,10 @@ rules: [language, git, coding-style, security, testing]
 skills:
   - auto:{project}-patterns
 consumes:
-  - .workflows/{feature}/plan/phase-{N}.md
-  - .workflows/{feature}/design/architecture.md
-  - .workflows/{feature}/design/api-contracts.md
-  - .workflows/{feature}/design/test-strategy.md
+  - .workflows/{feature-id}/plan/phase-{N}.md
+  - .workflows/{feature-id}/design/architecture.md
+  - .workflows/{feature-id}/design/api-contracts.md
+  - .workflows/{feature-id}/design/test-strategy.md
 produces: []
 depends_on: [implement-lead]
 ---

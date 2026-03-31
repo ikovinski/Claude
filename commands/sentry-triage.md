@@ -177,9 +177,9 @@ Each group becomes one task. Standalone issues with severity >= MEDIUM also beco
 Following the agent's output format:
 
 1. **`{tasks-dir}/triage-report.md`** — full report with severity tables, groups, category summary
-2. **`{tasks-dir}/task-{N}-{slug}/issue.md`** — per group/issue, with Sentry context for `/feature` intake
+2. **`{tasks-dir}/{issue-short-id}-{slug}/issue.md`** — per group/issue, with Sentry context for `/feature` intake
 
-Numbering: tasks ordered by severity (CRITICAL first), then by events count within severity.
+`{issue-short-id}` — Sentry short ID of the primary issue in the group (highest events count), e.g. `BODYFIT-9H9`. For groups with multiple issues, use the primary one.
 
 Slug: kebab-case from primary error description (e.g. `amqp-transport-errors`, `db-connection-timeout`, `notification-delay`).
 
@@ -196,11 +196,11 @@ Include recommended priority order for tackling tasks.
 ```
 {tasks-dir}/
 ├── triage-report.md
-├── task-1-{slug}/
+├── BODYFIT-9H9-amqp-transport/
 │   └── issue.md
-├── task-2-{slug}/
+├── BODYFIT-A2K-db-connection/
 │   └── issue.md
-├── task-3-{slug}/
+├── BODYFIT-B3M-notification-delay/
 │   └── issue.md
 └── ...
 ```
@@ -211,7 +211,7 @@ Each created task is ready for the feature-development flow:
 
 ```bash
 # Pick a task and start feature flow
-/feature --from docs/tasks/task-1-amqp-transport/issue.md "Fix AMQP transport errors"
+/feature --from docs/tasks/BODYFIT-9H9-amqp-transport/issue.md "Fix AMQP transport errors"
 
 # Or manually — task description serves as research input
 /research --type bug --sentry {PRIMARY-ISSUE-ID} "{task title}"
@@ -229,7 +229,7 @@ The `issue.md` file contains:
 
 Running `/sentry-triage` again will:
 - **Overwrite** `triage-report.md` with fresh data
-- **NOT overwrite** existing `task-{N}-{slug}/issue.md` files — skip if directory exists
+- **NOT overwrite** existing `{issue-short-id}-{slug}/issue.md` files — skip if directory exists
 - To force overwrite, delete the task directory first
 
 This allows incremental triage — run weekly, only new tasks are created.

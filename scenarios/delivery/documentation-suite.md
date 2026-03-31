@@ -167,9 +167,13 @@ This is a **scenario phase**, not an agent responsibility. Each agent reviews ot
 3. **Stoplight packaging** (if Decision 2 = A):
    - Verify Technical Writer produced `docs/getting-started.md`
    - Verify `docs/toc.json` exists and references all generated files
-   - Verify enriched OpenAPI in `reference/openapi.yaml` (Stoplight layout)
+   - Verify enriched OpenAPI in `docs/reference/openapi.yaml` (Stoplight layout)
    - Validate SMD syntax in feature articles (callouts use `<!-- theme: -->`, not bold text)
-4. Produce final statistics report
+4. **Create/update `docs/.artifacts/.meta.json`** — metadata for incremental updates:
+   - Current HEAD SHA, timestamp, mode (full/update)
+   - SHA256 hashes of all generated artifacts
+   - Feature mapping: source directories → feature articles
+5. Produce final statistics report
 
 **Output**: Final documentation suite ready for use
 
@@ -177,7 +181,7 @@ This is a **scenario phase**, not an agent responsibility. Each agent reviews ot
 
 ## Feature Context (--feature)
 
-When invoked via `/docs-suite --feature {name}`, Team Lead resolves `.workflows/{name}/` artifacts before spawning teammates. Each artifact is optional — if missing, the teammate gets a standard prompt without that context.
+When invoked via `/docs-suite --feature {feature-id}`, Team Lead resolves `.workflows/{feature-id}/` artifacts before spawning teammates. Each artifact is optional — if missing, the teammate gets a standard prompt without that context.
 
 | Teammate | Feature Artifact | How It's Used |
 |----------|-----------------|---------------|
@@ -186,7 +190,7 @@ When invoked via `/docs-suite --feature {name}`, Team Lead resolves `.workflows/
 | api-spec | `design/api-contracts.md` | Starting point for endpoint extraction |
 | writer | (no direct feature artifacts) | Benefits indirectly from enriched Phase 1-2 outputs |
 
-**Graceful degradation**: if `.workflows/{name}/` doesn't exist or is empty, all teammates work exactly as without `--feature` — scan code from scratch.
+**Graceful degradation**: if `.workflows/{feature-id}/` doesn't exist or is empty, all teammates work exactly as without `--feature` — scan code from scratch.
 
 ---
 
@@ -252,6 +256,65 @@ Phase 5 (FINALIZE):
 
 ---
 
+## Update Mode (`--update`)
+
+When documentation already exists from a previous full run, `--update` performs an incremental update instead of regenerating everything.
+
+### Prerequisites
+- `docs/.artifacts/.meta.json` must exist from a previous run
+- Previous `last_sha` must be in git history
+
+### Update Flow
+
+```
+Phase 0: DETECT (Team Lead only)
+  Read .meta.json → get last_sha
+  git diff {last_sha}..HEAD → changed source files
+  Map changes → affected features via feature_mapping
+  Check for manual edits (sha256 mismatch)
+  Output scope summary
+  If no changes → EXIT
+
+Phase 1*: COLLECT (scoped)
+  Scanner scans only changed directories
+  Updates existing report, preserves unchanged sections
+
+Phase 2*: ANALYZE (scoped, parallel)
+  Architect/API-spec update only affected sections
+  Skip agents whose artifacts are unaffected
+
+Phase 3*: WRITE (scoped)
+  Writer updates only affected feature articles
+  Unaffected articles are not touched
+
+Phase 4: USER CONFIRMATION (replaces cross-review)
+  Show git diff docs/ to user
+  User: approve / reject / edit
+
+Phase 5: FINALIZE
+  Update .meta.json with new SHA and hashes
+```
+
+### Key Differences from Full Mode
+
+| Aspect | Full Mode | Update Mode |
+|--------|-----------|-------------|
+| Phase 0 | Skipped | Change detection + scope analysis |
+| Scanner scope | Full project | Changed directories only |
+| Agent spawn | All 4 always | Only affected agents |
+| Writer scope | All feature articles | Only affected articles |
+| Phase 4 | Cross-review (5 pairs) | User confirmation (git diff) |
+| Manual edits | Overwritten | Preserved in unaffected files, warned in affected |
+
+### Edge Cases
+- Missing `.meta.json` → fallback to full mode
+- `last_sha` not in git → fallback to full mode
+- Format flag changed → fallback to full mode
+- Manual edits in affected files → warn user, offer skip
+- >60% features affected → suggest `--full` instead
+
+---
+
 ## Decision Points
 
 ### Decision 1: Documentation Scope
@@ -309,7 +372,7 @@ Phase 5 (FINALIZE):
 - [ ] All feature articles use SMD syntax (callouts, titled blocks)
 - [ ] `docs/getting-started.md` exists and takes < 5 min
 - [ ] `docs/toc.json` covers all generated files
-- [ ] `reference/openapi.yaml` follows Stoplight naming conventions
+- [ ] `docs/reference/openapi.yaml` follows Stoplight naming conventions
 - [ ] OpenAPI has standardized Error schema with `code`, `message`, `details`
 - [ ] Key endpoints have HTTP Request Maker blocks in articles
 

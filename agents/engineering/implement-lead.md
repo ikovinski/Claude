@@ -15,14 +15,14 @@ rules: [language, git]
 skills:
   - auto:{project}-patterns
 consumes:
-  - .workflows/{feature}/plan/phase-{N}.md
-  - .workflows/{feature}/design/architecture.md
-  - .workflows/{feature}/design/diagrams.md
-  - .workflows/{feature}/design/api-contracts.md
-  - .workflows/{feature}/design/test-strategy.md
-  - .workflows/{feature}/design/security-review.md (optional)
+  - .workflows/{feature-id}/plan/phase-{N}.md
+  - .workflows/{feature-id}/design/architecture.md
+  - .workflows/{feature-id}/design/diagrams.md
+  - .workflows/{feature-id}/design/api-contracts.md
+  - .workflows/{feature-id}/design/test-strategy.md
+  - .workflows/{feature-id}/design/security-review.md (optional)
 produces:
-  - .workflows/{feature}/implement/phase-{N}-report.md
+  - .workflows/{feature-id}/implement/phase-{N}-report.md
 depends_on: [phase-planner]
 ---
 
@@ -46,9 +46,9 @@ Your motto: "Plan the work, work the plan, verify the result."
 
 ### Input
 
-- `.workflows/{feature}/plan/phase-{N}.md` — план фази
-- `.workflows/{feature}/design/architecture.md` — архітектурний контекст
-- `.workflows/{feature}/design/test-strategy.md` — тестові кейси для цієї фази
+- `.workflows/{feature-id}/plan/phase-{N}.md` — план фази
+- `.workflows/{feature-id}/design/architecture.md` — архітектурний контекст
+- `.workflows/{feature-id}/design/test-strategy.md` — тестові кейси для цієї фази
 
 ### Process
 
@@ -74,15 +74,15 @@ Your motto: "Plan the work, work the plan, verify the result."
 ```
 [IMPLEMENTATION TASK {N}/{total}]
 Phase: {phase number}
-Feature: {feature-name}
+Feature: {feature-id}
 
 [FILES TO CREATE/MODIFY]
 - {file path} — {what to do}
 
 [CONTEXT]
-- Architecture: .workflows/{feature}/design/architecture.md
-- Phase plan: .workflows/{feature}/plan/phase-{N}.md
-- Test strategy: .workflows/{feature}/design/test-strategy.md
+- Architecture: .workflows/{feature-id}/design/architecture.md
+- Phase plan: .workflows/{feature-id}/plan/phase-{N}.md
+- Test strategy: .workflows/{feature-id}/design/test-strategy.md
 
 [IMPLEMENTATION NOTES FROM PLAN]
 {Copy relevant notes from phase-{N}.md}
@@ -122,48 +122,48 @@ Feature: {feature-name}
 **Security Reviewer** (`agents/engineering/security-reviewer.md`):
 ```
 [SECURITY REVIEW]
-Feature: {feature-name}, Phase: {N}
+Feature: {feature-id}, Phase: {N}
 
 [DESIGN SECURITY CONTEXT]
-- Read .workflows/{feature}/design/security-review.md (if exists) for Phase 2 security concerns
+- Read .workflows/{feature-id}/design/security-review.md (if exists) for Phase 2 security concerns
 
 [FILES TO REVIEW]
 {list of new/modified files from writer}
 
 [OUTPUT]
-Write to: .workflows/{feature}/implement/phase-{N}-security-review.md
+Write to: .workflows/{feature-id}/implement/phase-{N}-security-review.md
 ```
 Agent has its own 4-phase workflow (automated scan, OWASP analysis, code patterns, audit checklist) and references security skills.
 
 **Quality Reviewer** (`agents/engineering/quality-reviewer.md`):
 ```
 [QUALITY REVIEW]
-Feature: {feature-name}, Phase: {N}
+Feature: {feature-id}, Phase: {N}
 
 [FILES TO REVIEW]
 {list of new/modified files}
 
 [OUTPUT]
-Write to: .workflows/{feature}/implement/phase-{N}-quality-review.md
+Write to: .workflows/{feature-id}/implement/phase-{N}-quality-review.md
 ```
 Agent runs complexity analysis, SOLID checks, domain model quality, layer compliance, error handling.
 
 **Design Reviewer** (`agents/engineering/design-reviewer.md`):
 ```
 [DESIGN COMPLIANCE REVIEW]
-Feature: {feature-name}, Phase: {N}
+Feature: {feature-id}, Phase: {N}
 
 [DESIGN ARTIFACTS]
-- .workflows/{feature}/design/architecture.md
-- .workflows/{feature}/design/diagrams.md
-- .workflows/{feature}/design/api-contracts.md
-- .workflows/{feature}/design/test-strategy.md
+- .workflows/{feature-id}/design/architecture.md
+- .workflows/{feature-id}/design/diagrams.md
+- .workflows/{feature-id}/design/api-contracts.md
+- .workflows/{feature-id}/design/test-strategy.md
 
 [FILES TO REVIEW]
 {list of new/modified files}
 
 [OUTPUT]
-Write to: .workflows/{feature}/implement/phase-{N}-design-review.md
+Write to: .workflows/{feature-id}/implement/phase-{N}-design-review.md
 ```
 Agent compares implementation against design artifacts: components, data flow, API contracts, test strategy, ADR.
 
@@ -191,7 +191,7 @@ After reviews pass, run Quality Gate:
 
 #### Step 7: Generate Phase Report
 
-Write `.workflows/{feature}/implement/phase-{N}-report.md` з результатами.
+Write `.workflows/{feature-id}/implement/phase-{N}-report.md` з результатами.
 
 ### What NOT to Do
 
@@ -204,7 +204,7 @@ Write `.workflows/{feature}/implement/phase-{N}-report.md` з результат
 
 ## Output Format
 
-### `.workflows/{feature}/implement/phase-{N}-report.md`
+### `.workflows/{feature-id}/implement/phase-{N}-report.md`
 
 ```markdown
 # Implementation Report: Phase {N}
