@@ -82,25 +82,21 @@
 
 **Запуск:** `/docs-suite` (повна генерація) або `/docs-suite --update` (інкрементальне оновлення)
 
-| Command | Agent | Description |
-|---------|-------|-------------|
-| `/feature` | Meta-command | Full feature flow navigator with state tracking |
-| `/research` | Research Lead + Codebase Researcher | Investigate codebase before implementation |
-| `/design` | Design Architect + Test Strategist + Devil's Advocate | Architecture decisions, ADR, test strategy, design challenge |
-| `/plan` | Phase Planner | Decompose design into implementation phases |
-| `/implement` | Implement Lead + Writer + Reviewers + Gate | Execute one implementation phase |
-| `/docs-suite` | Team Lead + 4 agents | Full documentation suite |
-| `/pr` | Direct command | Create PR with design references |
-| `/sentry-triage` | Sentry Triager | Collect & categorize Sentry issues into tasks |
-| `/qa-checklist` | QA Engineer | Generate QA checklist from feature description (PDF, images, URL, text) |
-| `/skill-from-git` | -- | Extract project skill from git history |
-| `/ai-debug` | -- | System status and prompt analysis |
+| Фаза | Агент | Що робить |
+|------|-------|-----------|
+| Collect | technical-collector | Збирає технічні факти з коду |
+| Collect | architect-collector | Генерує архітектурні діаграми |
+| Collect | swagger-collector | Генерує/валідує OpenAPI spec |
+| Write | technical-writer | Пише документацію з артефактів |
+
+**Сценарій:** `scenarios/delivery/documentation-suite.md`
 
 ## Agents
 
 ### Engineering
 | Agent | File | Purpose |
 |-------|------|---------|
+| Task Refiner | `agents/engineering/task-refiner.md` | Refine fuzzy task through interactive dialogue, produce structured task document |
 | Research Lead | `agents/engineering/research-lead.md` | Decompose task, orchestrate research, synthesize report |
 | Codebase Researcher | `agents/engineering/codebase-researcher.md` | Scan codebase AS IS — facts only |
 | Design Architect | `agents/engineering/design-architect.md` | Diagrams, architecture, ADR, API contracts (contract-first) |
@@ -173,7 +169,7 @@
 ai-agents-system/
 ├── commands/         # Slash commands — точки входу
 ├── agents/           # Agent personas (engineering/, documentation/)
-│   ├── engineering/  # 14 агентів для розробки
+│   ├── engineering/  # 16 агентів для розробки
 │   └── documentation/# 5 агентів для документації
 ├── scenarios/        # Multi-agent workflows з README
 │   └── delivery/     # feature-development, documentation-suite

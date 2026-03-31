@@ -24,7 +24,8 @@ Slash-команди для Claude Code CLI. Швидкий виклик workflo
 
 | Command | Agent | Output | Description |
 |---------|-------|--------|-------------|
-| `/feature` | Meta-command | `.workflows/` | Навігатор повного flow: research → design → plan → implement → docs → pr |
+| `/feature` | Meta-command | `.workflows/` | Навігатор повного flow: refine → research → design → plan → implement → docs → pr |
+| `/refine` | Task Refiner | `.workflows/{feature-id}/refinement/` | Уточнення нечіткої задачі через діалог |
 | `/research` | Research Lead + Codebase Researcher | `.workflows/{feature-id}/research/` | AS-IS аналіз кодової бази |
 | `/design` | Design Architect + Test Strategist + Devil's Advocate | `.workflows/{feature-id}/design/` | Архітектура, ADR, тест-стратегія |
 | `/plan` | Phase Planner | `.workflows/{feature-id}/plan/` | Декомпозиція дизайну на фази імплементації |
@@ -32,6 +33,7 @@ Slash-команди для Claude Code CLI. Швидкий виклик workflo
 | `/docs-suite` | Team (4 agents) | `docs/` | Повна документація (technical, architecture, OpenAPI, articles) |
 | `/pr` | Direct command | GitHub PR | Створення PR з артефактами та тест-планом |
 | `/sentry-triage` | Sentry Triager | `docs/tasks/` | Збір і категоризація issues з Sentry |
+| `/qa-checklist` | QA Engineer | Chat | Генерація QA чеклісту з опису фічі (PDF, images, URL, text) |
 | `/system-profile` | System Profiler | `docs/` | Integration Profile — реєстр інтеграцій |
 | `/skill-from-git` | — | `.claude/skills/` | Генерація project skill з git history |
 | `/ai-debug` | — | Chat | Статус системи, аналіз промптів |
@@ -41,7 +43,9 @@ Slash-команди для Claude Code CLI. Швидкий виклик workflo
 Основний workflow — послідовне виконання команд:
 
 ```
-/feature "Task description"     # Ініціалізація + /research
+/feature "Task description"     # Ініціалізація
+/refine                         # Уточнення задачі (optional)
+/research                       # AS-IS аналіз кодової бази
 /design                         # Архітектура + ADR
   → Human Review                # Перевірка дизайну
 /plan                           # Декомпозиція на фази
