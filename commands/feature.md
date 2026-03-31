@@ -44,6 +44,19 @@ When started with `--from {path-to-issue.md}`:
 4. Copy issue.md content into `.workflows/{feature-id}/research/sentry-context.md` as pre-research input
 5. Continue with normal flow (Research phase will use this context)
 
+### --from (Refinement Integration)
+
+When started with `--from {path-to-refined-task.md}` (file contains `# Refined Task:` header):
+1. Read the refined-task.md file
+2. Extract title, description, acceptance criteria, estimation
+3. Copy as `.workflows/{feature-id}/refinement/refined-task.md` if not already there
+4. Set `refinement` phase to `"done"` in state.json
+5. Use estimation from refined task as initial complexity hint:
+   - S → `"complexity": "small"`
+   - M → `"complexity": "medium"` (tentative — Research confirms)
+   - L/XL → `"complexity": "large"` (tentative — Research confirms)
+6. Research phase will use acceptance criteria and technical context as pre-research input
+
 ## Execution
 
 ### Starting a New Feature
@@ -68,6 +81,7 @@ When started with `--from {path-to-issue.md}`:
      "complexity": null,
      "complexity_reason": null,
      "phases": {
+       "refinement": "skipped",
        "research": "pending",
        "design": "pending",
        "design-review": "pending",
@@ -151,6 +165,7 @@ After each phase command completes, the user runs `/feature {name} --status` to 
 
 | Phase | Complete When |
 |-------|-------------|
+| refinement | `refinement/refined-task.md` exists |
 | research | `research/research-report.md` exists |
 | design | `design/architecture.md` exists |
 | design-review | User confirms (manual) |
@@ -174,6 +189,7 @@ After each phase command completes, the user runs `/feature {name} --status` to 
   "complexity": "small|medium|large|null",
   "complexity_reason": "1 component, 3 files, no external deps|null",
   "phases": {
+    "refinement": "pending|done|skipped",
     "research": "pending|in_progress|done",
     "design": "pending|in_progress|done|skipped",
     "design-review": "pending|approved|changes-requested|skipped",

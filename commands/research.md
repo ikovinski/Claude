@@ -78,6 +78,16 @@ TeamCreate:
 
 ### Phase 1: Task Analysis + Intake
 
+**Pre-check: Refinement Artifacts**
+
+If `.workflows/{feature-id}/refinement/refined-task.md` exists:
+- Read it as pre-analyzed task context
+- Extract acceptance criteria → use as success criteria scope
+- Extract technical context hints (affected components) → narrow initial scope for Quick Reconnaissance
+- Extract open questions → focus research on answering them
+- Skip most intake questions below (PM already answered them during `/refine`)
+- Still determine Type and Initial scope from the refined task content
+
 Read and analyze the task description. Determine:
 
 1. **Type**: bug or feature
@@ -92,7 +102,7 @@ Read and analyze the task description. Determine:
 | Constraints? (backwards compat, deadline) | When task touches public API or shared components |
 | Expected outcome? (new feature / fix / refactor) | When task type is ambiguous |
 
-**Rule**: ask ONLY what's undefined AND critical for research. If context is sufficient — don't ask anything, proceed to Phase 2.
+**Rule**: ask ONLY what's undefined AND critical for research. If context is sufficient (especially when refined-task.md provides it) — don't ask anything, proceed to Phase 2.
 
 ### Phase 2: Quick Reconnaissance
 

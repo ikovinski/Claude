@@ -1,73 +1,277 @@
 # AI Agents System
 
-Slash commands for Claude Code CLI. Each command invokes a specific agent with defined biases and output format.
+Система AI-агентів для Claude Code CLI. Дозволяє одному розробнику виконувати повний цикл розробки — від уточнення задачі до Pull Request — з якістю, порівнянною з роботою команди (дослідження, архітектура, код-рев'ю, документація).
 
-## Structure
+## Установка
 
-```
-ai-agents-system/
-├── commands/         # Slash commands (main interface)
-├── agents/           # Agent personas referenced by commands
-│   ├── engineering/  # 14 engineering agents
-│   └── documentation/ # 5 documentation agents
-├── scenarios/        # Multi-agent workflows
-├── rules/            # Domain-specific rules (coding-style, security, testing, database, messaging)
-├── contexts/         # Development mode contexts (dev, review, research, planning)
-├── skills/           # Reusable skills (templates, project patterns)
-├── templates/        # Templates for creating new agents, scenarios, skills
-└── plans/            # Feature flow design plans and roadmap
+Prerequisite: [Claude Code](https://claude.ai/code) має бути встановлений (`~/.claude/` існує).
+
+```bash
+./install.sh
 ```
 
-## Commands
+Скрипт створює **symlinks** з цього репозиторію в `~/.claude/`:
 
-| Command | Agent | Description |
-|---------|-------|-------------|
-| `/feature` | Meta-command | Full feature flow navigator with state tracking |
-| `/research` | Research Lead + Codebase Researcher | Investigate codebase before implementation |
-| `/design` | Design Architect + Test Strategist + Devil's Advocate | Architecture decisions, ADR, test strategy |
-| `/plan` | Phase Planner | Decompose design into implementation phases |
-| `/implement` | Implement Lead + Writer + Reviewers + Gate | Execute one implementation phase |
-| `/docs-suite` | Team (4 agents) | Full documentation suite |
-| `/pr` | Direct command | Create PR with design references and test plan |
-| `/system-profile` | System Profiler | Integration Profile — business-technical registry |
-| `/sentry-triage` | Sentry Triager | Collect and categorize Sentry issues into tasks |
-| `/skill-from-git` | — | Generate project skill from git history |
-| `/ai-debug` | — | System status and prompt analysis |
+```
+ai-agents-system/commands/*    →  ~/.claude/commands/*
+ai-agents-system/agents/*      →  ~/.claude/agents/*
+ai-agents-system/rules/*       →  ~/.claude/rules/*
+ai-agents-system/scenarios/*   →  ~/.claude/scenarios/*
+ai-agents-system/skills/*      →  ~/.claude/skills/*
+ai-agents-system/contexts/*    →  ~/.claude/contexts/*
+ai-agents-system/templates/*   →  ~/.claude/templates/*
+```
 
-## Agents
+Кожен файл/піддиректорія лінкується **окремо** (не вся директорія). Існуючі файли не перезаписуються — symlinks, що вказують на інші місця, та звичайні файли пропускаються.
 
-### Engineering
+## Деінсталяція
 
-| Agent | Bias |
-|-------|------|
-| `research-lead` | Describe, don't prescribe |
-| `codebase-researcher` | Facts only, no proposals |
-| `design-architect` | Contract-first, boring technology wins |
-| `test-strategist` | Test strategy before implementation |
-| `phase-planner` | Vertical slices > horizontal layers |
-| `implement-lead` | Orchestrate, don't implement |
-| `code-writer` | Working code > clever code |
-| `tdd-guide` | Test first, always |
-| `security-reviewer` | Paranoid by default |
-| `quality-reviewer` | Complexity, SOLID, domain model |
-| `design-reviewer` | Implementation must match design |
-| `quality-gate` | Build, tests, linters — all green |
-| `devils-advocate` | Assume nothing works |
-| `sentry-triager` | Categorize and group by root cause |
+```bash
+./uninstall.sh
+```
 
-### Documentation
+Видаляє **тільки** symlinks, які вказують на цей репозиторій. Чужі файли та symlinks на інші джерела не зачіпає. Пусті директорії прибирає автоматично.
 
-| Agent | Bias |
-|-------|------|
-| `technical-collector` | Generate, don't write |
-| `architect-collector` | Diagram first, tables over prose |
-| `swagger-collector` | Code is the source of truth |
-| `technical-writer` | Audience first, examples > explanations |
-| `system-profiler` | Use cases and integrations registry |
+## Сценарії
 
-## Scenarios
+Основні multi-step workflows, кожен складається з послідовності команд.
 
-| Scenario | Commands | Agents |
-|----------|----------|--------|
-| `feature-development` | `/research` → `/design` → `/plan` → `/implement` → `/docs-suite` → `/pr` | Research Lead, Design Architect, Test Strategist, Devil's Advocate, Phase Planner, Implement Lead, Code Writer, Reviewers |
-| `documentation-suite` | `/docs-suite` | Technical Collector, Architect Collector, Swagger Collector, Technical Writer |
+### Feature Development
+
+```bash
+/feature "опис задачі"
+```
+
+Повний цикл розробки фічі. Мета-команда, яка навігує через фази та відстежує стан у `.workflows/{feature-id}/state.json`. Адаптується за складністю — прості задачі пропускають Design/Plan, складні проходять повний цикл.
+
+**Фази:** `/refine` (optional) → `/research` → `/design` → HUMAN REVIEW → `/plan` → `/implement` → `/docs-suite` → `/pr`
+
+**Результат:** готовий Pull Request з кодом, тестами, документацією та ревʼю-звітами.
+
+| Фаза | Агенти | Rules | Skills |
+|------|--------|-------|--------|
+| Refine (optional) | task-refiner | language | task-refinement |
+| Research | research-lead, codebase-researcher | language, coding-style | — |
+| Design | design-architect, test-strategist, devils-advocate | language, coding-style, database, messaging, testing | design-template, adr-template, api-contracts-template |
+| Plan | phase-planner | language | tdd-approach |
+| Implement | implement-lead, code-writer, security-reviewer, quality-reviewer, design-reviewer, quality-gate | language, git, coding-style, security, testing | owasp-top-10, security-audit-checklist |
+| Docs | technical-collector, architect-collector, swagger-collector, technical-writer | — | stoplight-docs (if applicable) |
+| PR | — (пряма команда) | language, git | — |
+
+**Сценарій:** `scenarios/delivery/feature-development.md`
+
+```
+.workflows/{feature-id}/
+├── state.json
+├── refinement/
+│   └── refined-task.md
+├── research/
+│   ├── research-report.md
+│   ├── architecture-scan.md
+│   ├── data-scan.md
+│   └── integration-scan.md
+├── design/
+│   ├── architecture.md
+│   ├── diagrams.md
+│   ├── adr/*.md
+│   ├── api-contracts.md
+│   ├── test-strategy.md
+│   ├── challenge-report.md
+│   └── security-review.md (optional)
+├── plan/
+│   ├── overview.md
+│   └── phase-{N}.md
+└── implement/
+    ├── phase-{N}-report.md
+    ├── phase-{N}-security-review.md
+    ├── phase-{N}-quality-review.md
+    ├── phase-{N}-design-review.md
+    └── phase-{N}-quality-gate-report.md
+```
+
+### Sentry Triage → Fix
+
+```bash
+/sentry-triage --project {name} --org {org}
+```
+
+Збирає production issues з Sentry, категоризує за критичністю (CRITICAL/HIGH/MEDIUM), групує за кореневою причиною. Кожен task потім можна передати у Feature Development:
+
+```bash
+/feature --from docs/tasks/{issue-id}/issue.md "Fix description"
+```
+
+**Результат:** `docs/tasks/triage-report.md` + окремі `issue.md` для кожного task.
+
+| Компонент | Значення |
+|-----------|----------|
+| Агент | sentry-triager (opus) |
+| Rules | language |
+| Skills | auto:{project}-patterns |
+| MCP | Sentry (list_issues, get_issue_details, analyze_issue_with_seer) |
+| Сценарій | `scenarios/delivery/feature-development.md` (entry point) |
+
+```
+docs/tasks/
+├── triage-report.md
+├── {ISSUE-ID-1}-{slug}/
+│   └── issue.md
+├── {ISSUE-ID-2}-{slug}/
+│   └── issue.md
+└── ...
+```
+
+### Documentation Suite
+
+```bash
+/docs-suite
+```
+
+Генерація повного пакету документації проекту. Оркеструє 4 агенти: збирач технічних фактів, архітектурних діаграм, OpenAPI spec та технічний писар.
+
+**Результат:** `docs/` з технічною документацією, діаграмами та API reference.
+
+| Фаза | Агент | Що робить |
+|------|-------|-----------|
+| Collect | technical-collector | Збирає технічні факти з коду |
+| Collect | architect-collector | Генерує архітектурні діаграми |
+| Collect | swagger-collector | Генерує/валідує OpenAPI spec |
+| Write | technical-writer | Пише документацію з артефактів |
+
+**Сценарій:** `scenarios/delivery/documentation-suite.md`
+
+```
+docs/
+├── .artifacts/                    # Проміжні артефакти
+│   ├── technical-collection-report.md
+│   ├── architecture-report.md
+│   ├── openapi.yaml
+│   ├── swagger-coverage-report.md
+│   └── .meta.json
+├── features/
+│   └── *.md                       # Статті по фічах
+├── openapi.yaml
+├── INDEX.md
+├── getting-started.md             # (stoplight format)
+├── toc.json                       # (stoplight format)
+└── reference/
+    └── openapi.yaml               # (stoplight format)
+```
+
+## Команди
+
+Окремі команди, які можна запускати незалежно або як частину сценарію.
+
+### `/refine "опис"`
+
+Уточнює нечітку задачу від PM через інтерактивний діалог. Автоматично збирає технічний контекст з кодової бази, попередніх артефактів та Sentry. Задає 2-3 уточнюючі питання за раунд (до 3 раундів), оцінює scope.
+
+**Результат:** `refined-task.md` з user stories, acceptance criteria, T-shirt estimation, risk flags.
+
+| Компонент | Значення |
+|-----------|----------|
+| Агент | task-refiner (opus) |
+| Rules | language |
+| Skills | task-refinement, auto:{project}-patterns |
+| MCP | Sentry (optional), Context7 (optional) |
+
+```
+.workflows/{feature-id}/refinement/
+├── refined-task.md
+└── source.md                      # (якщо --from)
+```
+
+### `/research "опис"`
+
+AS-IS аналіз кодової бази в контексті задачі. Оркеструє Research Lead + Codebase Researchers для сканування архітектури, даних, інтеграцій. Збирає факти — не пропонує рішення.
+
+**Результат:** research report з компонентами, data flows, залежностями та open questions.
+
+| Компонент | Значення |
+|-----------|----------|
+| Агенти | research-lead (opus), codebase-researcher ×1-4 (sonnet) |
+| Rules | language, coding-style |
+| Skills | auto:{project}-patterns |
+| MCP | Sentry (для bug-fix), Context7 |
+| Context | `contexts/research.md` |
+
+```
+.workflows/{feature-id}/research/
+├── research-report.md
+├── architecture-scan.md
+├── data-scan.md
+└── integration-scan.md
+```
+
+### `/design "опис"`
+
+Архітектурні рішення для задачі. Оркеструє Design Architect + Test Strategist + Devil's Advocate (challenge). Генерує C4/DataFlow/Sequence діаграми, ADR, тест-стратегію, API контракти.
+
+**Результат:** design artifacts для human review.
+
+| Компонент | Значення |
+|-----------|----------|
+| Агенти | design-architect (opus), test-strategist (sonnet), devils-advocate (opus), security-reviewer (optional, sonnet) |
+| Rules | language, coding-style, database, messaging, testing |
+| Skills | design-template, adr-template, api-contracts-template, auto:{project}-patterns |
+| Context | `contexts/review.md` |
+
+```
+.workflows/{feature-id}/design/
+├── architecture.md
+├── diagrams.md
+├── adr/
+│   └── *.md                       # Одне рішення — один файл
+├── api-contracts.md
+├── test-strategy.md
+├── challenge-report.md
+└── security-review.md             # (optional)
+```
+
+### `/plan "опис"`
+
+Декомпозиція дизайну на вертикальні фази реалізації. Кожна фаза — незалежний deliverable з тестами. Визначає порядок, залежності, TDD підхід.
+
+**Результат:** overview.md + phase-{N}.md з acceptance criteria та чітким scope.
+
+| Компонент | Значення |
+|-----------|----------|
+| Агент | phase-planner (opus) |
+| Rules | language |
+| Skills | tdd-approach, auto:{project}-patterns |
+| Context | `contexts/planning.md` |
+
+```
+.workflows/{feature-id}/plan/
+├── overview.md
+├── phase-1.md
+├── phase-2.md
+└── phase-{N}.md
+```
+
+### `/system-profile`
+
+Генерує реєстр інтеграцій проекту — use cases, актори, data flows, open questions.
+
+**Результат:** `docs/system-profile.md`.
+
+| Компонент | Значення |
+|-----------|----------|
+| Агент | system-profiler (opus) |
+| Rules | language |
+| Skills | auto:{project}-patterns |
+
+### `/skill-from-git`
+
+Аналізує git history проекту та генерує project skill з реальними патернами команди (PHP/Symfony). Skill потім використовується агентами для дотримання conventions проекту.
+
+**Результат:**
+
+```
+.claude/skills/{project}-patterns/
+├── SKILL.md
+└── references/
+    ├── architecture.md
+    ├── workflows.md
+    └── conventions.md
+```
