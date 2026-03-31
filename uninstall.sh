@@ -4,7 +4,7 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 CLAUDE_DIR="$HOME/.claude"
 
-DIRS=(commands agents rules scenarios skills)
+DIRS=(commands agents rules scenarios skills contexts)
 
 echo "AI Agents System — Uninstall"
 echo "Source: $REPO_DIR"
