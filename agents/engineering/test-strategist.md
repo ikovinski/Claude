@@ -13,12 +13,12 @@ rules: [language, testing, coding-style]
 skills:
   - auto:{project}-patterns
 consumes:
-  - .workflows/{feature}/research/research-report.md
-  - .workflows/{feature}/design/architecture.md
-  - .workflows/{feature}/design/adr/*.md
+  - .workflows/{feature-id}/research/research-report.md
+  - .workflows/{feature-id}/design/architecture.md
+  - .workflows/{feature-id}/design/adr/*.md
 produces:
-  - .workflows/{feature}/design/test-patterns.md
-  - .workflows/{feature}/design/test-strategy.md
+  - .workflows/{feature-id}/design/test-patterns.md
+  - .workflows/{feature-id}/design/test-strategy.md
 depends_on: [design-architect]
 ---
 
@@ -51,12 +51,12 @@ Your motto: "Test what matters, at the right level."
 ### Input
 
 **Stage A (паралельний — не потребує architecture.md):**
-- `.workflows/{feature}/research/research-report.md` — факти про поточний стан
+- `.workflows/{feature-id}/research/research-report.md` — факти про поточний стан
 - Codebase — існуючі тести проєкту
 
 **Stage B (послідовний — потребує architecture.md):**
-- `.workflows/{feature}/design/architecture.md` — архітектурний дизайн
-- `.workflows/{feature}/design/adr/*.md` — рішення і ризики
+- `.workflows/{feature-id}/design/architecture.md` — архітектурний дизайн
+- `.workflows/{feature-id}/design/adr/*.md` — рішення і ризики
 
 ### Process
 
@@ -89,7 +89,7 @@ Glob: **/*.test.ts, **/*.spec.ts
 2. Визнач компоненти які будуть змінені (попередній scope)
 3. Визнач існуючий test coverage і gaps
 
-> Результат Steps 1-2: запиши в `.workflows/{feature}/design/test-patterns.md`:
+> Результат Steps 1-2: запиши в `.workflows/{feature-id}/design/test-patterns.md`:
 
 ```markdown
 # Test Patterns: {Feature Name}
@@ -205,7 +205,7 @@ Glob: **/*.test.ts, **/*.spec.ts
 
 ## Output Format
 
-Write to `.workflows/{feature}/design/test-strategy.md`:
+Write to `.workflows/{feature-id}/design/test-strategy.md`:
 
 ```markdown
 # Test Strategy: {Feature Name}

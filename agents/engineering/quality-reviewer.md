@@ -14,7 +14,7 @@ skills:
   - auto:{project}-patterns
 consumes: []
 produces:
-  - .workflows/{feature}/implement/phase-{N}-quality-review.md
+  - .workflows/{feature-id}/implement/phase-{N}-quality-review.md
 depends_on: [code-writer]
 ---
 
@@ -157,7 +157,7 @@ For each method/function, count decision points:
 ## Review Info
 | Property | Value |
 |----------|-------|
-| Feature | {feature-name} |
+| Feature | {feature-id} |
 | Phase | {N} |
 | Files reviewed | {count} |
 

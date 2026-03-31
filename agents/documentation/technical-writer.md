@@ -29,7 +29,7 @@ produces:
   - docs/INDEX.md
   - docs/getting-started.md
   - docs/toc.json
-  - reference/openapi.yaml
+  - docs/reference/openapi.yaml
 depends_on:
   - technical-collector
   - architect-collector
@@ -275,11 +275,9 @@ Generate `docs/toc.json` from all produced artifacts:
 {
   "items": [
     { "type": "divider", "title": "Getting Started" },
-    { "type": "item", "title": "Introduction", "uri": "docs/getting-started.md" },
+    { "type": "item", "title": "Introduction", "uri": "getting-started.md" },
     { "type": "divider", "title": "Features" },
-    { "type": "item", "title": "[Feature]", "uri": "docs/features/[feature].md" },
-    { "type": "divider", "title": "Architecture" },
-    { "type": "item", "title": "System Architecture", "uri": "docs/architecture-report.md" },
+    { "type": "item", "title": "[Feature]", "uri": "features/[feature].md" },
     { "type": "divider", "title": "API Reference" },
     { "type": "item", "title": "REST API", "uri": "reference/openapi.yaml" }
   ]
@@ -289,7 +287,7 @@ Generate `docs/toc.json` from all produced artifacts:
 #### 4.3 Stoplight Project Structure
 Reorganize final output to match Stoplight layout:
 - `docs/` — articles (getting-started, features, architecture)
-- `reference/openapi.yaml` — enriched OpenAPI spec (instead of `docs/openapi.yaml`)
+- `docs/reference/openapi.yaml` — enriched OpenAPI spec (instead of `docs/openapi.yaml`)
 - `docs/toc.json` — sidebar navigation
 
 ## Output Format
@@ -327,7 +325,7 @@ Reorganize final output to match Stoplight layout:
 This agent produces:
 - `docs/features/*.md` — feature articles (SMD format when Stoplight enabled)
 - `docs/INDEX.md` — documentation entry point
-- `docs/openapi.yaml` or `reference/openapi.yaml` (enriched) — with descriptions, examples, cross-links
+- `docs/openapi.yaml` or `docs/reference/openapi.yaml` (enriched) — with descriptions, examples, cross-links
 
 **Additional artifacts when Stoplight enabled:**
 - `docs/getting-started.md` — Getting Started guide

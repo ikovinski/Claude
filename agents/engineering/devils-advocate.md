@@ -13,11 +13,11 @@ rules: [language]
 skills:
   - auto:{project}-patterns
 consumes:
-  - .workflows/{feature}/design/architecture.md
-  - .workflows/{feature}/design/adr/*.md
-  - .workflows/{feature}/research/research-report.md
+  - .workflows/{feature-id}/design/architecture.md
+  - .workflows/{feature-id}/design/adr/*.md
+  - .workflows/{feature-id}/research/research-report.md
 produces:
-  - .workflows/{feature}/design/challenge-report.md
+  - .workflows/{feature-id}/design/challenge-report.md
 depends_on: [design-architect]
 ---
 
@@ -41,9 +41,9 @@ Your motto: "If the decision survives my challenge, it's a good decision."
 
 ### Input
 
-- `.workflows/{feature}/design/architecture.md` — архітектурний дизайн
-- `.workflows/{feature}/design/adr/*.md` — Architecture Decision Records
-- `.workflows/{feature}/research/research-report.md` — факти з Research (для контексту)
+- `.workflows/{feature-id}/design/architecture.md` — архітектурний дизайн
+- `.workflows/{feature-id}/design/adr/*.md` — Architecture Decision Records
+- `.workflows/{feature-id}/research/research-report.md` — факти з Research (для контексту)
 
 ### Process
 
@@ -97,7 +97,7 @@ Your motto: "If the decision survives my challenge, it's a good decision."
 
 ## Output Format
 
-Write to `.workflows/{feature}/design/challenge-report.md`:
+Write to `.workflows/{feature-id}/design/challenge-report.md`:
 
 ```markdown
 # Challenge Report: {Feature Name}

@@ -11,6 +11,7 @@ triggers:
   - "Feature from scratch"
   - "Зроби фічу від початку до кінця"
 participants:
+  - Task Refiner (Phase 0 — optional)
   - Research Lead + Codebase Researcher (Phase 1)
   - Design Architect + Test Strategist + Devil's Advocate (Phase 2)
   - Phase Planner (Phase 3)
@@ -37,7 +38,7 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 
 ### Entry Points
 
-Задача може потрапити у flow двома шляхами:
+Задача може потрапити у flow трьома шляхами:
 
 1. **Пряма задача** — опис від людини (issue, feature request, bug report)
    ```bash
@@ -47,30 +48,52 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 2. **Sentry Triage** — автоматично зібрані та категоризовані production issues
    ```bash
    /sentry-triage --project bodyfit-api --org bodyfit
-   # → створює docs/tasks/task-{N}-{slug}/issue.md
+   # → створює docs/tasks/{issue-short-id}-{slug}/issue.md
    # → потім для кожного task:
-   /feature --from docs/tasks/task-1-amqp-transport/issue.md "Fix AMQP transport errors"
+   /feature --from docs/tasks/BODYFIT-9H9-amqp-transport/issue.md "Fix AMQP transport errors"
    ```
 
    `issue.md` містить Sentry контекст (stacktrace, events, tags), що автоматично використовується в Phase 1 (Research) як вхідні дані.
+
+3. **Refined Task** — уточнена задача через `/refine` (Phase 0)
+   ```bash
+   /refine "додай експорт в PDF"
+   # → діалог з PM → генерує .workflows/{feature-id}/refinement/refined-task.md
+   # → потім:
+   /feature --from .workflows/{feature-id}/refinement/refined-task.md "Export to PDF"
+   ```
+
+   `refined-task.md` містить user stories, acceptance criteria, estimation та технічний контекст. Research фаза використовує ці дані для звуження scope та пропуску intake-питань.
+
+### Feature ID Convention
+
+`{feature-id}` = `{track-id}-{slug}`, де:
+
+| Джерело | track-id | Приклад feature-id |
+|---------|----------|---------------------|
+| JIRA task | `MM-2696` | `MM-2696-add-refund` |
+| Sentry issue | `BODYFIT-9H9` | `BODYFIT-9H9-amqp-fix` |
+| Без трекера | `001`, `002`... (incremental) | `001-cache-warmup` |
+
+Артифакти зберігаються в `.workflows/{feature-id}/`.
 
 ---
 
 ## Process Flow
 
 ```
-Задача (issue / feature request / bug report)
+Задача (issue / feature request / bug report / нечіткий опис від PM)
     │
-    │   ┌─ OR ──────────────────────────────────────┐
-    │   │                                           │
-    │   │  /sentry-triage                           │
-    │   │    → docs/tasks/triage-report.md               │
-    │   │    → docs/tasks/task-{N}-{slug}/issue.md       │
-    │   │                                           │
-    │   │  Pick task → /feature --from issue.md     │
-    │   └───────────────────────────┬───────────────┘
-    │                               │
-    ▼                               ▼
+    │   ┌─ OR ──────────────────────────────────────┐   ┌─ OR ──────────────────────────────────────┐
+    │   │                                           │   │                                           │
+    │   │  /sentry-triage                           │   │  /refine (Phase 0 — optional)             │
+    │   │    → docs/tasks/triage-report.md          │   │    → діалог з PM                          │
+    │   │    → docs/tasks/{issue-short-id}/issue.md │   │    → .workflows/{id}/refinement/           │
+    │   │                                           │   │       refined-task.md                      │
+    │   │  Pick task → /feature --from issue.md     │   │    → /feature --from refined-task.md       │
+    │   └───────────────────────────┬───────────────┘   └───────────────────────────┬───────────────┘
+    │                               │                                               │
+    ▼                               ▼                                               ▼
 ┌─────────────────────────────────────────────────┐
 │  Phase 1: RESEARCH                /research     │
 │                                                 │
@@ -86,7 +109,7 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 │  Sentry MCP для bug-fix контексту               │
 │  Context7 для документації фреймворків          │
 │                                                 │
-│  Output: .workflows/{feature}/research/         │
+│  Output: .workflows/{feature-id}/research/         │
 │  Gate: Components, DataFlow, Open Questions     │
 └─────────────────┬───────────────────────────────┘
                   │
@@ -149,7 +172,7 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 │  Architect addresses CRITICAL/SIGNIFICANT       │
 │  challenges (якщо є)                            │
 │                                                 │
-│  Output: .workflows/{feature}/design/           │
+│  Output: .workflows/{feature-id}/design/           │
 │  Gate: Diagrams valid, ADR has alternatives,    │
 │        Challenge verdict not NEEDS REVISION     │
 └─────────────────┬───────────────────────────────┘
@@ -175,7 +198,7 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 │  Replan loop: reads replan-needed.md from       │
 │    /implement if exists → full re-plan          │
 │                                                 │
-│  Output: .workflows/{feature}/plan/             │
+│  Output: .workflows/{feature-id}/plan/             │
 │  Gate: No cycles, all components covered,       │
 │        execution waves valid, TDD + verify      │
 └─────────────────┬───────────────────────────────┘
@@ -196,7 +219,7 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 │      build → tests → linters → Sentry           │
 │  Fix iterations (max 3)                         │
 │                                                 │
-│  Output: code + .workflows/{feature}/implement/ │
+│  Output: code + .workflows/{feature-id}/implement/ │
 │  Gate: All reviews PASS, Quality Gate PASS      │
 │                                                 │
 │  Repeat for each phase from Plan                │
@@ -205,12 +228,12 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
                   ▼
 ┌─────────────────────────────────────────────────┐
 │  Phase 5: DOCUMENTATION           /docs-suite   │
-│  --feature {feature-name}                       │
+│  --feature {feature-id}                       │
 │                                                 │
 │  Team Lead перевіряє наявність артефактів:       │
-│    .workflows/{feature}/research/               │
-│    .workflows/{feature}/design/                 │
-│    .workflows/{feature}/implement/              │
+│    .workflows/{feature-id}/research/               │
+│    .workflows/{feature-id}/design/                 │
+│    .workflows/{feature-id}/implement/              │
 │  Знайдені → передає як контекст агентам         │
 │  Не знайдені → агенти працюють як звичайно      │
 │                                                 │
@@ -275,7 +298,7 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 |------|-----------|-------|
 | (see documentation-suite scenario) | `agents/documentation/*.md` | sonnet |
 
-*When invoked with `--feature {name}`: Team Lead checks `.workflows/{feature}/` for design artifacts and passes them as context to teammates. Missing artifacts are silently skipped — agents fall back to scanning code directly.*
+*When invoked with `--feature {feature-id}`: Team Lead checks `.workflows/{feature-id}/` for design artifacts and passes them as context to teammates. Missing artifacts are silently skipped — agents fall back to scanning code directly.*
 
 ### Phase 6: PR
 | Role | Agent File | Model |
@@ -287,15 +310,20 @@ requires: CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 ## Artifact Chain
 
 ```
+Phase 0 produces (optional — /refine):
+  .workflows/{feature-id}/refinement/
+    ├── refined-task.md              ◄── consumed by Phase 1 (Research — pre-context, skip intake)
+    └── source.md                    ◄── original input (if --from used)
+
 Phase 1 produces:
-  .workflows/{feature}/research/
+  .workflows/{feature-id}/research/
     ├── research-report.md          ◄── consumed by Phase 2, 3
     ├── architecture-scan.md
     ├── data-scan.md
     └── integration-scan.md
 
 Phase 2 produces:
-  .workflows/{feature}/design/
+  .workflows/{feature-id}/design/
     ├── diagrams.md                 ◄── consumed by Phase 4, 6 (visual reference)
     ├── architecture.md             ◄── consumed by Phase 3, 4
     ├── adr/*.md                     ◄── consumed by Phase 3, 6
@@ -305,7 +333,7 @@ Phase 2 produces:
     └── security-review.md          ◄── optional, consumed by Phase 4, 6
 
 Phase 3 produces:
-  .workflows/{feature}/plan/
+  .workflows/{feature-id}/plan/
     ├── overview.md                 ◄── consumed by Phase 4, 6
     ├── phase-1.md                  ◄── consumed by Phase 4
     ├── phase-2.md                  ◄── consumed by Phase 4
@@ -313,23 +341,23 @@ Phase 3 produces:
 
 Phase 4 produces:
   code changes (in project)
-  .workflows/{feature}/implement/
+  .workflows/{feature-id}/implement/
     ├── phase-{N}-report.md         ◄── consumed by Phase 6
     ├── phase-{N}-security-review.md
     ├── phase-{N}-quality-review.md
     ├── phase-{N}-design-review.md
     └── phase-{N}-quality-gate-report.md
   On structural blocker:
-  .workflows/{feature}/plan/
+  .workflows/{feature-id}/plan/
     └── replan-needed.md            ◄── consumed by Phase 3 (replan loop)
 
 Phase 5 consumes (if --feature):
-  .workflows/{feature}/research/research-report.md
-  .workflows/{feature}/design/architecture.md
-  .workflows/{feature}/design/diagrams.md
-  .workflows/{feature}/design/api-contracts.md
-  .workflows/{feature}/design/adr/*.md
-  .workflows/{feature}/implement/phase-*-report.md
+  .workflows/{feature-id}/research/research-report.md
+  .workflows/{feature-id}/design/architecture.md
+  .workflows/{feature-id}/design/diagrams.md
+  .workflows/{feature-id}/design/api-contracts.md
+  .workflows/{feature-id}/design/adr/*.md
+  .workflows/{feature-id}/implement/phase-*-report.md
 
 Phase 5 produces:
   docs/                             ◄── committed with PR

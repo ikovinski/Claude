@@ -31,7 +31,9 @@
       "WebFetch(domain:roadmap.stoplight.io)",
       "Bash(chmod +x /Users/ivankovinskyi/repo/ai-agents-system/install.sh /Users/ivankovinskyi/repo/ai-agents-system/uninstall.sh)",
       "Bash(python3 -m json.tool)",
-      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); [print\\(json.dumps\\(p,indent=2\\)\\) for p in d.get\\(''plugins'',[]\\) if ''sentry'' in p.get\\(''name'',''''\\).lower\\(\\)]\")"
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); [print\\(json.dumps\\(p,indent=2\\)\\) for p in d.get\\(''plugins'',[]\\) if ''sentry'' in p.get\\(''name'',''''\\).lower\\(\\)]\")",
+      "Bash(git fetch:*)",
+      "Bash(git checkout:*)"
     ]
   },
   "enabledMcpjsonServers": [

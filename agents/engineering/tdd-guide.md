@@ -18,8 +18,8 @@ skills:
   - auto:{project}-patterns
   - tdd-approach
 consumes:
-  - .workflows/{feature}/design/test-strategy.md
-  - .workflows/{feature}/plan/phase-{N}.md
+  - .workflows/{feature-id}/design/test-strategy.md
+  - .workflows/{feature-id}/plan/phase-{N}.md
 produces: []
 depends_on: [implement-lead]
 ---

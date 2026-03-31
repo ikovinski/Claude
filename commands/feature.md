@@ -19,10 +19,10 @@ Meta-command that guides through the full feature development flow. Tracks state
 
 ```bash
 /feature "Add refund functionality to payments"              # Start new feature
-/feature {feature-name} --status                              # Check current state
-/feature {feature-name} --resume                              # Continue from last phase
-/feature {feature-name} --type bug --sentry PROJ-123          # Bug fix flow
-/feature --from docs/tasks/task-1-amqp-transport/issue.md "Fix AMQP transport errors"  # From sentry-triage
+/feature {feature-id} --status                              # Check current state
+/feature {feature-id} --resume                              # Continue from last phase
+/feature {feature-id} --type bug --sentry PROJ-123          # Bug fix flow
+/feature --from docs/tasks/BODYFIT-9H9-amqp-transport/issue.md "Fix AMQP transport errors"  # From sentry-triage
 ```
 
 ## How It Works
@@ -41,8 +41,21 @@ When started with `--from {path-to-issue.md}`:
 1. Read the issue.md file
 2. Extract Sentry issue IDs from the Issues table
 3. Auto-set `--type bug` and `--sentry {PRIMARY-ISSUE-ID}`
-4. Copy issue.md content into `.workflows/{feature}/research/sentry-context.md` as pre-research input
+4. Copy issue.md content into `.workflows/{feature-id}/research/sentry-context.md` as pre-research input
 5. Continue with normal flow (Research phase will use this context)
+
+### --from (Refinement Integration)
+
+When started with `--from {path-to-refined-task.md}` (file contains `# Refined Task:` header):
+1. Read the refined-task.md file
+2. Extract title, description, acceptance criteria, estimation
+3. Copy as `.workflows/{feature-id}/refinement/refined-task.md` if not already there
+4. Set `refinement` phase to `"done"` in state.json
+5. Use estimation from refined task as initial complexity hint:
+   - S → `"complexity": "small"`
+   - M → `"complexity": "medium"` (tentative — Research confirms)
+   - L/XL → `"complexity": "large"` (tentative — Research confirms)
+6. Research phase will use acceptance criteria and technical context as pre-research input
 
 ## Execution
 
@@ -68,6 +81,7 @@ When started with `--from {path-to-issue.md}`:
      "complexity": null,
      "complexity_reason": null,
      "phases": {
+       "refinement": "skipped",
        "research": "pending",
        "design": "pending",
        "design-review": "pending",
@@ -151,6 +165,7 @@ After each phase command completes, the user runs `/feature {name} --status` to 
 
 | Phase | Complete When |
 |-------|-------------|
+| refinement | `refinement/refined-task.md` exists |
 | research | `research/research-report.md` exists |
 | design | `design/architecture.md` exists |
 | design-review | User confirms (manual) |
@@ -174,6 +189,7 @@ After each phase command completes, the user runs `/feature {name} --status` to 
   "complexity": "small|medium|large|null",
   "complexity_reason": "1 component, 3 files, no external deps|null",
   "phases": {
+    "refinement": "pending|done|skipped",
     "research": "pending|in_progress|done",
     "design": "pending|in_progress|done|skipped",
     "design-review": "pending|approved|changes-requested|skipped",
@@ -226,7 +242,7 @@ This task is too small for a full design/plan cycle. Suggested fast track:
 - Implement with lightweight review
 
 **Next step:**
-/implement {feature-name} --phase 1 --reviewers quality
+/implement {feature-id} --phase 1 --reviewers quality
 
 Override: reply "full flow" to proceed with Design → Plan → Implement as usual.
 ```
@@ -247,7 +263,7 @@ Suggested optimizations:
 - Full review in Implement phase
 
 **Next step:**
-/design {feature-name} --depth light --skip-challenge
+/design {feature-id} --depth light --skip-challenge
 
 Override: reply "full design" for standard depth with Devil's Advocate challenge.
 ```
@@ -274,7 +290,7 @@ For common flows:
 /feature "Internal refactoring" --skip-docs
 
 # From sentry-triage output
-/feature --from docs/tasks/task-1-amqp-transport/issue.md "Fix AMQP transport errors"
+/feature --from docs/tasks/BODYFIT-9H9-amqp-transport/issue.md "Fix AMQP transport errors"
 # → Auto-detects: --type bug --sentry {primary issue ID from file}
 ```
 
