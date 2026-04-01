@@ -6,7 +6,7 @@ CLAUDE_DIR="$HOME/.claude"
 
 DIRS=(commands agents rules scenarios skills contexts templates)
 
-echo "AI Agents System — Install"
+echo "AMO Claude Workflows — Install"
 echo "Source: $REPO_DIR"
 echo "Target: $CLAUDE_DIR"
 echo ""

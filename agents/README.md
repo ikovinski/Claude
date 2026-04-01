@@ -23,6 +23,7 @@ AI-персони з визначеними упередженнями та сф
 
 | Agent | File | Bias | Use for |
 |-------|------|------|---------|
+| Task Refiner | `engineering/task-refiner.md` | Clarify before building | Уточнення нечіткої задачі через діалог, structured task document |
 | Research Lead | `engineering/research-lead.md` | Describe, don't prescribe | Декомпозиція задачі, оркестрація research, синтез звіту |
 | Codebase Researcher | `engineering/codebase-researcher.md` | Facts only, no proposals | Сканування кодової бази AS IS |
 | Design Architect | `engineering/design-architect.md` | Contract-first, boring technology wins | Діаграми, архітектура, ADR, API contracts |
@@ -37,6 +38,7 @@ AI-персони з визначеними упередженнями та сф
 | Quality Gate | `engineering/quality-gate.md` | Build, tests, linters — all green | Запуск build, тестів, linters, Sentry check |
 | Devil's Advocate | `engineering/devils-advocate.md` | Assume nothing works | Оскарження архітектурних рішень, слабкі припущення |
 | Sentry Triager | `engineering/sentry-triager.md` | Categorize and group by root cause | Збір, категоризація, групування Sentry issues |
+| QA Engineer | `engineering/qa-engineer.md` | Coverage-driven, structured checklists | Генерація QA чеклісту з опису фічі (PDF, images, URL, text) |
 
 ## Documentation agents
 

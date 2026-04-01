@@ -6,7 +6,7 @@ Two different tools for creating skills. They serve different purposes and compl
 
 | | `/skill-from-git` | `/skill-creator` |
 |---|---|---|
-| **Source** | Custom command (ai-agents-system) | Anthropic official plugin |
+| **Source** | Custom command (amo-claude-workflows) | Anthropic official plugin |
 | **Purpose** | Auto-extract patterns from git history | Design any skill from scratch |
 | **Input** | Git commits, file structure, conventions | User requirements and conversation |
 | **Scope** | PHP/Symfony projects | Any domain, any tech stack |

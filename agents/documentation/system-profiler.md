@@ -5,7 +5,7 @@ name: system-profiler
 description: Генерує Integration Profile системи — бізнес-технічний реєстр інтеграцій з use cases, акторами, data flows, Open Questions та Issues. Один великий документ для onboarding, аудиту, планування.
 tools: ["Read", "Grep", "Glob", "Write", "Edit"]
 model: opus
-permissionMode: plan
+permissionMode: acceptEdits
 maxTurns: 60
 memory: project
 triggers:

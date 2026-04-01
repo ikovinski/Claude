@@ -390,7 +390,7 @@ Grep: "Payment" in src/services/
 - Artifacts are passed via **shared filesystem** (`.workflows/`), not in message body
 - If a scanner fails, report the error and continue with remaining scans — partial research is better than none
 - Always call `TeamDelete` at the end, even if some scanners failed
-- The target project may be a **different directory** than ai-agents-system — detect or ask
+- The target project may be a **different directory** than amo-claude-workflows — detect or ask
 
 ---
 

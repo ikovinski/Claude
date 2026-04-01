@@ -703,7 +703,7 @@ docs/INDEX.md
 - Artifacts are passed via **shared filesystem** (`docs/.artifacts/`), not in message body
 - `SendMessage` is for task coordination and status updates, not large data transfer
 - If a teammate fails, report the error and ask the user whether to retry or skip
-- The target project may be a **different directory** than ai-agents-system — always ask or detect
+- The target project may be a **different directory** than amo-claude-workflows — always ask or detect
 - Always call `TeamDelete` at the end, even if some phases were skipped
 - **`--feature` is a hint, not a hard dependency** — if `.workflows/{feature-id}/` doesn't exist or has no artifacts, all teammates work as usual (scan code from scratch). Each artifact is checked independently; missing ones are silently skipped
 
