@@ -6,7 +6,7 @@ CLAUDE_DIR="$HOME/.claude"
 
 DIRS=(commands agents rules scenarios skills contexts templates)
 
-echo "AI Agents System — Uninstall"
+echo "AMO Claude Workflows — Uninstall"
 echo "Source: $REPO_DIR"
 echo "Target: $CLAUDE_DIR"
 echo ""

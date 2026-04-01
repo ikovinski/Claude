@@ -46,11 +46,11 @@ When this command runs, YOU (Claude) spawn a **single System Profiler agent** th
 ### Step 1: Determine Target Project
 
 ```
-If CWD is ai-agents-system:
+If CWD is amo-claude-workflows:
   → Ask user: "В якому проєкті генерувати System Profile?"
   → User provides path or project name
 
-If CWD is NOT ai-agents-system:
+If CWD is NOT amo-claude-workflows:
   → Target = CWD
 ```
 

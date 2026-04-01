@@ -8,7 +8,7 @@ triggers:
 skills: []
 ---
 
-# /ai-debug - AI Agents System Status & Analyzer
+# /ai-debug - AMO Claude Workflows Status & Analyzer
 
 ## Usage
 
@@ -35,7 +35,7 @@ skills: []
 ### Output Format
 
 ```
-🔍 AI Agents System - Status
+🔍 AMO Claude Workflows - Status
 ════════════════════════════
 
 📁 Context
